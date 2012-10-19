@@ -288,7 +288,13 @@
 				<xsd:element ref="lqr:body" />
 			</xsd:sequence>
 			<xsd:attribute name="pageWidth" type="xsd:int" use="required" />
-			<xsd:attribute name="pageHeight" type="xsd:int" use="required" />
+			<xsd:attribute name="pageHeight" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="[0-9]+|100%" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
 		</xsd:complexType>
 		
 		<xsd:unique name="uniqueFontId">

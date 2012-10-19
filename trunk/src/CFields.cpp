@@ -125,22 +125,24 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CFields::swap(CField *f1, CField *f2) {
-		QString idF1, idF2;
-		int idxF1, idxF2;
-		CField *fTemp;
-		
-		idF1=f1->getAttribute("id");
-		idF2=f2->getAttribute("id");
-		
-		idxF1=keyMap->take(idF1);
-		idxF2=keyMap->take(idF2);
-		
-		fTemp=map->at(idxF1);
-		map->replace(idxF1, f2);
-		map->replace(idxF2, fTemp);
-		
-		keyMap->insert(idF2, idxF1);
-		keyMap->insert(idF1, idxF2);
+		if(f1 != f2) {
+			QString idF1, idF2;
+			int idxF1, idxF2;
+			CField *fTemp;
+			
+			idF1=f1->getAttribute("id");
+			idF2=f2->getAttribute("id");
+			
+			idxF1=keyMap->take(idF1);
+			idxF2=keyMap->take(idF2);
+			
+			fTemp=map->at(idxF1);
+			map->replace(idxF1, f2);
+			map->replace(idxF2, fTemp);
+			
+			keyMap->insert(idF2, idxF1);
+			keyMap->insert(idF1, idxF2);
+		}
 	}
 	//------------------------------------------------------------------------------
 }//namespace
