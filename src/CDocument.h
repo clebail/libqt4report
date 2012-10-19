@@ -12,7 +12,7 @@
 namespace libqt4report {
 	class CDocument {
 		public:
-			CDocument(int pageWidth, int pageHeight);
+			CDocument(QString pageWidth, QString pageHeight);
 			~CDocument(void);
 			int getNbPage(void);
 			QString toSvg(int pageIdx);
@@ -41,7 +41,7 @@ namespace libqt4report {
 			QString sqlQuery;
 			QString lastError;
 			QStringList pages;
-			int pageWidth, pageHeight;
+			QString pageWidth, pageHeight;
 			
 			void createPages(QSqlQuery * query);
 			void processFields(QSqlRecord *record) { CFields::getInstance()->process(record); }

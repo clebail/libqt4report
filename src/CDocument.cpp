@@ -7,7 +7,7 @@
 #include "CScript.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
-	CDocument::CDocument(int pageWidth, int pageHeight) {
+	CDocument::CDocument(QString pageWidth, QString pageHeight) {
 		pageHeader=docHeader=docBody=docFooter=pageFooter=0;
 		
 		this->pageWidth=pageWidth;
@@ -69,7 +69,7 @@ namespace libqt4report {
 			pageHeader->cleanup();
 			delete pageHeader;
 		}
-				
+		
 		if(docHeader != 0) {
 			docHeader->cleanup();
 			delete docHeader;
@@ -94,7 +94,8 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::createPages(QSqlQuery *query) {
-		int w=pageWidth*CPrintableObject::getCoef(), h=pageHeight*CPrintableObject::getCoef();
+		QString w=QString::number(pageWidth.toInt()*CPrintableObject::getCoef());
+		int hPage=0;
 		int y;
 		int hDocBody, hDocFooter=0, hPageFooter=0;
 		int hFooter;
@@ -102,6 +103,12 @@ namespace libqt4report {
 		bool nouvellePage=true, finPage=false;
 		QString svg;
 		int idxRec, lastRec;
+		bool hSpecified=false;
+		
+		if(pageHeight != "100%") {
+			hSpecified=true;
+			hPage=pageHeight.toInt()*CPrintableObject::getCoef();
+		}
 		
 		hDocBody=docBody->getHeight();
 		
@@ -128,9 +135,9 @@ namespace libqt4report {
 			if(nouvellePage) {
 				svg="<?xml version='1.0' encoding='utf-8'?>";
 				svg+="<svg xmlns='http://www.w3.org/2000/svg' version='1.2' ";
-				svg+="baseProfile='tiny' width='"+QString::number(w)+"' ";
-				svg+="height='"+QString::number(h)+"'>";
-				svg+="<rect x='0' y='0' width='"+QString::number(w)+"' height='"+QString::number(h)+"' fill='white' stroke='none' />";
+				svg+="baseProfile='tiny' width='"+w+"' ";
+				svg+="height='${height}'>";
+				svg+="<rect x='0' y='0' width='"+w+"' height='${height}' fill='white' stroke='none' />";
 			
 				y=0;
 				
@@ -148,7 +155,7 @@ namespace libqt4report {
 			
 			hFooter=hPageFooter + (idxRec == lastRec-1 ? hDocFooter : 0);
 			
-			if(idxRec == lastRec || h - y - hFooter - hDocBody < 0) {
+			if(idxRec == lastRec || (hSpecified && hPage - y - hFooter - hDocBody < 0)) {
 				finPage=true;
 			}
 			
@@ -167,6 +174,7 @@ namespace libqt4report {
 				}
 				
 				svg+="</svg>";
+				svg.replace("${height}", QString::number(hSpecified ? hPage : y));
 				
 				pages.append(svg);
 				

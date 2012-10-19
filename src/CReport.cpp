@@ -59,7 +59,6 @@ namespace libqt4report {
 		if(document != 0) {
 			delete document;
 		}
-		
 		xmlReader->setContentHandler(parser);
 		xmlReader->setLexicalHandler(parser);
 		if(xmlReader->parse(source)) {

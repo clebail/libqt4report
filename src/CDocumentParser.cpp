@@ -43,13 +43,13 @@ namespace libqt4report {
 		int i;
 		
 		if(qName == "document") {
-			int pageWidth, pageHeight;
+			QString pageWidth, pageHeight;
 
 			for(i=0;i<atts.count();i++) {
 				if(atts.localName(i) == "pageWidth") {
-					pageWidth=atts.value(i).toInt();
+					pageWidth=atts.value(i);
 				}else if(atts.localName(i) == "pageHeight") {
-					pageHeight=atts.value(i).toInt();
+					pageHeight=atts.value(i);
 				}
 			}
 			
