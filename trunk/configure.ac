@@ -15,33 +15,33 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AC_CONFIG_FILES([Makefile src/Makefile src/viewer/Makefile])
 
-AC_CHECK_PROG([MOC], [moc-qt4], [moc-qt4], [no])
-if test "$MOC" = no; then
-	AC_CHECK_PROG([MOC], [moc], [moc], [no])
-	if test "$MOC" = no; then
+AC_CHECK_PROG(MOC, moc-qt4, moc-qt4)
+if test x$MOC = x; then
+	AC_CHECK_PROG(MOC, moc, moc)
+	if test x$MOC = x; then
 		AC_MSG_ERROR([moc not found! Make sure you have Qt-devel-tools installed!])
 	fi
 fi
 
-AC_CHECK_PROG([UI], [uic-qt4], [uic-qt4], [no])
-if test "$UI" = no; then
-	AC_CHECK_PROG([UI], [uic], [uic], [no])
-	if test "$UI" = no; then
+AC_CHECK_PROG(UI, uic-qt4, uic-qt4)
+if test x$UI = x; then
+	AC_CHECK_PROG(UI, uic, uic)
+	if test x$UI = x; then
 		AC_MSG_ERROR([uic not found! Make sure you have Qt-devel-tools installed!])
 	fi
 fi
 
-AC_CHECK_PROG([LRELEASE], [lrelease-qt4], [lrelease-qt4], [no])
-if test "$LRELEASE" = no; then
-	AC_CHECK_PROG([LRELEASE], [lrelease], [lrelease], [no])
-	if test "$LRELEASE" = no; then
+AC_CHECK_PROG(LRELEASE, lrelease-qt4, lrelease-qt4)
+if test x$LRELEASE = x; then
+	AC_CHECK_PROG(LRELEASE, lrelease, lrelease)
+	if test x$LRELEASE = x ; then
 		AC_MSG_ERROR([lrelease not found! Make sure you have Qt-devel-tools installed!])
 	fi
 fi
 
-AC_CHECK_PROG([RCC], [rcc], [rcc], [no])
-if test "$MOC" = no; then
-	AC_MSG_ERROR([moc not found! Make sure you have Qt-devel-tools installed!])
+AC_CHECK_PROG(RCC, rcc, rcc)
+if test x$RCC = x; then
+	AC_MSG_ERROR([rcc not found! Make sure you have Qt-devel-tools installed!])
 fi
 
 PKG_CHECK_MODULES([QT4], [QtCore QtGui QtNetwork QtXml QtXmlPatterns QtSvg QtSql QtScript])
