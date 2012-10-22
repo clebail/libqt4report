@@ -295,6 +295,15 @@
 					</xsd:restriction>
 				</xsd:simpleType>
 			</xsd:attribute>
+			<xsd:attribute name="unit" use="required">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="mm" />
+						<xsd:enumeration value="in" />
+						<xsd:enumeration value="px" /> 
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
 		</xsd:complexType>
 		
 		<xsd:unique name="uniqueFontId">
