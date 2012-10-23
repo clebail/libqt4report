@@ -29,14 +29,9 @@ libqt4report_la_LIBADD = $(QT4_LIBS) $(LOG4CPP_LIBS)
 
 libqt4report_ladir = $(datarootdir)/@PACKAGE@
 
-libqt4report_la_DATA = $(lrelease_FILES) log4cpp.properties schema/libqt4report.xsd
+libqt4report_la_DATA = $(lrelease_FILES) log4cpp.properties
 
-dist_libqt4report_la_DATA = $(INTERFACES) $(TRANSLATE) $(RESSOURCES) log4cpp.properties schema/libqt4report.xsd
-
-$(SCHEMA): schema/libqt4report.xsd
-	echo -n 'static QByteArray schema("' > $@ 
-	sed -e 's/\"/\\\"/g' -e 's/$$/\\/g' $< >> $@ 
-	echo '");' >> $@
+include_dir = $(prefix)/include
 
 moc_%.cpp: %.h
 	$(MOC) -o $@ $<
@@ -54,3 +49,15 @@ clean-qt-extra:
 	rm -f $(SCHEMA)
 	
 clean-am: clean-qt-extra
+
+install-data-hook:
+	mkdir -p $(libqt4report_ladir)/schema; \
+	mkdir -p $(include_dir); \
+	cp $(srcdir)/CReport.h $(include_dir); \
+	cp $(srcdir)/schema/libqt4report.xsd $(libqt4report_ladir)/schema;
+	cp $(srcdir)/log4cpp.properties $(libqt4report_ladir)
+	
+dist-hook:
+	mkdir $(distdir)/schema; \
+	cp $(srcdir)/log4cpp.properties $(distdir); \
+	cp $(srcdir)/schema/libqt4report.xsd $(distdir)/schema

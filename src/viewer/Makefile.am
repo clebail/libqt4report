@@ -8,7 +8,7 @@ INTERFACES = CMainFrm.ui
 		
 ui_FILES = $(patsubst %.ui,ui_%.h, $(INTERFACES))
 
-RESSOURCES =
+RESSOURCES = viewer.qrc
 		
 qrc_FILES = qrc_viewer.cpp
 
@@ -26,8 +26,6 @@ viewer_LDADD = $(QT4_LIBS) ../.libs/libqt4report.la
 viewerdir = $(datarootdir)/@PACKAGE@
 
 viewer_DATA = $(lrelease_FILES)
-
-dist_viewer_DATA = $(INTERFACES) $(TRANSLATE)  $(RESSOURCES) test.xlqr viewer.qrc images/*.png
 
 moc_%.cpp: %.h
 	$(MOC) -o $@ $<
@@ -51,3 +49,12 @@ clean-qt-extra:
 	rm -rf *.o
 	
 clean-am: clean-qt-extra
+
+install-data-hook:
+
+dist-hook:
+	mkdir $(distdir)/images; \
+	cp $(srcdir)/$(INTERFACES) $(distdir); \
+	cp $(srcdir)/$(TRANSLATE) $(distdir); \
+	cp $(srcdir)/$(RESSOURCES) $(distdir); \
+	cp $(srcdir)/images/*.png $(distdir)/images
