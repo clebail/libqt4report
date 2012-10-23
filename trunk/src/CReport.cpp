@@ -8,6 +8,7 @@
 #include <QtDebug>
 #include <log4cpp/Category.hh>
 #include <log4cpp/PropertyConfigurator.hh>
+#include <config.h>
 #include "CReport.h"
 #include "CDocumentParser.h"
 #include "CDocument.h"
@@ -17,7 +18,7 @@ namespace libqt4report {
 	static CDocument * document;
 	//------------------------------------------------------------------------------
 	CReport::CReport(void) {
-		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/log4cpp.properties").toStdString());
+		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
 		document=0;
 	}
 	//------------------------------------------------------------------------------
@@ -29,7 +30,7 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	bool CReport::validDocument(QFile *docFile) {
 		QXmlSchema *xmlSchema=new QXmlSchema();
-		QFile *xsdFile=new QFile(QString(DATADIR)+"/schema/libqt4report.xsd");
+		QFile *xsdFile=new QFile((QString(DATADIR)+"/"+QString(PACKAGE)+"/schema/libqt4report.xsd"));
 		xsdFile->open(QIODevice::ReadOnly);
 		bool ret=false;
 		
