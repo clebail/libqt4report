@@ -57,4 +57,5 @@ dist-hook:
 	cp $(srcdir)/$(INTERFACES) $(distdir); \
 	cp $(srcdir)/$(TRANSLATE) $(distdir); \
 	cp $(srcdir)/$(RESSOURCES) $(distdir); \
-	cp $(srcdir)/images/*.png $(distdir)/images
+	cp $(srcdir)/images/*.png $(distdir)/images; \
+	cp $(srcdir)/test.xlqr $(distdir);

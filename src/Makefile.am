@@ -52,10 +52,12 @@ clean-am: clean-qt-extra
 
 install-data-hook:
 	mkdir -p $(libqt4report_ladir)/schema; \
+	mkdir -p $(libqt4report_ladir)/example; \
 	mkdir -p $(include_dir); \
 	cp $(srcdir)/CReport.h $(include_dir); \
-	cp $(srcdir)/schema/libqt4report.xsd $(libqt4report_ladir)/schema;
-	cp $(srcdir)/log4cpp.properties $(libqt4report_ladir)
+	cp $(srcdir)/schema/libqt4report.xsd $(libqt4report_ladir)/schema; \
+	cp $(srcdir)/log4cpp.properties $(libqt4report_ladir); \
+	cp $(srcdir)/viewer/test.xlqr $(libqt4report_ladir)/example
 	
 dist-hook:
 	mkdir $(distdir)/schema; \
