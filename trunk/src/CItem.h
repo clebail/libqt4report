@@ -14,7 +14,7 @@ namespace libqt4report {
 			void setAttribute(QString name, QString value) { attributes.insert(name, value); }
 			QString getAttribute(QString name) { return attributes.value(name) ;}
 			bool hasAttribute(QString name) { return attributes.contains(name); }
-			virtual int getHeight(void) = 0;
+			virtual int getHeight(double coef) = 0;
 		private:
 			QHash<QString ,QString> attributes;
 	};
@@ -22,8 +22,8 @@ namespace libqt4report {
 	class CItemText : public CItem {
 		public:
 			virtual ~CItemText(void) {}
-			QString toSvg(int &y);
-			int getHeight(void) { return (int)(getAttribute("y").toDouble()*CPrintableObject::getCoef()); }
+			QString toSvg(int &y, double coef);
+			int getHeight(double coef) { return (int)(getAttribute("y").toDouble()*coef); }
 		protected:
 			virtual QString getValue(void) = 0;
 	};
@@ -44,13 +44,13 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	class CItemLineObject : public CItem {
 		public:
-			QString toSvg(int &y);
-			int getHeight(void);
+			QString toSvg(int &y, double coef);
+			int getHeight(double coef);
 	};
 	//------------------------------------------------------------------------------
 	class CItemRectObject : public CItemLineObject {
 		public:
-			QString toSvg(int &y);
+			QString toSvg(int &y, double coef);
 	};
 } //namespace
 //------------------------------------------------------------------------------

@@ -43,17 +43,19 @@ namespace libqt4report {
 		int i;
 		
 		if(qName == "document") {
-			QString pageWidth, pageHeight;
+			QString pageWidth, pageHeight, unit;
 
 			for(i=0;i<atts.count();i++) {
 				if(atts.localName(i) == "pageWidth") {
 					pageWidth=atts.value(i);
 				}else if(atts.localName(i) == "pageHeight") {
 					pageHeight=atts.value(i);
+				}else if(atts.localName(i) == "unit") {
+					unit=atts.value(i);
 				}
 			}
 			
-			document=new CDocument(pageWidth, pageHeight);
+			document=new CDocument(pageWidth, pageHeight, unit);
 			
 			return true;
 		}
