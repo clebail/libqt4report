@@ -7,11 +7,12 @@
 #include "CScript.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
-	CDocument::CDocument(QString pageWidth, QString pageHeight) {
+	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit) {
 		pageHeader=docHeader=docBody=docFooter=pageFooter=0;
 		
 		this->pageWidth=pageWidth;
 		this->pageHeight=pageHeight;
+		setUnit(unit);
 	}
 	//------------------------------------------------------------------------------
 	CDocument::~CDocument(void) {
@@ -94,7 +95,7 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::createPages(QSqlQuery *query) {
-		QString w=QString::number(pageWidth.toInt()*CPrintableObject::getCoef());
+		QString w=QString::number(pageWidth.toInt()*coef);
 		int hPage=0;
 		int y;
 		int hDocBody, hDocFooter=0, hPageFooter=0;
@@ -107,17 +108,17 @@ namespace libqt4report {
 		
 		if(pageHeight != "100%") {
 			hSpecified=true;
-			hPage=pageHeight.toInt()*CPrintableObject::getCoef();
+			hPage=pageHeight.toInt()*coef;
 		}
 		
-		hDocBody=docBody->getHeight();
+		hDocBody=docBody->getHeight(coef);
 		
 		if(docFooter != 0) {
-			hDocFooter=docFooter->getHeight();
+			hDocFooter=docFooter->getHeight(coef);
 		}
 		
 		if(pageFooter != 0) {
-			hPageFooter=pageFooter->getHeight();
+			hPageFooter=pageFooter->getHeight(coef);
 		}
 		
 		hFooter=hPageFooter;
@@ -142,16 +143,16 @@ namespace libqt4report {
 				y=0;
 				
 				if(pageHeader != 0) {
-					svg+=pageHeader->toSvg(y);
+					svg+=pageHeader->toSvg(y, coef);
 				}
 				
 				if(idxRec == 0 && docHeader != 0) {
-					svg+=docHeader->toSvg(y);
+					svg+=docHeader->toSvg(y, coef);
 				}
 				
 				nouvellePage=false;
 			}
-			svg+=docBody->toSvg(y);
+			svg+=docBody->toSvg(y, coef);
 			
 			hFooter=hPageFooter + (idxRec == lastRec-1 ? hDocFooter : 0);
 			
@@ -162,7 +163,7 @@ namespace libqt4report {
 			if(finPage) {
 				if(idxRec == lastRec) {
 					if(docFooter != 0) {
-						svg+=docFooter->toSvg(y);
+						svg+=docFooter->toSvg(y, coef);
 					}
 					fini=true;
 				}else {
@@ -170,7 +171,7 @@ namespace libqt4report {
 				}
 				
 				if(pageFooter != 0) {
-					svg+=pageFooter->toSvg(y);
+					svg+=pageFooter->toSvg(y, coef);
 				}
 				
 				svg+="</svg>";

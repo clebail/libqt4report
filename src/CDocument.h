@@ -9,10 +9,14 @@
 #include "CDocBand.h"
 #include "CFields.h"
 //------------------------------------------------------------------------------
+#define COEF_MM		3.515625 	//90 dpi 1 pouce = 25.6 mm => 90/25.6
+#define COEF_IN		90.0		//90 dpi
+#define COEF_PX		1	
+//------------------------------------------------------------------------------
 namespace libqt4report {
 	class CDocument {
 		public:
-			CDocument(QString pageWidth, QString pageHeight);
+			CDocument(QString pageWidth, QString pageHeight, QString unit);
 			~CDocument(void);
 			int getNbPage(void);
 			QString toSvg(int pageIdx);
@@ -42,9 +46,11 @@ namespace libqt4report {
 			QString lastError;
 			QStringList pages;
 			QString pageWidth, pageHeight;
+			double coef;
 			
 			void createPages(QSqlQuery * query);
 			void processFields(QSqlRecord *record) { CFields::getInstance()->process(record); }
+			void setUnit(QString unit) { coef=(unit == "mm" ? COEF_MM : (unit == "in" ? COEF_IN : COEF_PX)); }
 	};
 } //namespace
 //------------------------------------------------------------------------------

@@ -8,9 +8,8 @@
 #include "CValueType.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
-	QString CItemText::toSvg(int &y) {
-		double coef=CPrintableObject::getCoef();
-		QString value=CPrintableObject::xmlEncode(getValue());
+	QString CItemText::toSvg(int &y, double coef) {
+		QString value=xmlEncode(getValue());
 		QString align="";
 		QString style="style='";
 		CFont *font=CFonts::getInstance()->getFont(getAttribute("fontId"));
@@ -61,8 +60,7 @@ namespace libqt4report {
 		return value->toFormatedString(getAttribute("format"));
 	}
 	//------------------------------------------------------------------------------
-	QString CItemLineObject::toSvg(int &y) {
-		double coef=CPrintableObject::getCoef();
+	QString CItemLineObject::toSvg(int &y, double coef) {
 		int height=(int)((getAttribute("height").toDouble())*coef);
 		int x1, y1, x2, y2;
 		QString color="black";
@@ -80,8 +78,7 @@ namespace libqt4report {
 			.arg(x1).arg(y1).arg(x2).arg(y2);
 	}
 	//------------------------------------------------------------------------------
-	int CItemLineObject::getHeight(void) { 
-		double coef=CPrintableObject::getCoef();
+	int CItemLineObject::getHeight(double coef) { 
 		int y, height;
 		
 		y=(int)((getAttribute("y").toDouble())*coef);
@@ -90,8 +87,7 @@ namespace libqt4report {
 		return y+height;
 	}
 	//------------------------------------------------------------------------------
-	QString CItemRectObject::toSvg(int &y) {
-		double coef=CPrintableObject::getCoef();
+	QString CItemRectObject::toSvg(int &y, double coef) {
 		int x, yR, width, height;
 		QString color="black";
 		
