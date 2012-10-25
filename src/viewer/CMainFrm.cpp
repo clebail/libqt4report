@@ -60,8 +60,7 @@ void CMainFrm::loadFile(QString fileName) {
 }
 //--------------------------------------------------------------------------------------------------------------
 void CMainFrm::showPage() {
-	libqt4report::SPage *page=report->getPage(curPage);
-	svgWidget->load(page->svg.toUtf8());
+	svgWidget->load(report->toSvg(curPage).toUtf8());
 
 	scrollArea->setWidget(svgWidget);
 	
@@ -145,12 +144,13 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		QPrinter *printer=printDialog->printer();
 		
 		printer->setPageMargins(0, 0, 0, 0, QPrinter::Millimeter);
+		printer->setPaperSize(report->getPagesSize(), QPrinter::DevicePixel);
 		
 		QPainter p;
 		p.begin(printer);
 		p.setRenderHint((QPainter::RenderHint)0, true);
 		
-		int f=printer->fromPage();
+		int f=qMin(printer->fromPage(), nbPage);
 		int t=qMin(printer->toPage(), nbPage);
 		int nbPageToPrint;
 		int sens=1;
@@ -181,9 +181,7 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		
 		for(i=1,j=f;i<=nbPageToPrint;i++)
 		{
-			libqt4report::SPage *page=report->getPage(j);
-			printer->setPaperSize(page->size, QPrinter::DevicePixel);
-			svgRenderer.load(page->svg.toUtf8());
+			svgRenderer.load(report->toSvg(j).toUtf8());
 			svgRenderer.render(&p);
 			
 			if(i<nbPageToPrint) 
