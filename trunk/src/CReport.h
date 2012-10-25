@@ -17,12 +17,12 @@ namespace libqt4report {
 			QString toSvg(int pageIdx);
 			QString getLastError(void) { return lastError; }
 			QString getLastSourceError(void) { return lastSourceError; }
-			QTranslator * getTranslator(void) { return translator; }
 			QSize getPagesSize(void);
+			
+			static QTranslator * getTranslator(void);
 		private:
 			QString lastError;
 			QString lastSourceError;
-			QTranslator *translator;
 			
 			void cleanup(void);
 	};
