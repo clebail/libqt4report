@@ -19,7 +19,7 @@ CMainFrm::CMainFrm(QString fileName) : QMainWindow() {
 	scrollArea->setAlignment(Qt::AlignCenter);
 	
 	report=new libqt4report::CReport();
-	QApplication::installTranslator(report->getTranslator());
+	QApplication::installTranslator(libqt4report::CReport::getTranslator());
 	
 	setCentralWidget(scrollArea);
 	

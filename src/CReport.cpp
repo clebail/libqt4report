@@ -17,13 +17,10 @@
 namespace libqt4report {
 	//------------------------------------------------------------------------------
 	static CDocument * document;
+	static QTranslator *translator=0;
 	//------------------------------------------------------------------------------
 	CReport::CReport(void) {
 		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
-		
-		translator=new QTranslator();
-		
-		translator->load("libqt4report_"+QLocale::system().name(), QDir(QString(DATADIR)+"/"+QString(PACKAGE)).absolutePath());
 		
 		document=0;
 	}
@@ -33,7 +30,10 @@ namespace libqt4report {
 			delete document;
 		}
 		
-		delete translator;
+		
+		if(translator != 0) {
+			delete translator;
+		}
 	}
 	//------------------------------------------------------------------------------
 	bool CReport::validDocument(QFile *docFile) {
@@ -113,6 +113,14 @@ namespace libqt4report {
 		}
 		
 		return QSize();
+	}
+	//------------------------------------------------------------------------------
+	QTranslator * CReport::getTranslator(void) {
+		if(translator == 0) {
+			translator=new QTranslator();
+			translator->load("libqt4report_"+QLocale::system().name(), QDir(QString(DATADIR)+"/"+QString(PACKAGE)).absolutePath());
+		}
+		return translator;
 	}
 	//------------------------------------------------------------------------------
 	void CReport::cleanup(void) {
