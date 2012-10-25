@@ -22,7 +22,7 @@ class CMainFrm : public QMainWindow, private Ui::MainFrm {
 		int curPage;
 		QSvgWidget *svgWidget;
 		
-		void loadFile(QString fileName);
+		bool loadFile(QString fileName);
 		void showPage(void);
 		void enableAction(void);
 	private slots:

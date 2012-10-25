@@ -26,7 +26,9 @@ CMainFrm::CMainFrm(QString fileName) : QMainWindow() {
 	setWindowTitle("viewer - "+QString(PACKAGE_VERSION));
 	
 	if(!fileName.isEmpty()) {
-		loadFile(fileName);
+		if(loadFile(fileName)) {
+			on_actionRecharger_triggered();
+		}
 	}
 }
 //--------------------------------------------------------------------------------------------------------------
@@ -38,7 +40,7 @@ CMainFrm::~CMainFrm(void) {
 	delete report;
 }
 //--------------------------------------------------------------------------------------------------------------
-void CMainFrm::loadFile(QString fileName) {
+bool CMainFrm::loadFile(QString fileName) {
 	if(xmlFile->isOpen()) {
 		xmlFile->close();
 	}
@@ -53,10 +55,14 @@ void CMainFrm::loadFile(QString fileName) {
 			actionRecharger->setEnabled(true);
 			
 			Ui_MainFrm::statusBar->showMessage(fileName);
+			
+			return true;
 		}
 	}else {
 		QMessageBox::critical(this, tr("Error"), tr("Impossible to open document"));
 	}
+	
+	return false;
 }
 //--------------------------------------------------------------------------------------------------------------
 void CMainFrm::showPage() {
@@ -82,7 +88,9 @@ void CMainFrm::on_actionOuvrir_triggered(bool) {
 	QString fileName=QFileDialog::getOpenFileName(this, tr("Open"), QDir::home().path(), tr("xlqr file (*.xlqr)"));
 	
 	if(!fileName.isEmpty()) {
-		loadFile(fileName);
+		if(loadFile(fileName)) {
+			on_actionRecharger_triggered();
+		}
 	}
 }
 //--------------------------------------------------------------------------------------------------------------
@@ -145,6 +153,7 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		
 		printer->setPageMargins(0, 0, 0, 0, QPrinter::Millimeter);
 		printer->setPaperSize(report->getPagesSize(), QPrinter::DevicePixel);
+		printer->setResolution(72);
 		
 		QPainter p;
 		p.begin(printer);
