@@ -72,13 +72,13 @@
 			<span class='motCle'>bool</span> validDocument(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile<a> *docFile)
 			<div class='doc'>
 				Try to validate a xlqr document represented by docFile.<br />
-				Return to if the document is valid, false otherwise.
+				Return true if the document is valid, false otherwise.
 			</div>
 			<br />
 			<span class='motCle'>bool</span> process(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile</a> *docFile)
 			<div class='doc'>
 				Try to process a xlqr document represented by docFile.<br />
-				Return to if the document is valid, false otherwise.
+				Return true if the document is valid, false otherwise.
 			</div>
 			<br />
 			<span class='motCle'>int</span> getNbPage(<span class='motCle'>void</span>)
@@ -89,7 +89,7 @@
 			<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> toSvg(<span class='motCle'>int</span> pageIdx)
 			<div class='doc'>
 				Return the svg representation of the page number pageIdx.<br />
-				Page must between 0 and getNbPage()-1
+				Page must be between 0 and getNbPage()-1
 			</div>
 			<br />
 			<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> getLastError(<span class='motCle'>void</span>)
