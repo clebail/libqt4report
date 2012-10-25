@@ -40,7 +40,7 @@
 		</pageHeader>
 		 <docHeader>
 			<item xsi:type="textFixedObject" id="title" fontId="fontTitre" x="105" y="10" value="Titre" align="middle" color="red" />
-			<item xsi:type="textFieldObject" id="titleDate" fontId="fontTitre" x="5" y="10" fieldId="dbTD" color="blue" />
+			<item xsi:type="textFieldObject" id="titleDate" fontId="fontTitre" x="20" y="10" fieldId="dbTD" color="blue" />
 		</docHeader>
 		<docBody>
 			<item xsi:type="textFieldObject" id="code" fontId="font1" x="5" y="5" fieldId="dbArticle" />
