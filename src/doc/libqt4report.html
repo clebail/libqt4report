@@ -67,6 +67,13 @@
 	<body>
 		<h1 class='align_c'>LibQt4Report</h1>
 		<hr />
+		<h2>Data type :</h2>
+		<div class='code'>
+		<span class='motCle'>typedef struct</span> _SPage {<br/>
+		<span class='oneTab'><a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> svg;<br />
+		<span class='oneTab'><a href='http://doc.qt.digia.com/4.6/qsize.html' class='qt'>QSize</a> size;<br />
+		}SPage;<br/>
+		</div>
 		<h2>Public member functions :</h2>
 		<div class='code'>
 			<span class='motCle'>bool</span> validDocument(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile<a> *docFile)
@@ -86,9 +93,9 @@
 				Return the number of page of the result document.
 			</div>
 			<br />
-			<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> toSvg(<span class='motCle'>int</span> pageIdx)
+			SPage* getPage(<span class='motCle'>int</span> pageIdx)
 			<div class='doc'>
-				Return the svg representation of the page number pageIdx.<br />
+				Return the page representation of the page number pageIdx.<br />
 				Page must be between 0 and getNbPage()-1
 			</div>
 			<br />
@@ -129,7 +136,7 @@
 			<span class='fourTab'><span class='motCle'>if</span>(outFile->open(<a href='http://doc.qt.digia.com/4.6/qiodevice.html' class='qt'>QIODevice</a>::WriteOnly)) {</span><br />
 			<span class='fiveTab'><a href='http://doc.qt.digia.com/4.6/qtextstream.html' class='qt'>QTextStream</a> out(outFile);</span><br />
 			<br />
-			<span class='fiveTab'>out &lt;&lt; report->toSvg(i);</span><br />
+			<span class='fiveTab'>out &lt;&lt; report->getPage(i)->svg;</span><br />
 			<br />
 			<span class='fiveTab'>outFile->close();</span><br />
 			<span class='fourTab'>}<span class='motCle'>else</span> {</span><br />

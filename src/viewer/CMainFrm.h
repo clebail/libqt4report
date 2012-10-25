@@ -24,6 +24,7 @@ class CMainFrm : public QMainWindow, private Ui::MainFrm {
 		
 		void loadFile(QString fileName);
 		void showPage(void);
+		void enableAction(void);
 	private slots:
 		void on_actionQuitter_triggered(bool checked=false);
 		void on_actionOuvrir_triggered(bool checked=false);
@@ -33,6 +34,7 @@ class CMainFrm : public QMainWindow, private Ui::MainFrm {
 		void on_actionPagePrecedente_triggered(bool checked=false);
 		void on_actionPageSuivante_triggered(bool checked=false);
 		void on_actionDernierePage_triggered(bool checked=false);
+		void on_actionPrint_triggered(bool checked=false);
 };
 //------------------------------------------------------------------------------
 #endif // __CMAINFRM_H__

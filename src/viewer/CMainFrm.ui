@@ -51,9 +51,14 @@
    <addaction name="actionDernierePage"/>
    <addaction name="separator"/>
    <addaction name="actionRecharger"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrint"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionPremierePage">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="viewer.qrc">
      <normaloff>:/viewer/images/2leftarrow.png</normaloff>:/viewer/images/2leftarrow.png</iconset>
@@ -66,6 +71,9 @@
    </property>
   </action>
   <action name="actionPagePrecedente">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="viewer.qrc">
      <normaloff>:/viewer/images/1leftarrow.png</normaloff>:/viewer/images/1leftarrow.png</iconset>
@@ -81,6 +89,9 @@
    </property>
   </action>
   <action name="actionPageSuivante">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="viewer.qrc">
      <normaloff>:/viewer/images/1rightarrow.png</normaloff>:/viewer/images/1rightarrow.png</iconset>
@@ -96,6 +107,9 @@
    </property>
   </action>
   <action name="actionDernierePage">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="viewer.qrc">
      <normaloff>:/viewer/images/2rightarrow.png</normaloff>:/viewer/images/2rightarrow.png</iconset>
@@ -147,6 +161,21 @@
    </property>
    <property name="text">
     <string>&amp;Close</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="viewer.qrc">
+     <normaloff>:/viewer/images/agt_print.png</normaloff>:/viewer/images/agt_print.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Print</string>
+   </property>
+   <property name="toolTip">
+    <string>Print</string>
    </property>
   </action>
  </widget>

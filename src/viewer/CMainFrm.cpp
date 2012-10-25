@@ -4,6 +4,10 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QPaintEngine>
+#include <QPrintDialog>
+#include <QPrinter>
+#include <QPainter>
+#include <QSvgRenderer>
 #include <config.h>
 #include "CMainFrm.h"
 //--------------------------------------------------------------------------------------------------------------
@@ -56,9 +60,19 @@ void CMainFrm::loadFile(QString fileName) {
 }
 //--------------------------------------------------------------------------------------------------------------
 void CMainFrm::showPage() {
-	svgWidget->load(report->toSvg(curPage).toUtf8());
+	libqt4report::SPage *page=report->getPage(curPage);
+	svgWidget->load(page->svg.toUtf8());
 
-	scrollArea->setWidget(svgWidget); 
+	scrollArea->setWidget(svgWidget);
+	
+	enableAction();
+}
+//--------------------------------------------------------------------------------------------------------------
+void CMainFrm::enableAction(void) {
+	actionPremierePage->setEnabled(curPage != 0);
+	actionPagePrecedente->setEnabled(actionPremierePage->isEnabled());
+	actionPageSuivante->setEnabled(curPage < nbPage-1);
+	actionDernierePage->setEnabled(actionPageSuivante->isEnabled());
 }
 //--------------------------------------------------------------------------------------------------------------
 void CMainFrm::on_actionQuitter_triggered(bool) {
@@ -79,6 +93,7 @@ void CMainFrm::on_actionRecharger_triggered(bool) {
 		nbPage=report->getNbPage();
 		svgWidget=new QSvgWidget();
 		on_actionPremierePage_triggered();
+		actionPrint->setEnabled(true);
 	}else {
 		QMessageBox::critical(this, report->getLastSourceError(), report->getLastError());
 	}
@@ -91,6 +106,9 @@ void CMainFrm::on_actionFermer_triggered(bool) {
 	
 	Ui_MainFrm::statusBar->clearMessage();
 	actionRecharger->setEnabled(false);
+	actionPrint->setEnabled(false);
+	nbPage=curPage=0;
+	enableAction();
 	delete svgWidget; 
 	scrollArea->setWidget(0); 
 }
@@ -117,5 +135,75 @@ void CMainFrm::on_actionPageSuivante_triggered(bool) {
 void CMainFrm::on_actionDernierePage_triggered(bool) {
 	curPage=nbPage-1;
 	showPage();
+}
+//--------------------------------------------------------------------------------------------------------------
+void CMainFrm::on_actionPrint_triggered(bool) {
+	QPrintDialog *printDialog=new QPrintDialog(this);
+	
+	if(printDialog->exec() == QDialog::Accepted)
+	{
+		QPrinter *printer=printDialog->printer();
+		
+		printer->setPageMargins(0, 0, 0, 0, QPrinter::Millimeter);
+		
+		QPainter p;
+		p.begin(printer);
+		p.setRenderHint((QPainter::RenderHint)0, true);
+		
+		int f=printer->fromPage();
+		int t=qMin(printer->toPage(), nbPage);
+		int nbPageToPrint;
+		int sens=1;
+		int i,j;
+		QSvgRenderer svgRenderer;
+		
+		switch(printer->printRange())
+		{
+			default:
+			case QPrinter::AllPages:
+				f=0;
+				t=nbPage;
+				break;
+			case QPrinter::PageRange:
+				f--;
+				break;
+		}
+		
+		nbPageToPrint=t*printer->numCopies();
+		
+		if(printer->pageOrder() == QPrinter::LastPageFirst)
+		{
+			qSwap(f, t);
+			f--;
+			t--;
+			sens=-1;
+		}
+		
+		for(i=1,j=f;i<=nbPageToPrint;i++)
+		{
+			libqt4report::SPage *page=report->getPage(j);
+			printer->setPaperSize(page->size, QPrinter::DevicePixel);
+			svgRenderer.load(page->svg.toUtf8());
+			svgRenderer.render(&p);
+			
+			if(i<nbPageToPrint) 
+			{
+				printer->newPage();
+			}
+			
+			if(printer->collateCopies())
+			{
+				j+=sens*(i%printer->numCopies() == 0 ? 1 : 0);
+			}else {
+				j+=sens;
+				if(j == t)
+				{
+					j=f;
+				}
+			}
+		}
+		p.end();
+	}
+	delete printDialog;
 }
 //--------------------------------------------------------------------------------------------------------------

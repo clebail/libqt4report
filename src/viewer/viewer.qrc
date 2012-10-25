@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="viewer">
+    <file>images/agt_print.png</file>
     <file>images/agt_stop.png</file>
     <file>images/reload.png</file>
     <file>images/exit.png</file>

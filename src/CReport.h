@@ -4,8 +4,14 @@
 //------------------------------------------------------------------------------
 #include <QFile>
 #include <QTranslator>
+#include <QSize>
 //------------------------------------------------------------------------------
 namespace libqt4report {
+	typedef struct _SPage {
+		QString svg;
+		QSize size;
+	}SPage;
+	//------------------------------------------------------------------------------
 	class CReport {
 		public:
 			CReport(void);
@@ -13,7 +19,7 @@ namespace libqt4report {
 			bool validDocument(QFile *docFile);
 			bool process(QFile *docFile);
 			int getNbPage(void);
-			QString toSvg(int pageIdx);
+			SPage * getPage(int pageIdx);
 			QString getLastError(void) { return lastError; }
 			QString getLastSourceError(void) { return lastSourceError; }
 			QTranslator * getTranslator(void) { return translator; }
