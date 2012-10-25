@@ -40,6 +40,7 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	bool CDocument::process(void) {
 		if(!database.open()) {
+			lastSourceError=QObject::tr("Database error");
 			lastError=database.lastError().databaseText();
 			
 			return false;
@@ -47,6 +48,7 @@ namespace libqt4report {
 		
 		QSqlQuery query(sqlQuery, database);
 		if(!query.exec()) {
+			lastSourceError=QObject::tr("Database error");
 			lastError=query.lastError().databaseText();
 			
 			return false;
@@ -55,6 +57,7 @@ namespace libqt4report {
 		try {
 			createPages(&query);
 		}catch(QString *e) {
+			lastSourceError=QObject::tr("Processing error");
 			lastError=*e;
 			
 			return false;

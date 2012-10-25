@@ -2,7 +2,7 @@
 <document	xmlns="http://corentin-lebail.eu/libqt4report"
 			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			xsi:schemaLocation="http://corentin-lebail.eu/libqt4report libqt4report.xsd"
-			pageWidth="210" pageHeight="100%" unit="mm">
+			pageWidth="210" pageHeight="297" unit="mm">
 	<fonts>
 		<font id="font1" family="arial" size="10" />
 		<font id="fontColumnName" family="arial" size="14" />

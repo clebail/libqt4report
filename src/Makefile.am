@@ -6,9 +6,9 @@ AM_CPPFLAGS = $(QT4_CFLAGS) $(LOG4CPP_CFLAGS) -DDATADIR='"$(datarootdir)"'
 
 moc_FILES =
 
-TRANSLATE =
+TRANSLATE = libqt4report_fr_FR.ts
 
-lrelease_FILES = $(patsubst %.ts,%.qm, $(TRANSLATE))
+lrelease_FILES = libqt4report_fr_FR.qm
 
 libqt4report_la_SOURCES =	CReport.cpp CReport.h \
 				CDocument.cpp CDocument.h \
@@ -53,13 +53,19 @@ clean-am: clean-qt-extra
 install-data-hook:
 	mkdir -p $(libqt4report_ladir)/schema; \
 	mkdir -p $(libqt4report_ladir)/example; \
+	mkdir -p $(libqt4report_ladir)/doc; \
 	mkdir -p $(include_dir); \
 	cp $(srcdir)/CReport.h $(include_dir); \
 	cp $(srcdir)/schema/libqt4report.xsd $(libqt4report_ladir)/schema; \
 	cp $(srcdir)/log4cpp.properties $(libqt4report_ladir); \
-	cp $(srcdir)/viewer/test.xlqr $(libqt4report_ladir)/example
+	cp $(srcdir)/viewer/test.xlqr $(libqt4report_ladir)/example; \
+	cp $(srcdir)/doc/libqt4report.html $(libqt4report_ladir)/doc; \
+	cp $(srcdir)/$(lrelease_FILES) $(libqt4report_ladir)
 	
 dist-hook:
 	mkdir $(distdir)/schema; \
+	mkdir $(distdir)/doc; \
+	cp $(srcdir)/$(TRANSLATE) $(distdir); \
 	cp $(srcdir)/log4cpp.properties $(distdir); \
-	cp $(srcdir)/schema/libqt4report.xsd $(distdir)/schema
+	cp $(srcdir)/schema/libqt4report.xsd $(distdir)/schema; \
+	cp $(srcdir)/doc/libqt4report.html $(distdir)/doc

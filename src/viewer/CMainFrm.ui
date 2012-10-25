@@ -25,7 +25,7 @@
    </property>
    <widget class="QMenu" name="menu_Fichier">
     <property name="title">
-     <string>&amp;Fichier</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionOuvrir"/>
     <addaction name="actionFermer"/>
@@ -59,10 +59,10 @@
      <normaloff>:/viewer/images/2leftarrow.png</normaloff>:/viewer/images/2leftarrow.png</iconset>
    </property>
    <property name="text">
-    <string>Première page</string>
+    <string>First page</string>
    </property>
    <property name="toolTip">
-    <string>Première page</string>
+    <string>First page</string>
    </property>
   </action>
   <action name="actionPagePrecedente">
@@ -71,10 +71,13 @@
      <normaloff>:/viewer/images/1leftarrow.png</normaloff>:/viewer/images/1leftarrow.png</iconset>
    </property>
    <property name="text">
-    <string>Page précédente</string>
+    <string>Previous page</string>
+   </property>
+   <property name="iconText">
+    <string>Previous page</string>
    </property>
    <property name="toolTip">
-    <string>Page précédente</string>
+    <string>Previous page</string>
    </property>
   </action>
   <action name="actionPageSuivante">
@@ -83,10 +86,13 @@
      <normaloff>:/viewer/images/1rightarrow.png</normaloff>:/viewer/images/1rightarrow.png</iconset>
    </property>
    <property name="text">
-    <string>Page suivante</string>
+    <string>Next page</string>
+   </property>
+   <property name="iconText">
+    <string>Next page</string>
    </property>
    <property name="toolTip">
-    <string>Page suivante</string>
+    <string>Next page</string>
    </property>
   </action>
   <action name="actionDernierePage">
@@ -95,10 +101,10 @@
      <normaloff>:/viewer/images/2rightarrow.png</normaloff>:/viewer/images/2rightarrow.png</iconset>
    </property>
    <property name="text">
-    <string>Dernière page</string>
+    <string>Last page</string>
    </property>
    <property name="toolTip">
-    <string>Dernière page</string>
+    <string>Last page</string>
    </property>
   </action>
   <action name="actionOuvrir">
@@ -107,7 +113,7 @@
      <normaloff>:/viewer/images/fileopen.png</normaloff>:/viewer/images/fileopen.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Ouvrir</string>
+    <string>&amp;Open</string>
    </property>
   </action>
   <action name="actionQuitter">
@@ -116,7 +122,7 @@
      <normaloff>:/viewer/images/exit.png</normaloff>:/viewer/images/exit.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Quitter</string>
+    <string>&amp;Quit</string>
    </property>
   </action>
   <action name="actionRecharger">
@@ -128,10 +134,10 @@
      <normaloff>:/viewer/images/reload.png</normaloff>:/viewer/images/reload.png</iconset>
    </property>
    <property name="text">
-    <string>Recharger</string>
+    <string>Reload</string>
    </property>
    <property name="toolTip">
-    <string>Reharger</string>
+    <string>Reload</string>
    </property>
   </action>
   <action name="actionFermer">
@@ -140,7 +146,7 @@
      <normaloff>:/viewer/images/agt_stop.png</normaloff>:/viewer/images/agt_stop.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Fermer</string>
+    <string>&amp;Close</string>
    </property>
   </action>
  </widget>
