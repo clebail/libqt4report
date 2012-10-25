@@ -27,7 +27,7 @@
 				font-style: italic;
 				font-weight: bold;
 				color: #808080;
-				padding-left: 30px;
+				padding-left: 40px;
 			}
 			
 			.motCle {
@@ -65,47 +65,54 @@
 		</style>
 	</head>
 	<body>
-		<h1 class='align_c'>LibQt4Report</h1>
+		<h1 class='align_c'>LibQt4Report - 1.0.0preAlpha4</h1>
 		<hr />
-		<h2>Public member functions :</h2>
+		<h2>Namespace :</h2>
 		<div class='code'>
-			<span class='motCle'>bool</span> validDocument(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile<a> *docFile)
+			<span class='motCle'>namespace</span> libqt4report;
+		</div>
+		<h2>Class definition :</h2>
+		<div class='code'>
+			<span class='motCle'>class</span> CReport {<br/>
+			<span class='oneTab'><span class='motCle'>public:</span></span><br />
+			<span class='twoTab'><span class='motCle'>bool</span> validDocument(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile<a> *docFile);</span>
 			<div class='doc'>
-				Try to validate a xlqr document represented by docFile.<br />
-				Return true if the document is valid, false otherwise.
+				// Try to validate a xlqr document represented by docFile.<br />
+				// Return true if the document is valid, false otherwise.
 			</div>
 			<br />
-			<span class='motCle'>bool</span> process(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile</a> *docFile)
+			<span class='twoTab'><span class='motCle'>bool</span> process(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile</a> *docFile);</span>
 			<div class='doc'>
-				Try to process a xlqr document represented by docFile.<br />
-				Return true if the document is valid, false otherwise.
+				// Try to process a xlqr document represented by docFile.<br />
+				// Return true if the document is valid, false otherwise.
 			</div>
 			<br />
-			<span class='motCle'>int</span> getNbPage(<span class='motCle'>void</span>)
+			<span class='twoTab'><span class='motCle'>int</span> getNbPage(<span class='motCle'>void</span>);</span>
 			<div class='doc'>
-				Return the number of page of the result document.
+				// Return the number of page of the result document.
 			</div>
 			<br />
-			<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> toSvg(<span class='motCle'>int</span> pageIdx)
+			<span class='twoTab'><a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> toSvg(<span class='motCle'>int</span> pageIdx);</span>
 			<div class='doc'>
-				Return the svg representation of the page number pageIdx.<br />
-				Page must be between 0 and getNbPage()-1
+				// Return the svg representation of the page number pageIdx.<br />
+				// Page must be between 0 and getNbPage()-1
 			</div>
 			<br />
-			<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> getLastError(<span class='motCle'>void</span>)
+			<span class='twoTab'><a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> getLastError(<span class='motCle'>void</span>);</span>
 			<div class='doc'>
-				Return the last error string.
+				// Return the last error string.
 			</div>
 			<br />
-			<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> getLastSourceError(<span class='motCle'>void</span>)
+			<span class='twoTab'><a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> getLastSourceError(<span class='motCle'>void</span>);</span>
 			<div class='doc'>
-				Return the last error cause string.
+				// Return the last error cause string.
 			</div>
 			<br />
-			<span class='motCle'>static</span> <a href='http://doc.qt.digia.com/4.6/qtranslator.html' class='qt'>QTranslator</a> * getTranslator(<span class='motCle'>void</span>)
+			<span class='twoTab'><span class='motCle'>static</span> <a href='http://doc.qt.digia.com/4.6/qtranslator.html' class='qt'>QTranslator</a> * getTranslator(<span class='motCle'>void</span>);</span>
 			<div class='doc'>
-				Return a pointer to a <a href='http://doc.qt.digia.com/4.6/qtranslator.html' class='qt'>QTranslator</a> object.
+				// Return a pointer to a <a href='http://doc.qt.digia.com/4.6/qtranslator.html' class='qt'>QTranslator</a> object.
 			</div>
+			}<br />
 		</div>
 		<h2>Simple example :</h2>
 		<div class='code'>
