@@ -5,8 +5,8 @@
 #include <QHash>
 #include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QList>
-#include "CReport.h"
+#include <QStringList>
+#include <QSize>
 #include "CDocBand.h"
 #include "CFields.h"
 //------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ namespace libqt4report {
 			CDocument(QString pageWidth, QString pageHeight, QString unit);
 			~CDocument(void);
 			int getNbPage(void);
-			SPage * getPage(int pageIdx);
+			QString toSvg(int pageIdx);
 			QString getLastError(void) { return lastError; }
 			QString getLastSourceError(void) { return lastSourceError; }
 			void setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName);
@@ -37,6 +37,7 @@ namespace libqt4report {
 			CDocBand * getDocFooter(void) { return docFooter; }
 			CDocBand * getPageFooter(void) { return pageFooter; }
 			void cleanup(void);
+			QSize getPagesSize(void) { return pagesSize; }
 		private:
 			CDocBand *pageHeader;
 			CDocBand *docHeader;
@@ -47,9 +48,10 @@ namespace libqt4report {
 			QString sqlQuery;
 			QString lastError;
 			QString lastSourceError;
-			QList<SPage *> pages;
+			QStringList pages;
 			QString pageWidth, pageHeight;
 			double coef;
+			QSize pagesSize;
 			
 			void createPages(QSqlQuery * query);
 			void processFields(QSqlRecord *record) { CFields::getInstance()->process(record); }

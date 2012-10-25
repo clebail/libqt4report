@@ -16,10 +16,6 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	CDocument::~CDocument(void) {
-		int i;
-		for(i=0;i<pages.size();i++) {
-			delete pages.at(i);
-		}
 		pages.clear();
 	}
 	//------------------------------------------------------------------------------
@@ -27,11 +23,11 @@ namespace libqt4report {
 		return pages.size();;
 	}
 	//------------------------------------------------------------------------------
-	SPage * CDocument::getPage(int pageIdx) {
+	QString CDocument::toSvg(int pageIdx) {
 		if(pageIdx >= 0 &&  pageIdx < pages.size()) {
 			return pages.at(pageIdx);
 		}
-		return 0;
+		return "";
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName) {
@@ -113,7 +109,6 @@ namespace libqt4report {
 		QString svg;
 		int idxRec, lastRec;
 		bool hSpecified=false;
-		SPage *page;
 		
 		if(pageHeight != "100%") {
 			hSpecified=true;
@@ -143,8 +138,6 @@ namespace libqt4report {
 			processFields(&record);
 			
 			if(nouvellePage) {
-				page=new SPage;
-				
 				svg="<?xml version='1.0' encoding='utf-8'?>";
 				svg+="<svg xmlns='http://www.w3.org/2000/svg' version='1.2' ";
 				svg+="baseProfile='tiny' width='"+w+"' ";
@@ -188,17 +181,14 @@ namespace libqt4report {
 				svg+="</svg>";
 				svg.replace("${height}", QString::number(hSpecified ? hPage : y));
 				
-				page->svg=svg;
-				page->size=QSize(wPage, hSpecified ? hPage : y);
-				
-				pages.append(page);
+				pages.append(svg);
 				
 				finPage=false;
 			}
 			
 			idxRec++;
 		}
-		
+		pagesSize=QSize(wPage, hSpecified ? hPage : y);
 	}
 	//------------------------------------------------------------------------------
 }

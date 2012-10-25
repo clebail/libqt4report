@@ -100,11 +100,19 @@ namespace libqt4report {
 		return 0;
 	}
 	//------------------------------------------------------------------------------
-	SPage * CReport::getPage(int pageIdx) {
+	QString CReport::toSvg(int pageIdx) {
 		if(document != 0 && pageIdx >= 0 && pageIdx < document->getNbPage()) {
-			return document->getPage(pageIdx);
+			return document->toSvg(pageIdx);
 		}
-		return 0;
+		return "";
+	}
+	//------------------------------------------------------------------------------
+	QSize CReport::getPagesSize(void) {
+		if(document != 0) {
+			return document->getPagesSize();
+		}
+		
+		return QSize();
 	}
 	//------------------------------------------------------------------------------
 	void CReport::cleanup(void) {
