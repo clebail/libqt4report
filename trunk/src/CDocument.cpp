@@ -16,6 +16,10 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	CDocument::~CDocument(void) {
+		int i;
+		for(i=0;i<pages.size();i++) {
+			delete pages.at(i);
+		}
 		pages.clear();
 	}
 	//------------------------------------------------------------------------------
@@ -23,11 +27,11 @@ namespace libqt4report {
 		return pages.size();;
 	}
 	//------------------------------------------------------------------------------
-	QString CDocument::toSvg(int pageIdx) {
+	SPage * CDocument::getPage(int pageIdx) {
 		if(pageIdx >= 0 &&  pageIdx < pages.size()) {
 			return pages.at(pageIdx);
 		}
-		return "";
+		return 0;
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName) {
@@ -98,7 +102,8 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::createPages(QSqlQuery *query) {
-		QString w=QString::number(pageWidth.toInt()*coef);
+		int wPage=pageWidth.toInt()*coef;
+		QString w=QString::number(wPage);
 		int hPage=0;
 		int y;
 		int hDocBody, hDocFooter=0, hPageFooter=0;
@@ -108,6 +113,7 @@ namespace libqt4report {
 		QString svg;
 		int idxRec, lastRec;
 		bool hSpecified=false;
+		SPage *page;
 		
 		if(pageHeight != "100%") {
 			hSpecified=true;
@@ -137,6 +143,8 @@ namespace libqt4report {
 			processFields(&record);
 			
 			if(nouvellePage) {
+				page=new SPage;
+				
 				svg="<?xml version='1.0' encoding='utf-8'?>";
 				svg+="<svg xmlns='http://www.w3.org/2000/svg' version='1.2' ";
 				svg+="baseProfile='tiny' width='"+w+"' ";
@@ -180,9 +188,10 @@ namespace libqt4report {
 				svg+="</svg>";
 				svg.replace("${height}", QString::number(hSpecified ? hPage : y));
 				
-				pages.append(svg);
+				page->svg=svg;
+				page->size=QSize(wPage, hSpecified ? hPage : y);
 				
-				//qDebug() << svg;
+				pages.append(page);
 				
 				finPage=false;
 			}
