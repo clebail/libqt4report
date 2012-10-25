@@ -21,6 +21,7 @@ namespace libqt4report {
 			int getNbPage(void);
 			QString toSvg(int pageIdx);
 			QString getLastError(void) { return lastError; }
+			QString getLastSourceError(void) { return lastSourceError; }
 			void setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName);
 			void setQuery(QString sqlQuery) { this->sqlQuery=sqlQuery.trimmed(); }
 			bool process(void);
@@ -44,6 +45,7 @@ namespace libqt4report {
 			QSqlDatabase database;
 			QString sqlQuery;
 			QString lastError;
+			QString lastSourceError;
 			QStringList pages;
 			QString pageWidth, pageHeight;
 			double coef;

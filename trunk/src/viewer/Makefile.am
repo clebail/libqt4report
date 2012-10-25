@@ -6,15 +6,15 @@ moc_FILES = moc_CMainFrm.cpp
 		
 INTERFACES = CMainFrm.ui
 		
-ui_FILES = $(patsubst %.ui,ui_%.h, $(INTERFACES))
+ui_FILES = ui_CMainFrm.h
 
 RESSOURCES = viewer.qrc
 		
 qrc_FILES = qrc_viewer.cpp
 
-TRANSLATE =
+TRANSLATE = viewer_fr_FR.ts
 
-lrelease_FILES = $(patsubst %.ts,%.qm, $(TRANSLATE))
+lrelease_FILES = viewer_fr_FR.qm
 
 viewer_SOURCES = 	viewer.cpp \
 			CMainFrm.cpp CMainFrm.h
@@ -51,6 +51,7 @@ clean-qt-extra:
 clean-am: clean-qt-extra
 
 install-data-hook:
+	cp $(srcdir)/$(lrelease_FILES)	$(viewerdir)
 
 dist-hook:
 	mkdir $(distdir)/images; \

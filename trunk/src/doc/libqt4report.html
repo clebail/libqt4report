@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<meta charset='utf-8' />
+		<title>libqt4report</title>
+		<style>
+			body {
+				font-family: helvetica;
+			}
+			
+			h2 {
+				font-size: 12pt;
+			}
+		
+			.align_c {
+				text-align: center;
+			}
+			
+			.code {
+				padding: 5px 0px 5px 15px;
+				background-color: #E0E0E0;
+				border: 1px solid #B0B0B0;
+				color: green;
+			}
+			
+			.code .doc {
+				font-style: italic;
+				font-weight: bold;
+				color: #808080;
+				padding-left: 30px;
+			}
+			
+			.motCle {
+				color: magenta;
+			}
+			
+			.directive {
+				font-weight: bold;
+			}
+			
+			a.qt {
+				text-decoration: none;
+				color: blue;
+			}
+			
+			.oneTab {
+				margin-left: 20px;
+			}
+			
+			.twoTab {
+				margin-left: 40px;
+			}
+			
+			.threeTab {
+				margin-left: 60px;
+			}
+			
+			.fourTab {
+				margin-left: 80px;
+			}
+			
+			.fiveTab {
+				margin-left: 100px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1 class='align_c'>LibQt4Report</h1>
+		<hr />
+		<h2>Public member functions :</h2>
+		<div class='code'>
+			<span class='motCle'>bool</span> validDocument(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile<a> *docFile)
+			<div class='doc'>
+				Try to validate a xlqr document represented by docFile.<br />
+				Return to if the document is valid, false otherwise.
+			</div>
+			<br />
+			<span class='motCle'>bool</span> process(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile</a> *docFile)
+			<div class='doc'>
+				Try to process a xlqr document represented by docFile.<br />
+				Return to if the document is valid, false otherwise.
+			</div>
+			<br />
+			<span class='motCle'>int</span> getNbPage(<span class='motCle'>void</span>)
+			<div class='doc'>
+				Return the number of page of the result document.
+			</div>
+			<br />
+			<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> toSvg(<span class='motCle'>int</span> pageIdx)
+			<div class='doc'>
+				Return the svg representation of the page number pageIdx.<br />
+				Page must between 0 and getNbPage()-1
+			</div>
+			<br />
+			<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> getLastError(<span class='motCle'>void</span>)
+			<div class='doc'>
+				Return the last error string.
+			</div>
+			<br />
+			<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> getLastSourceError(<span class='motCle'>void</span>)
+			<div class='doc'>
+				Return the last error cause string.
+			</div>
+			<br />
+			<a href='http://doc.qt.digia.com/4.6/qtranslator.html' class='qt'>QTranslator</a> * getTranslator(<span class='motCle'>void</span>)
+			<div class='doc'>
+				Return a pointer to a translator object.
+			</div>
+		</div>
+		<h2>Simple example :</h2>
+		<div class='code'>
+			<span class='directive'>#include</span> &lt;QApplication&gt;<br />
+			<span class='directive'>#include</span> &lt;QTextCodec&gt;<br />
+			<span class='directive'>#include</span> &lt;QTextStream&gt;<br />
+			<span class='directive'>#include</span> &lt;iostream&gt;<br />
+			<span class='directive'>#include</span> &lt;CReport.h&gt;<br /><br />
+			<span class='motCle'>void</span> process(<span class='motCle'>char</span> *filename) {<br />
+			<span class='oneTab'><a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile</a> *xmlFile=new <a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile</a>(filename);</span><br />
+			<span class='oneTab'><span class='motCle'>if</span>(xmlFile->open(<a href='http://doc.qt.digia.com/4.6/qiodevice.html' class='qt'>QIODevice</a>::ReadOnly)) {</span><br />
+			<span class='twoTab'>libqt4report::CReport *report=new libqt4report::CReport();</span><br />
+			<br />
+			<span class='twoTab'><a href='http://doc.qt.digia.com/4.6/qapplication.html' class='qt'>QApplication</a>::installTranslator(report->getTranslator());</span><br />
+			<br />
+			<span class='twoTab'><span class='motCle'>if</span>(report->process(xmlFile)) {</span><br />
+			<span class='threeTab'><span class='motCle'>for</span>(<span class='motCle'>int</span> i=0;i<report->getNbPage();i++) {</span><br />
+			<span class='fourTab'><a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> outFileName=<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a>(filename)+"_"+<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a>::number(i+1)+".svg";</span><br />
+			<span class='fourTab'><a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile</a> *outFile=new <a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile</a>(outFileName);</span><br />
+			<br />
+			<span class='fourTab'><span class='motCle'>if</span>(outFile->open(<a href='http://doc.qt.digia.com/4.6/qiodevice.html' class='qt'>QIODevice</a>::WriteOnly)) {</span><br />
+			<span class='fiveTab'><a href='http://doc.qt.digia.com/4.6/qtextstream.html' class='qt'>QTextStream</a> out(outFile);</span><br />
+			<br />
+			<span class='fiveTab'>out &lt;&lt; report->toSvg(i);</span><br />
+			<br />
+			<span class='fiveTab'>outFile->close();</span><br />
+			<span class='fourTab'>}<span class='motCle'>else</span> {</span><br />
+			<span class='fiveTab'>std::cout &lt;&lt; "Unable to write file " &lt;&lt; outFileName.toStdString() &lt;&lt; std::endl;</span><br />
+			<span class='fiveTab'><span class='motCle'>delete</span> outFile;</span><br />
+			<span class='fiveTab'><span class='motCle'>delete</span> report;</span><br />
+			<span class='fiveTab'><span class='motCle'>delete</span> xmlFile;</span><br />
+			<br />
+			<span class='fiveTab'><span class='motCle'>return</span>;</span><br />
+			<span class='fourTab'>}</span><br />
+			<br />
+			<span class='fourTab'><span class='motCle'>delete</span> outFile;</span><br />
+			<span class='threeTab'>}</span><br />
+			<span class='twoTab'>}<span class='motCle'>else</span> {</span><br />
+			<span class='threeTab'>std::cout &lt;&lt; report->getLastSourceError().toStdString() &lt;&lt; std::endl;</span><br />
+			<span class='threeTab'>std::cout &lt;&lt; report->getLastError().toStdString() &lt;&lt; std::endl;</span><br />
+			<span class='twoTab'>}</span><br />
+			<br />
+			<span class='twoTab'><span class='motCle'>delete</span> report;</span><br />
+			<span class='oneTab'>}</span><br />
+			<span class='oneTab'><span class='motCle'>delete</span> xmlFile;</span><br />
+			}<br />
+			<br />
+			<span class='motCle'>int</span> main(<span class='motCle'>int</span> argc, <span class='motCle'>char</span> *argv[]) {<br />
+			<span class='oneTab'><span class='motCle'>if</span>(argc != 2) {</span><br />
+			<span class='twoTab'>std::cout << "Usage : " << argv[0] << " xlqrfile " << std::endl;</span><br />
+			<br />
+			<span class='twoTab'><span class='motCle'>return</span> 1;</span><br />
+			<span class='oneTab'>}</span><br />
+			<br />
+			<span class='oneTab'><a href='http://doc.qt.digia.com/4.6/qapplication.html' class='qt'>QApplication</a> app(argc, argv);</span><br />
+			<br />
+			<span class='oneTab'><a href='http://doc.qt.digia.com/4.6/qtextcodec.html' class='qt'>QTextCodec</a>::setCodecForTr(<a href='http://doc.qt.digia.com/4.6/qtextcodec.html' class='qt'>QTextCodec</a>::codecForName("utf8"));</span><br />
+			<span class='oneTab'><a href='http://doc.qt.digia.com/4.6/qtextcodec.html' class='qt'>QTextCodec</a>::setCodecForCStrings(<a href='http://doc.qt.digia.com/4.6/qtextcodec.html' class='qt'>QTextCodec</a>::codecForName("utf8"));</span><br />
+			<br />
+			<span class='oneTab'>process(argv[1]);</span><br />
+			<br />
+			<span class='oneTab'><span class='motCle'>return</span> 0;</span><br />
+			}
+		</div>
+	</body>
+</html>

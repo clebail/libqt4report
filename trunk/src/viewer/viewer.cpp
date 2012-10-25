@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf8"));
 	
-	translator.load("viewer"+QLocale::system().name(), QDir(QString(DATADIR)).absolutePath());
+	translator.load("viewer_"+QLocale::system().name(), QDir(QString(DATADIR)+"/"+QString(PACKAGE)).absolutePath());
 	
 	app.installTranslator(&translator);
 	

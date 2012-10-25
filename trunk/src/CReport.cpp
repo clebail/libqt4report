@@ -6,6 +6,7 @@
 #include <QXmlSimpleReader>
 #include <QXmlInputSource>
 #include <QtDebug>
+#include <QDir>
 #include <log4cpp/Category.hh>
 #include <log4cpp/PropertyConfigurator.hh>
 #include <config.h>
@@ -19,6 +20,11 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	CReport::CReport(void) {
 		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
+		
+		translator=new QTranslator();
+		
+		translator->load("libqt4report_"+QLocale::system().name(), QDir(QString(DATADIR)+"/"+QString(PACKAGE)).absolutePath());
+		
 		document=0;
 	}
 	//------------------------------------------------------------------------------
@@ -26,6 +32,8 @@ namespace libqt4report {
 		if(document != 0) {
 			delete document;
 		}
+		
+		delete translator;
 	}
 	//------------------------------------------------------------------------------
 	bool CReport::validDocument(QFile *docFile) {
@@ -68,10 +76,12 @@ namespace libqt4report {
 			if(document->process()) {
 				ret=true;
 			}else {
+				lastSourceError=document->getLastSourceError();
 				lastError=document->getLastError();
 			}
 		}else {
-			lastError="Unable to parse the file : "+parser->errorString();
+			lastSourceError=QObject::tr("Invalid file");
+			lastError=QObject::tr("Unable to parse the file : ")+parser->errorString();
 		}
 		
 		cleanup();
