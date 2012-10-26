@@ -54,7 +54,7 @@ install-data-hook:
 	mkdir -p $(libqt4report_ladir)/doc; \
 	mkdir -p $(includedir); \
 	mkdir -p $(libdir)/pkgconfig; \
-	cp $(srcdir)/CReport.h $(include_dir); \
+	cp $(srcdir)/CReport.h $(includedir); \
 	cp $(srcdir)/schema/libqt4report.xsd $(libqt4report_ladir)/schema; \
 	cp $(srcdir)/log4cpp.properties $(libqt4report_ladir); \
 	cp $(srcdir)/viewer/test.xlqr $(libqt4report_ladir)/example; \
