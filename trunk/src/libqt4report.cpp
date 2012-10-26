@@ -10,7 +10,7 @@
 #include <log4cpp/Category.hh>
 #include <log4cpp/PropertyConfigurator.hh>
 #include <config.h>
-#include "CReport.h"
+#include "libqt4report.h"
 #include "CDocumentParser.h"
 #include "CDocument.h"
 //------------------------------------------------------------------------------

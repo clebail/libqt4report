@@ -10,7 +10,7 @@ TRANSLATE = libqt4report_fr_FR.ts
 
 lrelease_FILES = libqt4report_fr_FR.qm
 
-libqt4report_la_SOURCES =	CReport.cpp CReport.h \
+libqt4report_la_SOURCES =	libqt4report.cpp libqt4report.h \
 				CDocument.cpp CDocument.h \
 				CDocumentParser.cpp CDocumentParser.h \
 				CPrintableObject.h \
@@ -54,7 +54,7 @@ install-data-hook:
 	mkdir -p $(libqt4report_ladir)/doc; \
 	mkdir -p $(includedir); \
 	mkdir -p $(libdir)/pkgconfig; \
-	cp $(srcdir)/CReport.h $(includedir); \
+	cp $(srcdir)/libqt4report.h $(includedir); \
 	cp $(srcdir)/schema/libqt4report.xsd $(libqt4report_ladir)/schema; \
 	cp $(srcdir)/log4cpp.properties $(libqt4report_ladir); \
 	cp $(srcdir)/viewer/test.xlqr $(libqt4report_ladir)/example; \
