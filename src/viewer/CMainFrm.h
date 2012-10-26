@@ -6,7 +6,7 @@
 #include <QFile>
 #include <QScrollArea>
 #include <QSvgWidget>
-#include <CReport.h>
+#include <libqt4report.h>
 #include "ui_CMainFrm.h"
 //------------------------------------------------------------------------------
 class CMainFrm : public QMainWindow, private Ui::MainFrm {
