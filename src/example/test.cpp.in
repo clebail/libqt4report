@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
 	QApplication::installTranslator(libqt4report::CReport::getTranslator());
 
-	process("@datarootdir@/example/test.xlqr");
+	process("@DATAROOT_DIR@/example/test.xlqr");
 
 	return 0;
 }
