@@ -31,7 +31,9 @@ libqt4report_ladir = $(datarootdir)/@PACKAGE@
 
 libqt4report_la_DATA = $(lrelease_FILES) log4cpp.properties
 
-example_dir = $(srcdir)/exmaple
+example_dir = $(srcdir)/example
+
+example_file = $(example_dir)/test.cpp
 
 moc_%.cpp: %.h
 	$(MOC) -o $@ $<
@@ -39,7 +41,10 @@ moc_%.cpp: %.h
 %.qm: %.ts
 	$(LRELEASE) $< -qm $@
 
-$(libqt4report_la_OBJECTS): $(moc_FILES) $(lrelease_FILES)
+$(libqt4report_la_OBJECTS): $(moc_FILES) $(lrelease_FILES) $(example_file)
+
+$(example_file): $(example_file).in
+	sed 's|@DATAROOT_DIR@|$(libqt4report_ladir)|g' $< > $@
 	
 clean-qt-extra:
 	rm -f *.o
@@ -60,6 +65,7 @@ install-data-hook:
 	cp $(srcdir)/schema/libqt4report.xsd $(libqt4report_ladir)/schema; \
 	cp $(srcdir)/log4cpp.properties $(libqt4report_ladir); \
 	cp $(srcdir)/viewer/test.xlqr $(libqt4report_ladir)/example; \
+	cp $(srcdir)/example/test.cpp $(libqt4report_ladir)/example; \
 	cp $(srcdir)/doc/libqt4report.html $(libqt4report_ladir)/doc; \
 	cp $(srcdir)/$(lrelease_FILES) $(libqt4report_ladir); \
 	cp $(srcdir)/libqt4report.pc $(libdir)/pkgconfig
@@ -67,7 +73,9 @@ install-data-hook:
 dist-hook:
 	mkdir $(distdir)/schema; \
 	mkdir $(distdir)/doc; \
+	mkdir $(distdir)/example; \
 	cp $(srcdir)/$(TRANSLATE) $(distdir); \
 	cp $(srcdir)/log4cpp.properties $(distdir); \
 	cp $(srcdir)/schema/libqt4report.xsd $(distdir)/schema; \
-	cp $(srcdir)/doc/libqt4report.html $(distdir)/doc
+	cp $(srcdir)/doc/libqt4report.html $(distdir)/doc; \
+	cp $(example_file).in $(distdir)/example
