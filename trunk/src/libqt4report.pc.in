@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: libqt4report
 Description: Reporting tool library for qt4
-Requires: QtCore QtGui QtNetwork QtXml QtXmlPatterns QtSvg QtSql QtScript log4cpp
+Requires:
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -lqt4report
 Cflags: -I${includedir}
