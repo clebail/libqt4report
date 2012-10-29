@@ -1,0 +1,11 @@
+README for libqt4report
+
+This directory contains the libqt4report library.
+
+Please see the file COPYING for copying conditions.
+
+Please see the file INSTALL for generic compilation and installation
+instructions.  Briefly, you can run "./configure; make install".  The
+command "./configure --help" lists the supported --enable and --with
+options.
+

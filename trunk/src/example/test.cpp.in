@@ -1,0 +1,57 @@
+//------------------------------------------------------------------------------
+#include <QApplication>
+#include <QTextCodec>
+#include <QTextStream>
+#include <iostream>
+#include <libqt4report.h>
+//------------------------------------------------------------------------------
+void process(QString filename) {
+	QFile *xmlFile=new QFile(filename);
+	if(xmlFile->open(QIODevice::ReadOnly)) {
+		libqt4report::CReport *report=new libqt4report::CReport();
+
+		if(report->process(xmlFile)) {
+			for(int i=0;igetNbPage();i++) {
+				QString outFileName=filename+"_"+QString::number(i+1)+".svg";
+				QFile *outFile=new QFile(outFileName);
+
+				if(outFile->open(QIODevice::WriteOnly)) {
+					QTextStream out(outFile);
+
+					out << report->toSvg(i);
+
+					outFile->close();
+				}else {
+					std::cout << "Unable to write file " << outFileName.toStdString() << std::endl;
+					delete outFile;
+					delete report;
+					delete xmlFile;
+
+					return;
+				}
+
+				delete outFile;
+			}		
+		}else {
+			std::cout << report->getLastSourceError().toStdString() << std::endl;
+			std::cout << report->getLastError().toStdString() << std::endl;
+		}
+
+		delete report;
+	}
+	delete xmlFile;
+}
+//------------------------------------------------------------------------------
+int main(int argc, char *argv[]) {
+	QApplication app(argc, argv);
+
+	QTextCodec::setCodecForTr(QTextCodec::codecForName("utf8"));
+	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf8"));
+
+	QApplication::installTranslator(libqt4report::CReport::getTranslator());
+
+	process("@datarootdir@/example/test.xlqr");
+
+	return 0;
+}
+//------------------------------------------------------------------------------
