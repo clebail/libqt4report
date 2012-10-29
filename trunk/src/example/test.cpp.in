@@ -11,7 +11,7 @@ void process(QString filename) {
 		libqt4report::CReport *report=new libqt4report::CReport();
 
 		if(report->process(xmlFile)) {
-			for(int i=0;igetNbPage();i++) {
+			for(int i=0;i<report->getNbPage();i++) {
 				QString outFileName=filename+"_"+QString::number(i+1)+".svg";
 				QFile *outFile=new QFile(outFileName);
 
