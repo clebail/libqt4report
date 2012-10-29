@@ -102,7 +102,7 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	QString CReport::toSvg(int pageIdx) {
 		if(document != 0 && pageIdx >= 0 && pageIdx < document->getNbPage()) {
-			return document->toSvg(pageIdx);
+			return document->getPage(pageIdx)->getSvg();
 		}
 		return "";
 	}
@@ -113,6 +113,11 @@ namespace libqt4report {
 		}
 		
 		return QSize();
+	}
+	//------------------------------------------------------------------------------
+	void CReport::renderPage(int pageIdx, QPainter *painter) {
+		if(document != 0) {
+		}
 	}
 	//------------------------------------------------------------------------------
 	QTranslator * CReport::getTranslator(void) {

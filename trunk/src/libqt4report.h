@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QTranslator>
 #include <QSize>
+#include <QPainter>
 //------------------------------------------------------------------------------
 namespace libqt4report {
 	class CReport {
@@ -18,6 +19,7 @@ namespace libqt4report {
 			QString getLastError(void) { return lastError; }
 			QString getLastSourceError(void) { return lastSourceError; }
 			QSize getPagesSize(void);
+			void renderPage(int pageIdx, QPainter *painter);
 			
 			static QTranslator * getTranslator(void);
 		private:

@@ -3,7 +3,7 @@
 #include "CDocBand.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
-	QString CDocBand::toSvg(int &y, double coef) {
+	QString CDocBand::toSvg(int y, double coef) {
 		QString svg="<g>";
 		QHashIterator<QString, CItem *> i(*this);
 		
@@ -13,8 +13,6 @@ namespace libqt4report {
 		}
 		
 		svg+="</g>";
-		
-		y+=getHeight(coef);
 		
 		return svg;
 	}
@@ -42,6 +40,15 @@ namespace libqt4report {
 		while (i.hasNext()) {
 			i.next();
 			delete i.value();
+		}
+	}
+	//------------------------------------------------------------------------------
+	void CDocBand::prepareRender(QList<CRendererObject *> *rendererObjects, double coef) {
+		QHashIterator<QString, CItem *> i(*this);
+		
+		while (i.hasNext()) {
+			i.next();
+			i.value()->prepareRender(rendererObjects, coef);
 		}
 	}
 	//------------------------------------------------------------------------------

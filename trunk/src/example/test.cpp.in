@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <QTextCodec>
 #include <QTextStream>
+#include <QDir>
 #include <iostream>
 #include <libqt4report.h>
 //------------------------------------------------------------------------------
@@ -12,7 +13,7 @@ void process(QString filename) {
 
 		if(report->process(xmlFile)) {
 			for(int i=0;i<report->getNbPage();i++) {
-				QString outFileName=filename+"_"+QString::number(i+1)+".svg";
+				QString outFileName=QDir::homePath()+"out_"+QString::number(i+1)+".svg";
 				QFile *outFile=new QFile(outFileName);
 
 				if(outFile->open(QIODevice::WriteOnly)) {
@@ -50,7 +51,7 @@ int main(int argc, char *argv[]) {
 
 	QApplication::installTranslator(libqt4report::CReport::getTranslator());
 
-	process("@DATAROOT_DIR@/example/test.xlqr");
+	process(QDir::toNativeSeparators("@DATAROOT_DIR@/example/test.xlqr"));
 
 	return 0;
 }
