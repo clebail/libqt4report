@@ -16,6 +16,12 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	CDocument::~CDocument(void) {
+		int i;
+		
+		for(i=0;i<pages.size();i++) {
+			delete pages.at(i);
+		}
+		
 		pages.clear();
 	}
 	//------------------------------------------------------------------------------
@@ -23,11 +29,11 @@ namespace libqt4report {
 		return pages.size();;
 	}
 	//------------------------------------------------------------------------------
-	QString CDocument::toSvg(int pageIdx) {
+	CPage * CDocument::getPage(int pageIdx) {
 		if(pageIdx >= 0 &&  pageIdx < pages.size()) {
 			return pages.at(pageIdx);
 		}
-		return "";
+		return 0;
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName) {
@@ -109,6 +115,7 @@ namespace libqt4report {
 		QString svg;
 		int idxRec, lastRec;
 		bool hSpecified=false;
+		CPage *page;
 		
 		if(pageHeight != "100%") {
 			hSpecified=true;
@@ -138,6 +145,8 @@ namespace libqt4report {
 			processFields(&record);
 			
 			if(nouvellePage) {
+				page=new CPage();
+				
 				svg="<?xml version='1.0' encoding='utf-8'?>";
 				svg+="<svg xmlns='http://www.w3.org/2000/svg' version='1.2' ";
 				svg+="baseProfile='tiny' width='"+w+"' ";
@@ -148,15 +157,21 @@ namespace libqt4report {
 				
 				if(pageHeader != 0) {
 					svg+=pageHeader->toSvg(y, coef);
+					pageHeader->prepareRender(page->getRendererObjects(), coef);
+					y+=pageHeader->getHeight(coef);
 				}
 				
 				if(idxRec == 0 && docHeader != 0) {
 					svg+=docHeader->toSvg(y, coef);
+					docHeader->prepareRender(page->getRendererObjects(), coef);
+					y+=docHeader->getHeight(coef);
 				}
 				
 				nouvellePage=false;
 			}
 			svg+=docBody->toSvg(y, coef);
+			docBody->prepareRender(page->getRendererObjects(), coef);
+			y+=docBody->getHeight(coef);
 			
 			hFooter=hPageFooter + (idxRec == lastRec-1 ? hDocFooter : 0);
 			
@@ -168,6 +183,8 @@ namespace libqt4report {
 				if(idxRec == lastRec) {
 					if(docFooter != 0) {
 						svg+=docFooter->toSvg(y, coef);
+						docFooter->prepareRender(page->getRendererObjects(), coef);
+						y+=docFooter->getHeight(coef);
 					}
 					fini=true;
 				}else {
@@ -176,12 +193,16 @@ namespace libqt4report {
 				
 				if(pageFooter != 0) {
 					svg+=pageFooter->toSvg(y, coef);
+					pageFooter->prepareRender(page->getRendererObjects(), coef);
+					y+=pageFooter->getHeight(coef);
 				}
 				
 				svg+="</svg>";
 				svg.replace("${height}", QString::number(hSpecified ? hPage : y));
 				
-				pages.append(svg);
+				page->setSvg(svg);
+				
+				pages.append(page);
 				
 				finPage=false;
 			}

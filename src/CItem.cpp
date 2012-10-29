@@ -8,7 +8,7 @@
 #include "CValueType.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
-	QString CItemText::toSvg(int &y, double coef) {
+	QString CItemText::toSvg(int y, double coef) {
 		QString value=xmlEncode(getValue());
 		QString align="";
 		QString style="style='";
@@ -60,7 +60,7 @@ namespace libqt4report {
 		return value->toFormatedString(getAttribute("format"));
 	}
 	//------------------------------------------------------------------------------
-	QString CItemLineObject::toSvg(int &y, double coef) {
+	QString CItemLineObject::toSvg(int y, double coef) {
 		int height=(int)((getAttribute("height").toDouble())*coef);
 		int x1, y1, x2, y2;
 		QString color="black";
@@ -87,7 +87,7 @@ namespace libqt4report {
 		return y+height;
 	}
 	//------------------------------------------------------------------------------
-	QString CItemRectObject::toSvg(int &y, double coef) {
+	QString CItemRectObject::toSvg(int y, double coef) {
 		int x, yR, width, height;
 		QString color="black";
 		

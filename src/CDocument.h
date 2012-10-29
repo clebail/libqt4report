@@ -5,10 +5,11 @@
 #include <QHash>
 #include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QStringList>
+#include <QList>
 #include <QSize>
 #include "CDocBand.h"
 #include "CFields.h"
+#include "CPage.h"
 //------------------------------------------------------------------------------
 #define COEF_MM		3.515625 	//90 dpi 1 pouce = 25.6 mm => 90/25.6
 #define COEF_IN		90.0		//90 dpi
@@ -20,7 +21,7 @@ namespace libqt4report {
 			CDocument(QString pageWidth, QString pageHeight, QString unit);
 			~CDocument(void);
 			int getNbPage(void);
-			QString toSvg(int pageIdx);
+			CPage *getPage(int pageIdx);
 			QString getLastError(void) { return lastError; }
 			QString getLastSourceError(void) { return lastSourceError; }
 			void setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName);
@@ -48,7 +49,7 @@ namespace libqt4report {
 			QString sqlQuery;
 			QString lastError;
 			QString lastSourceError;
-			QStringList pages;
+			QList<CPage *> pages;
 			QString pageWidth, pageHeight;
 			double coef;
 			QSize pagesSize;
