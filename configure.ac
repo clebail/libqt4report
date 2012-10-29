@@ -14,7 +14,7 @@ AC_PROG_LIBTOOL
 
 AC_CONFIG_MACRO_DIR([m4])
 
-AC_CONFIG_FILES([Makefile src/libqt4report.pc src/Makefile src/viewer/Makefile])
+AC_CONFIG_FILES([Makefile src/libqt4report.pc src/Makefile src/viewer/Makefile src/example/test.cpp])
 
 AC_CHECK_PROG(MOC, moc-qt4, moc-qt4)
 if test x$MOC = x; then

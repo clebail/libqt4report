@@ -31,6 +31,8 @@ libqt4report_ladir = $(datarootdir)/@PACKAGE@
 
 libqt4report_la_DATA = $(lrelease_FILES) log4cpp.properties
 
+example_dir = $(srcdir)/exmaple
+
 moc_%.cpp: %.h
 	$(MOC) -o $@ $<
 	
