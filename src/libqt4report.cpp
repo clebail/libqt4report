@@ -19,8 +19,10 @@ namespace libqt4report {
 	static CDocument * document;
 	static QTranslator *translator=0;
 	//------------------------------------------------------------------------------
-	CReport::CReport(void) {
+	CReport::CReport(QString connectionNam) {
 		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
+		
+		this->connectionName=connectionName;
 		
 		document=0;
 	}
@@ -62,7 +64,7 @@ namespace libqt4report {
 	bool CReport::process(QFile *docFile) {
 		QXmlSimpleReader *xmlReader=new QXmlSimpleReader();
 		QXmlInputSource *source = new QXmlInputSource(docFile);
-		CDocumentParser *parser=new CDocumentParser();
+		CDocumentParser *parser=new CDocumentParser(connectionName);
 		bool ret=false;
 		
 		if(document != 0) {

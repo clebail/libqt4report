@@ -9,7 +9,7 @@
 namespace libqt4report {
 	class CDocumentParser : public QXmlDefaultHandler {
 		public:
-			CDocumentParser(void);
+			CDocumentParser(QString connectionName);
 			bool startDocument(void);
 			bool endDocument(void);
 			bool startElement(const QString& namespaceURI, const QString& localName, const QString& qName, const QXmlAttributes& atts);
@@ -33,6 +33,7 @@ namespace libqt4report {
 			EDBType curDocBand;
 			CField *curField;
 			QString lastError;
+			QString connectionName;
 			
 			libqt4report::CItem * parseItem(const QXmlAttributes& atts);
 			libqt4report::CField * parseField(const QXmlAttributes& atts);
