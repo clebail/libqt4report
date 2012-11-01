@@ -10,7 +10,7 @@
 namespace libqt4report {
 	class CReport {
 		public:
-			CReport(void);
+			CReport(QString connectionName=QString());
 			~CReport(void);
 			bool validDocument(QFile *docFile);
 			bool process(QFile *docFile);
@@ -25,6 +25,7 @@ namespace libqt4report {
 		private:
 			QString lastError;
 			QString lastSourceError;
+			QString connectionName;
 			
 			void cleanup(void);
 	};

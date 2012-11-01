@@ -11,7 +11,7 @@
 namespace libqt4report {
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CDocumentParser");
 	//--------------------------------------------------------------------------------------------------------------
-	CDocumentParser::CDocumentParser(void) {
+	CDocumentParser::CDocumentParser(QString connectionName) {
 		qRegisterMetaType<CItemTextFixedObject>("CItemTextFixedObject");
 		qRegisterMetaType<CItemTextFieldObject>("CItemTextFieldObject");
 
@@ -29,6 +29,7 @@ namespace libqt4report {
 		document=0;
 		inFonts=inFields=inDatabase=inQuery=inBody=inField=inCDATA=false;
 		curDocBand=edbtNone;
+		this->connectionName=connectionName;
 	}
 	//--------------------------------------------------------------------------------------------------------------
 	bool CDocumentParser::startDocument(void) {
@@ -55,7 +56,7 @@ namespace libqt4report {
 				}
 			}
 			
-			document=new CDocument(pageWidth, pageHeight, unit);
+			document=new CDocument(pageWidth, pageHeight, unit, connectionName);
 			
 			return true;
 		}

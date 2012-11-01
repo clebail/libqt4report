@@ -7,11 +7,12 @@
 #include "CScript.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
-	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit) {
+	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName) {
 		pageHeader=docHeader=docBody=docFooter=pageFooter=0;
 		
 		this->pageWidth=pageWidth;
 		this->pageHeight=pageHeight;
+		this->connectionName=connectionName;
 		setUnit(unit);
 	}
 	//------------------------------------------------------------------------------
@@ -37,19 +38,25 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName) {
-		database=QSqlDatabase::addDatabase(driver);
-		database.setHostName(host);
-		database.setUserName(userName);
-		database.setPassword(password);
-		database.setDatabaseName(dbName);
+		if(connectionName.isEmpty()) {
+			database=QSqlDatabase::addDatabase(driver);
+			database.setHostName(host);
+			database.setUserName(userName);
+			database.setPassword(password);
+			database.setDatabaseName(dbName);
+		}else {
+			database=QSqlDatabase::database(connectionName);
+		}
 	}
 	//------------------------------------------------------------------------------
 	bool CDocument::process(void) {
-		if(!database.open()) {
-			lastSourceError=QObject::tr("Database error");
-			lastError=database.lastError().databaseText();
+		if(connectionName.isEmpty()) {
+			if(!database.open()) {
+				lastSourceError=QObject::tr("Database error");
+				lastError=database.lastError().databaseText();
 			
-			return false;
+				return false;
+			}
 		}
 		
 		QSqlQuery query(sqlQuery, database);
@@ -68,8 +75,12 @@ namespace libqt4report {
 			
 			return false;
 		}
+		
 		query.clear();
-		database.close();
+		
+		if(connectionName.isEmpty()) {
+			database.close();
+		}
 		
 		return true;
 	}
