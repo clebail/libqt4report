@@ -218,7 +218,7 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 }
 //--------------------------------------------------------------------------------------------------------------
 void CMainFrm::onReportQueryParam(QString paramName, QVariant& value) {
-	QString sValue=QInputDialog::getText(this, tr("Value for")+" "+paramName, paramName);
+	QString sValue=QInputDialog::getText(this, tr("Value for")+" "+paramName+" ?", paramName);
 	
 	value=QVariant(sValue);
 }
