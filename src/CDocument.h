@@ -26,7 +26,7 @@ namespace libqt4report {
 			QString getLastSourceError(void) { return lastSourceError; }
 			void setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName);
 			void setQuery(QString sqlQuery) { this->sqlQuery=sqlQuery.trimmed(); }
-			bool process(void);
+			bool process(const QHash<QString, QVariant>& params=QHash<QString, QVariant>());
 			void createPageHeader(void) { pageHeader=new CDocBand(); }
 			void createDocHeader(void) { docHeader=new CDocBand(); }
 			void createDocBody(void) { docBody=new CDocBand(); }

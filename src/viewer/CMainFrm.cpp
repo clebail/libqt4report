@@ -96,6 +96,10 @@ void CMainFrm::on_actionOuvrir_triggered(bool) {
 //--------------------------------------------------------------------------------------------------------------
 void CMainFrm::on_actionRecharger_triggered(bool) {	
 	xmlFile->seek(0);
+	
+	report->setParamValue("fromCommande", QVariant(1));
+	report->setParamValue("toCommande", QVariant(3));
+	
 	if(report->process(xmlFile)) {
 		nbPage=report->getNbPage();
 		svgWidget=new QSvgWidget();

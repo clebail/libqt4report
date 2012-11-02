@@ -254,6 +254,20 @@
 		</xsd:complexType>
 	</xsd:element>
 	
+	<xsd:element name="param">
+		<xsd:complexType>
+			<xsd:attribute name="id" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="params">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="lqr:param" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
 	<xsd:element name="connection">
 		<xsd:complexType>
 			<xsd:attribute name="driver" type="xsd:string" use="required" />
@@ -273,7 +287,8 @@
 	<xsd:element name="database">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element ref="lqr:connection" />
+				<xsd:element ref="lqr:params" minOccurs="0" />
+				<xsd:element ref="lqr:connection" minOccurs="0" />
 				<xsd:element ref="lqr:query" />
 			</xsd:sequence>
 		</xsd:complexType>
@@ -330,5 +345,10 @@
 			<xsd:selector xpath="lqr:body/*/lqr:item" />
 			<xsd:field xpath="@fieldId" />
 		</xsd:keyref>
+		
+		<xsd:unique name="uniqueParamId">
+			<xsd:selector xpath="lqr:database/lqr:params/lqr:param" />
+			<xsd:field xpath="@id" />
+		</xsd:unique>
 	</xsd:element>
 </xsd:schema>

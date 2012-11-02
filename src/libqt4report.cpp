@@ -75,7 +75,7 @@ namespace libqt4report {
 		if(xmlReader->parse(source)) {
 			document=parser->getDocument();;
 			
-			if(document->process()) {
+			if(document->process(params)) {
 				ret=true;
 			}else {
 				lastSourceError=document->getLastSourceError();
