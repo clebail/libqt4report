@@ -11,7 +11,7 @@
 namespace libqt4report {
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CDocumentParser");
 	//--------------------------------------------------------------------------------------------------------------
-	CDocumentParser::CDocumentParser(QString connectionName) {
+	CDocumentParser::CDocumentParser(QString connectionName) : QObject() {
 		qRegisterMetaType<CItemTextFixedObject>("CItemTextFixedObject");
 		qRegisterMetaType<CItemTextFieldObject>("CItemTextFieldObject");
 
@@ -27,7 +27,7 @@ namespace libqt4report {
 		qRegisterMetaType<CValueTypeDate>("CValueTypeDate");
 		
 		document=0;
-		inFonts=inFields=inDatabase=inQuery=inBody=inField=inCDATA=false;
+		inFonts=inFields=inDatabase=inQuery=inBody=inField=inCDATA=inParams=false;
 		curDocBand=edbtNone;
 		this->connectionName=connectionName;
 	}
@@ -73,6 +73,29 @@ namespace libqt4report {
 		
 		if(qName == "database") {
 			inDatabase=true;
+			return true;
+		}
+		
+		if(qName == "params" && inDatabase) {
+			inParams=true;
+			return true;
+		}
+		
+		if(qName == "param" && inParams) {
+			QString id;
+			QVariant value;
+			
+			for(i=0;i<atts.count();i++) {
+				if(atts.localName(i) == "id") {
+					id=atts.value(i);
+				}
+			}
+			
+			emit queryParam(id, value);
+			if(value.isValid()) {
+				document->setParamValue(id, value);
+			}
+			
 			return true;
 		}
 		
@@ -250,6 +273,11 @@ namespace libqt4report {
 		
 		if(qName == "database") {
 			inDatabase=false;
+			return true;
+		}
+		
+		if(qName == "params") {
+			inParams=false;
 			return true;
 		}
 		
