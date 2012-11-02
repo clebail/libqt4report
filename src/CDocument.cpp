@@ -49,7 +49,7 @@ namespace libqt4report {
 		}
 	}
 	//------------------------------------------------------------------------------
-	bool CDocument::process(const QHash<QString, QVariant>& params) {
+	bool CDocument::process(void) {
 		if(connectionName.isEmpty()) {
 			if(!database.open()) {
 				lastSourceError=QObject::tr("Database error");

@@ -19,7 +19,7 @@ namespace libqt4report {
 	static CDocument * document;
 	static QTranslator *translator=0;
 	//------------------------------------------------------------------------------
-	CReport::CReport(QString connectionNam) {
+	CReport::CReport(QString connectionNam) : QObject() {
 		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
 		
 		this->connectionName=connectionName;
@@ -67,15 +67,23 @@ namespace libqt4report {
 		CDocumentParser *parser=new CDocumentParser(connectionName);
 		bool ret=false;
 		
+		connect(parser, SIGNAL(queryParam(QString,QVariant&)), this, SLOT(onParserQueryParam(QString,QVariant&)));
+		
 		if(document != 0) {
 			delete document;
 		}
 		xmlReader->setContentHandler(parser);
 		xmlReader->setLexicalHandler(parser);
 		if(xmlReader->parse(source)) {
-			document=parser->getDocument();;
+			document=parser->getDocument();
 			
-			if(document->process(params)) {
+			QHashIterator<QString, QVariant> i(params);
+			while (i.hasNext()) {
+				i.next();
+				document->setParamValue(i.key(), i.value());
+			}
+			
+			if(document->process()) {
 				ret=true;
 			}else {
 				lastSourceError=document->getLastSourceError();
@@ -134,6 +142,10 @@ namespace libqt4report {
 		if(document != 0) {
 			document->cleanup();
 		}
+	}
+	//------------------------------------------------------------------------------
+	void CReport::onParserQueryParam(QString paramName, QVariant& value) {
+		emit queryParam(paramName, value);
 	}
 	//------------------------------------------------------------------------------
 } //namespace

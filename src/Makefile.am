@@ -4,7 +4,8 @@ lib_LTLIBRARIES = libqt4report.la
 
 AM_CPPFLAGS = $(QT4_CFLAGS) $(LOG4CPP_CFLAGS) -DDATADIR='"$(datarootdir)"'
 
-moc_FILES =
+moc_FILES =	moc_libqt4report.cpp \
+		moc_CDocumentParser.cpp
 
 TRANSLATE = libqt4report_fr_FR.ts
 

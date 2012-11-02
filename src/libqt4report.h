@@ -10,7 +10,8 @@
 #include <QVariant>
 //------------------------------------------------------------------------------
 namespace libqt4report {
-	class CReport {
+	class CReport : public QObject {
+		Q_OBJECT
 		public:
 			CReport(QString connectionName=QString());
 			~CReport(void);
@@ -32,6 +33,10 @@ namespace libqt4report {
 			QHash<QString, QVariant> params;
 			
 			void cleanup(void);
+		private slots:
+			void onParserQueryParam(QString paramName, QVariant& value);
+		signals:
+			void queryParam(QString paramName, QVariant& value);
 	};
 } //namespace
 //------------------------------------------------------------------------------

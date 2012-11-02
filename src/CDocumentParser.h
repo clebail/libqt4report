@@ -7,7 +7,8 @@
 #include "CItem.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
-	class CDocumentParser : public QXmlDefaultHandler {
+	class CDocumentParser : public QObject, public QXmlDefaultHandler {
+		Q_OBJECT
 		public:
 			CDocumentParser(QString connectionName);
 			bool startDocument(void);
@@ -30,6 +31,7 @@ namespace libqt4report {
 			bool inField;
 			bool inFieldExpression;
 			bool inCDATA;
+			bool inParams;
 			EDBType curDocBand;
 			CField *curField;
 			QString lastError;
@@ -37,6 +39,8 @@ namespace libqt4report {
 			
 			libqt4report::CItem * parseItem(const QXmlAttributes& atts);
 			libqt4report::CField * parseField(const QXmlAttributes& atts);
+		signals:
+			void queryParam(QString paramName, QVariant& value);
 	};
 } //namespace
 //------------------------------------------------------------------------------

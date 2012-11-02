@@ -11,9 +11,12 @@ void process(QString filename) {
 	if(xmlFile->open(QIODevice::ReadOnly)) {
 		libqt4report::CReport *report=new libqt4report::CReport();
 
+		report->setParamValue("fromCommande", QVariant(1));
+		report->setParamValue("toCommande", QVariant(3));
+		
 		if(report->process(xmlFile)) {
 			for(int i=0;i<report->getNbPage();i++) {
-				QString outFileName=QDir::homePath()+"out_"+QString::number(i+1)+".svg";
+				QString outFileName=QDir::homePath()+"/out_"+QString::number(i+1)+".svg";
 				QFile *outFile=new QFile(outFileName);
 
 				if(outFile->open(QIODevice::WriteOnly)) {

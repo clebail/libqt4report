@@ -127,7 +127,7 @@
 				// ******************************* NOT IMPLEMENTED YET *******************************
 			</div>
 			<br />
-			<span class='twoTab'><span class='motCle'>void</span> setParamValue(<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a>  paramName, <a href='http://doc.qt.digia.com/4.6/qvariant.html' class='qt'>QVariant</a>  value);
+			<span class='twoTab'><span class='motCle'>void</span> setParamValue(<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a>  paramName, <a href='http://doc.qt.digia.com/4.6/qvariant.html' class='qt'>QVariant</a> value);
 			<div class='doc'>
 				// Set the value of a SQL parameter.
 			</div>
@@ -135,6 +135,11 @@
 			<span class='twoTab'><span class='motCle'>static</span> <a href='http://doc.qt.digia.com/4.6/qtranslator.html' class='qt'>QTranslator</a> * getTranslator(<span class='motCle'>void</span>);</span>
 			<div class='doc'>
 				// Return a pointer to a <a href='http://doc.qt.digia.com/4.6/qtranslator.html' class='qt'>QTranslator</a> object.
+			</div>
+			<span class='oneTab'><span class='motCle'>signals:</span></span><br />
+			<span class='twoTab'><span class='motCle'>void</span> queryParam(<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> paramName, <a href='http://doc.qt.digia.com/4.6/qvariant.html' class='qt'>QVariant</a>& value);<br />
+			<div class='doc'>
+				// Signal is emitted when the XML parser encounters a "param" tag.<br />
 			</div>
 			}<br />
 		</div>
@@ -149,6 +154,9 @@
 			<span class='oneTab'><a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile</a> *xmlFile=new <a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile</a>(filename);</span><br />
 			<span class='oneTab'><span class='motCle'>if</span>(xmlFile->open(<a href='http://doc.qt.digia.com/4.6/qiodevice.html' class='qt'>QIODevice</a>::ReadOnly)) {</span><br />
 			<span class='twoTab'>libqt4report::CReport *report=new libqt4report::CReport();</span><br />
+			<br />
+			<span class='twoTab'>report->setParamValue("fromCommande", <a href='http://doc.qt.digia.com/4.6/qvariant.html' class='qt'>QVariant</a>(1));</span><br />
+			<span class='twoTab'>report->setParamValue("toCommande", <a href='http://doc.qt.digia.com/4.6/qvariant.html' class='qt'>QVariant</a>(3));</span><br />
 			<br />
 			<span class='twoTab'><span class='motCle'>if</span>(report->process(xmlFile)) {</span><br />
 			<span class='threeTab'><span class='motCle'>for</span>(<span class='motCle'>int</span> i=0;i<report->getNbPage();i++) {</span><br />

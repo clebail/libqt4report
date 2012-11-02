@@ -8,6 +8,7 @@
 #include <QPrinter>
 #include <QPainter>
 #include <QSvgRenderer>
+#include <QInputDialog>
 #include <config.h>
 #include "CMainFrm.h"
 //--------------------------------------------------------------------------------------------------------------
@@ -19,6 +20,7 @@ CMainFrm::CMainFrm(QString fileName) : QMainWindow() {
 	scrollArea->setAlignment(Qt::AlignCenter);
 	
 	report=new libqt4report::CReport();
+	connect(report, SIGNAL(queryParam(QString,QVariant&)), this, SLOT(onReportQueryParam(QString,QVariant&)));
 	QApplication::installTranslator(libqt4report::CReport::getTranslator());
 	
 	setCentralWidget(scrollArea);
@@ -96,9 +98,6 @@ void CMainFrm::on_actionOuvrir_triggered(bool) {
 //--------------------------------------------------------------------------------------------------------------
 void CMainFrm::on_actionRecharger_triggered(bool) {	
 	xmlFile->seek(0);
-	
-	report->setParamValue("fromCommande", QVariant(1));
-	report->setParamValue("toCommande", QVariant(3));
 	
 	if(report->process(xmlFile)) {
 		nbPage=report->getNbPage();
@@ -216,5 +215,11 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		p.end();
 	}
 	delete printDialog;
+}
+//--------------------------------------------------------------------------------------------------------------
+void CMainFrm::onReportQueryParam(QString paramName, QVariant& value) {
+	QString sValue=QInputDialog::getText(this, tr("Value for")+" "+paramName, paramName);
+	
+	value=QVariant(sValue);
 }
 //--------------------------------------------------------------------------------------------------------------

@@ -26,7 +26,7 @@ namespace libqt4report {
 			QString getLastSourceError(void) { return lastSourceError; }
 			void setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName);
 			void setQuery(QString sqlQuery) { this->sqlQuery=sqlQuery.trimmed(); }
-			bool process(const QHash<QString, QVariant>& params=QHash<QString, QVariant>());
+			bool process(void);
 			void createPageHeader(void) { pageHeader=new CDocBand(); }
 			void createDocHeader(void) { docHeader=new CDocBand(); }
 			void createDocBody(void) { docBody=new CDocBand(); }
@@ -39,6 +39,7 @@ namespace libqt4report {
 			CDocBand * getPageFooter(void) { return pageFooter; }
 			void cleanup(void);
 			QSize getPagesSize(void) { return pagesSize; }
+			void setParamValue(QString paramName, QVariant value) { params[paramName]=value; }
 		private:
 			CDocBand *pageHeader;
 			CDocBand *docHeader;
@@ -54,6 +55,7 @@ namespace libqt4report {
 			double coef;
 			QSize pagesSize;
 			QString connectionName;
+			QHash<QString, QVariant> params;
 			
 			void createPages(QSqlQuery * query);
 			void processFields(QSqlRecord *record) { CFields::getInstance()->process(record); }

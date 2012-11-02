@@ -35,6 +35,7 @@ class CMainFrm : public QMainWindow, private Ui::MainFrm {
 		void on_actionPageSuivante_triggered(bool checked=false);
 		void on_actionDernierePage_triggered(bool checked=false);
 		void on_actionPrint_triggered(bool checked=false);
+		void onReportQueryParam(QString paramName, QVariant& value);
 };
 //------------------------------------------------------------------------------
 #endif // __CMAINFRM_H__
