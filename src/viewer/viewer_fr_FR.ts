@@ -44,39 +44,39 @@
     <name>MainFrm</name>
     <message>
         <source>&amp;File</source>
-        <translation type="obsolete">&amp;Fichier</translation>
+        <translation type="unfinished">&amp;Fichier</translation>
     </message>
     <message>
         <source>First page</source>
-        <translation type="obsolete">Première page</translation>
+        <translation type="unfinished">Première page</translation>
     </message>
     <message>
         <source>Previous page</source>
-        <translation type="obsolete">Page précédente</translation>
+        <translation type="unfinished">Page précédente</translation>
     </message>
     <message>
         <source>Next page</source>
-        <translation type="obsolete">Page suivante</translation>
+        <translation type="unfinished">Page suivante</translation>
     </message>
     <message>
         <source>Last page</source>
-        <translation type="obsolete">Dernière page</translation>
+        <translation type="unfinished">Dernière page</translation>
     </message>
     <message>
         <source>&amp;Open</source>
-        <translation type="obsolete">&amp;Ouvir</translation>
+        <translation type="unfinished">&amp;Ouvir</translation>
     </message>
     <message>
         <source>Reload</source>
-        <translation type="obsolete">Recharger</translation>
+        <translation type="unfinished">Recharger</translation>
     </message>
     <message>
         <source>&amp;Close</source>
-        <translation type="obsolete">&amp;Fermer</translation>
+        <translation type="unfinished">&amp;Fermer</translation>
     </message>
     <message>
         <source>&amp;Quit</source>
-        <translation type="obsolete">&amp;Quitter</translation>
+        <translation type="unfinished">&amp;Quitter</translation>
     </message>
 </context>
 </TS>
