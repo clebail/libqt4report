@@ -75,6 +75,12 @@
 		<div class='code'>
 			<span class='motCle'>class</span> CReport {<br/>
 			<span class='oneTab'><span class='motCle'>public:</span></span><br />
+			<span class='twoTab'>CReport(<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> connectionName=<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString()</a>);</span>
+			<div class='doc'>
+				// Constructor.<br />
+				// connectionName of an allready open database connection.
+			</div>
+			<br />
 			<span class='twoTab'><span class='motCle'>bool</span> validDocument(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile<a> *docFile);</span>
 			<div class='doc'>
 				// Try to validate a xlqr document represented by docFile.<br />
@@ -117,6 +123,11 @@
 			<div class='doc'>
 				// Render the page number pageIdx in the <a href='http://doc.qt.digia.com/4.6/qpainter.html' class='qt'>QPainter</a> painter device.<br />
 				// Page must be between 0 and getNbPage()-1
+			</div>
+			<br />
+			<span class='twoTab'><span class='motCle'>void</span> setParamValue(<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a>  paramName, <a href='http://doc.qt.digia.com/4.6/qvariant.html' class='qt'>QVariant</a>  value);
+			<div class='doc'>
+				// Set the value of a SQL parameter.
 			</div>
 			<br />
 			<span class='twoTab'><span class='motCle'>static</span> <a href='http://doc.qt.digia.com/4.6/qtranslator.html' class='qt'>QTranslator</a> * getTranslator(<span class='motCle'>void</span>);</span>

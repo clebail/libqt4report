@@ -49,7 +49,7 @@ namespace libqt4report {
 		}
 	}
 	//------------------------------------------------------------------------------
-	bool CDocument::process(void) {
+	bool CDocument::process(const QHash<QString, QVariant>& params) {
 		if(connectionName.isEmpty()) {
 			if(!database.open()) {
 				lastSourceError=QObject::tr("Database error");
@@ -59,7 +59,15 @@ namespace libqt4report {
 			}
 		}
 		
-		QSqlQuery query(sqlQuery, database);
+		QSqlQuery query(database);
+		query.prepare(sqlQuery);
+		
+		QHashIterator<QString, QVariant> i(params);
+		while (i.hasNext()) {
+			i.next();
+			query.bindValue(":"+i.key(), i.value());
+		}
+		
 		if(!query.exec()) {
 			lastSourceError=QObject::tr("Database error");
 			lastError=query.lastError().databaseText();

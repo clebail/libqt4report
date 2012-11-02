@@ -6,6 +6,8 @@
 #include <QTranslator>
 #include <QSize>
 #include <QPainter>
+#include <QHash>
+#include <QVariant>
 //------------------------------------------------------------------------------
 namespace libqt4report {
 	class CReport {
@@ -20,12 +22,14 @@ namespace libqt4report {
 			QString getLastSourceError(void) { return lastSourceError; }
 			QSize getPagesSize(void);
 			void renderPage(int pageIdx, QPainter *painter);
+			void setParamValue(QString paramName, QVariant value) { params[paramName]=value; }
 			
 			static QTranslator * getTranslator(void);
 		private:
 			QString lastError;
 			QString lastSourceError;
 			QString connectionName;
+			QHash<QString, QVariant> params;
 			
 			void cleanup(void);
 	};

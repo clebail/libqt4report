@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <document	xmlns="http://corentin-lebail.eu/libqt4report"
+			xmlns:lqr="http://corentin-lebail.eu/libqt4report"
 			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			xsi:schemaLocation="http://corentin-lebail.eu/libqt4report libqt4report.xsd"
 			pageWidth="210" pageHeight="297" unit="mm">
@@ -25,8 +26,12 @@
 		</field>
 	</fields>
 	<database>
+		<params>
+			<param id="fromCommande" /> 
+			<param id="toCommande" /> 
+		</params>
 		<connection driver="QMYSQL" host="127.0.0.1" userName="test" password="" dbName="test" />
-		<query><![CDATA[SELECT article, quantite, prixUnitaireHT, tauxTva, CURDATE() as td FROM ligneCommandes ORDER BY commande, numeroLigne]]></query>
+		<query><![CDATA[SELECT article, quantite, prixUnitaireHT, tauxTva, CURDATE() as td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne]]></query>
 	</database>
 	<body>
 		<pageHeader>
