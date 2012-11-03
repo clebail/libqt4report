@@ -2,6 +2,7 @@
 #include <QtDebug>
 #include <QVariant>
 #include <QDate>
+#include <QFontMetrics>
 #include "CItem.h"
 #include "CFields.h"
 #include "CFonts.h"
@@ -32,6 +33,34 @@ namespace libqt4report {
 			.arg((int)(getAttribute("x").toDouble()*coef))
 			.arg((int)((getAttribute("y").toDouble())*coef)+y)
 			.arg(value);
+	}
+	//------------------------------------------------------------------------------
+	void CItemText::prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {
+		CRendererObjectText * rendererObject=new CRendererObjectText();
+		QFont font;
+		QPoint point((int)(getAttribute("x").toDouble()*coef), (int)((getAttribute("y").toDouble())*coef)+y);
+		QString text=getValue();
+		
+		CFonts::getInstance()->getFont(getAttribute("fontId"))->toQFont(font);
+		
+		if(hasAttribute("align")) {
+			QString align=getAttribute("align");
+			
+			QFontMetrics fm(font);
+			int width=fm.width(text);
+			
+			if(align == "end") {
+				point.rx()-=width;
+			}else if(align == "middle") {
+				point.rx()-=width/2;
+			}
+		}
+		
+		rendererObject->setText(text);
+		rendererObject->setFont(font);
+		rendererObject->setPoint(point);
+		
+		rendererObjects->append(rendererObject);
 	}
 	//------------------------------------------------------------------------------
 	QString CItemTextFixedObject::getValue(void) {

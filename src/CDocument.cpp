@@ -176,20 +176,20 @@ namespace libqt4report {
 				
 				if(pageHeader != 0) {
 					svg+=pageHeader->toSvg(y, coef);
-					pageHeader->prepareRender(page->getRendererObjects(), coef);
+					pageHeader->prepareRender(page->getRendererObjects(), y, coef);
 					y+=pageHeader->getHeight(coef);
 				}
 				
 				if(idxRec == 0 && docHeader != 0) {
 					svg+=docHeader->toSvg(y, coef);
-					docHeader->prepareRender(page->getRendererObjects(), coef);
+					docHeader->prepareRender(page->getRendererObjects(), y, coef);
 					y+=docHeader->getHeight(coef);
 				}
 				
 				nouvellePage=false;
 			}
 			svg+=docBody->toSvg(y, coef);
-			docBody->prepareRender(page->getRendererObjects(), coef);
+			docBody->prepareRender(page->getRendererObjects(), y, coef);
 			y+=docBody->getHeight(coef);
 			
 			hFooter=hPageFooter + (idxRec == lastRec-1 ? hDocFooter : 0);
@@ -202,7 +202,7 @@ namespace libqt4report {
 				if(idxRec == lastRec) {
 					if(docFooter != 0) {
 						svg+=docFooter->toSvg(y, coef);
-						docFooter->prepareRender(page->getRendererObjects(), coef);
+						docFooter->prepareRender(page->getRendererObjects(), y, coef);
 						y+=docFooter->getHeight(coef);
 					}
 					fini=true;
@@ -212,7 +212,7 @@ namespace libqt4report {
 				
 				if(pageFooter != 0) {
 					svg+=pageFooter->toSvg(y, coef);
-					pageFooter->prepareRender(page->getRendererObjects(), coef);
+					pageFooter->prepareRender(page->getRendererObjects(), y, coef);
 					y+=pageFooter->getHeight(coef);
 				}
 				

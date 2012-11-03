@@ -156,7 +156,7 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		
 		printer->setPageMargins(0, 0, 0, 0, QPrinter::Millimeter);
 		printer->setPaperSize(report->getPagesSize(), QPrinter::DevicePixel);
-		printer->setResolution(72);
+		printer->setResolution(90);
 		
 		QPainter p;
 		p.begin(printer);
@@ -167,7 +167,7 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		int nbPageToPrint;
 		int sens=1;
 		int i,j;
-		QSvgRenderer svgRenderer;
+		//QSvgRenderer svgRenderer;
 		
 		switch(printer->printRange())
 		{
@@ -193,8 +193,10 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		
 		for(i=1,j=f;i<=nbPageToPrint;i++)
 		{
-			svgRenderer.load(report->toSvg(j).toUtf8());
-			svgRenderer.render(&p);
+			//svgRenderer.load(report->toSvg(j).toUtf8());
+			//svgRenderer.render(&p);
+			
+			report->renderPage(j, &p);
 			
 			if(i<nbPageToPrint) 
 			{

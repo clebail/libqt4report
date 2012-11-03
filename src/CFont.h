@@ -2,6 +2,9 @@
 #ifndef __CFONT_H__
 #define __CFONT_H__
 //------------------------------------------------------------------------------
+#include <QString>
+#include <QFont>
+//------------------------------------------------------------------------------
 namespace libqt4report {
 	class CFont {
 		public:
@@ -12,6 +15,7 @@ namespace libqt4report {
 			QString getWeight(void) { return weight; }
 			void setStyle(QString style) { this->style=style; }
 			QString getStyle(void) { return style; }
+			void toQFont(QFont &font);
 		private:
 			QString family;
 			int size;

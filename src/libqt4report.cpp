@@ -127,6 +127,15 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	void CReport::renderPage(int pageIdx, QPainter *painter) {
 		if(document != 0) {
+			CPage *page=document->getPage(pageIdx);
+			if(page != 0) {
+				int i;
+				QList<CRendererObject *> * rendererObjects=page->getRendererObjects();
+				
+				for(i=0;i<rendererObjects->count();i++) {
+					rendererObjects->at(i)->draw(painter);
+				}
+			}
 		}
 	}
 	//------------------------------------------------------------------------------
