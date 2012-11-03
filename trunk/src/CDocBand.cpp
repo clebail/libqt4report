@@ -43,12 +43,12 @@ namespace libqt4report {
 		}
 	}
 	//------------------------------------------------------------------------------
-	void CDocBand::prepareRender(QList<CRendererObject *> *rendererObjects, double coef) {
+	void CDocBand::prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {
 		QHashIterator<QString, CItem *> i(*this);
 		
 		while (i.hasNext()) {
 			i.next();
-			i.value()->prepareRender(rendererObjects, coef);
+			i.value()->prepareRender(rendererObjects, y, coef);
 		}
 	}
 	//------------------------------------------------------------------------------

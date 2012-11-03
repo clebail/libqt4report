@@ -13,7 +13,7 @@ namespace libqt4report {
 			QString toSvg(int y, double coef);
 			int getHeight(double coef);
 			void cleanup(void);
-			void prepareRender(QList<CRendererObject *> *rendererObjects, double coef);
+			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
 		private:
 			int height;
 	};

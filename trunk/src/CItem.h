@@ -15,7 +15,6 @@ namespace libqt4report {
 			QString getAttribute(QString name) { return attributes.value(name) ;}
 			bool hasAttribute(QString name) { return attributes.contains(name); }
 			virtual int getHeight(double coef) = 0;
-			void prepareRender(QList<CRendererObject *> *rendererObjects, double coef) {}
 		private:
 			QHash<QString ,QString> attributes;
 	};
@@ -25,6 +24,7 @@ namespace libqt4report {
 			virtual ~CItemText(void) {}
 			QString toSvg(int y, double coef);
 			int getHeight(double coef) { return (int)(getAttribute("y").toDouble()*coef); }
+			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
 		protected:
 			virtual QString getValue(void) = 0;
 	};
@@ -47,11 +47,13 @@ namespace libqt4report {
 		public:
 			QString toSvg(int y, double coef);
 			int getHeight(double coef);
+			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {}
 	};
 	//------------------------------------------------------------------------------
 	class CItemRectObject : public CItemLineObject {
 		public:
 			QString toSvg(int y, double coef);
+			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {}
 	};
 } //namespace
 //------------------------------------------------------------------------------
