@@ -160,7 +160,7 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		
 		QPainter p;
 		p.begin(printer);
-		p.setRenderHint((QPainter::RenderHint)0, true);
+		p.setRenderHint(QPainter::Antialiasing | QPainter::TextAntialiasing, true);
 		
 		int f=qMin(printer->fromPage(), nbPage);
 		int t=qMin(printer->toPage(), nbPage);
