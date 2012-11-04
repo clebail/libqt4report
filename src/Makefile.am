@@ -8,9 +8,11 @@ moc_FILES =	moc_libqt4report.cpp \
 		moc_CDocumentParser.cpp \
 		moc_CFont.cpp
 
-TRANSLATE = libqt4report_fr_FR.ts
+TRANSLATE = 	libqt4report_fr_FR.ts \
+		libqt4report_cs_CZ.ts
 
-lrelease_FILES = libqt4report_fr_FR.qm
+lrelease_FILES = 	libqt4report_fr_FR.qm \
+			libqt4report_cs_CZ.qm
 
 libqt4report_la_SOURCES =	libqt4report.cpp libqt4report.h \
 				CDocument.cpp CDocument.h \
