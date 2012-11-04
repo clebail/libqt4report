@@ -10,7 +10,10 @@
 namespace libqt4report {
 	class CRendererObject {
 		public:
+			void setColor(QString sColor) { color.setNamedColor(sColor); }
 			virtual void draw(QPainter * painter) = 0;
+		protected:
+			QColor color;
 	};
 	//------------------------------------------------------------------------------
 	class CRendererObjectText : public CRendererObject {
@@ -27,12 +30,20 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	class CRendererObjectLine : public CRendererObject {
 		public:
-			void draw(QPainter * painter) {};
+			void setStartPoint(QPoint point) { startPoint=point; }
+			void setEndPoint(QPoint point) { endPoint=point; }
+			void draw(QPainter * painter);
+		private:
+			QPoint startPoint;
+			QPoint endPoint;
 	};
 	//------------------------------------------------------------------------------
 	class CRendererObjectRect : public CRendererObject {
 		public:
-			void draw(QPainter * painter) {};
+			void setRect(QRect rect) { this->rect=rect; }
+			void draw(QPainter * painter);
+		private:
+			QRect rect;
 	};
 	//------------------------------------------------------------------------------
 } //namespace

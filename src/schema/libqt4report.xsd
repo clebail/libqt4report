@@ -70,7 +70,13 @@
 		<xsd:attribute name="id" type="xsd:string" use="required" />
 		<xsd:attribute name="x" type="xsd:int" use="required" />
 		<xsd:attribute name="y" type="xsd:int" use="required" />
-		<xsd:attribute name="color" type="xsd:string" />
+		<xsd:attribute name="color">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="#[0-9a-fA-F]{6,6}" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
 	</xsd:complexType>
 
 	<xsd:complexType name="textObject" abstract="true">
@@ -139,33 +145,23 @@
 			<xsd:attribute name="id" type="xsd:string" use="required" />
 			<xsd:attribute name="family" type="xsd:string" use="required" />
 			<xsd:attribute name="size" type="xsd:int" use="required" />
-			<xsd:attribute name="weight" default="normal">
+			<xsd:attribute name="weight" default="Normal">
 				<xsd:simpleType>
 					<xsd:restriction base="xsd:string">
-						<xsd:enumeration value="normal" />
-						<xsd:enumeration value="bold" />
-						<xsd:enumeration value="bolder" /> 
-						<xsd:enumeration value="lighter" />
-						<xsd:enumeration value="100" />
-						<xsd:enumeration value="200" />
-						<xsd:enumeration value="300" />
-						<xsd:enumeration value="400" />
-						<xsd:enumeration value="500" />
-						<xsd:enumeration value="600" />
-						<xsd:enumeration value="700" />
-						<xsd:enumeration value="800" />
-						<xsd:enumeration value="900" />
-						<xsd:enumeration value="inherit" />
+						<xsd:enumeration value="Light" />
+						<xsd:enumeration value="Normal" />
+						<xsd:enumeration value="DemiBold" /> 
+						<xsd:enumeration value="Bold" />
+						<xsd:enumeration value="Black" />
 					</xsd:restriction>
 				</xsd:simpleType>
 			</xsd:attribute>
-			<xsd:attribute name="style" default="normal">
+			<xsd:attribute name="style" default="StyleNormal">
 				<xsd:simpleType>
 					<xsd:restriction base="xsd:string">
-						<xsd:enumeration value="normal" />
-						<xsd:enumeration value="italic" />
-						<xsd:enumeration value="oblique" /> 
-						<xsd:enumeration value="inherit" />
+						<xsd:enumeration value="StyleNormal" />
+						<xsd:enumeration value="StyleItalic" />
+						<xsd:enumeration value="StyleOblique" /> 
 					</xsd:restriction>
 				</xsd:simpleType>
 			</xsd:attribute>

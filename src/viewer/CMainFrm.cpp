@@ -7,7 +7,6 @@
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QPainter>
-#include <QSvgRenderer>
 #include <QInputDialog>
 #include <config.h>
 #include "CMainFrm.h"
@@ -160,14 +159,13 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		
 		QPainter p;
 		p.begin(printer);
-		p.setRenderHint(QPainter::Antialiasing | QPainter::TextAntialiasing, true);
+		p.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing, true);
 		
 		int f=qMin(printer->fromPage(), nbPage);
 		int t=qMin(printer->toPage(), nbPage);
 		int nbPageToPrint;
 		int sens=1;
 		int i,j;
-		//QSvgRenderer svgRenderer;
 		
 		switch(printer->printRange())
 		{
@@ -193,9 +191,6 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		
 		for(i=1,j=f;i<=nbPageToPrint;i++)
 		{
-			//svgRenderer.load(report->toSvg(j).toUtf8());
-			//svgRenderer.render(&p);
-			
 			report->renderPage(j, &p);
 			
 			if(i<nbPageToPrint) 

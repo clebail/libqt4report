@@ -21,8 +21,8 @@ namespace libqt4report {
 		}
 		
 		style+="font-family:"+font->getFamily()+";font-size:"+QString::number(font->getSize())+"pt;";
-		style+="font-weight:"+font->getWeight()+";";
-		style+="font-style:"+font->getStyle()+";";
+		style+="font-weight:"+CFont::toSvgWeight(font->getWeight())+";";
+		style+="font-style:"+CFont::toSvgStyle(font->getStyle())+";";
 		style+=color+"'";
 		
 		if(hasAttribute("align")) {
@@ -42,7 +42,7 @@ namespace libqt4report {
 		QString text=getValue();
 		
 		CFonts::getInstance()->getFont(getAttribute("fontId"))->toQFont(font);
-		
+				
 		if(hasAttribute("align")) {
 			QString align=getAttribute("align");
 			
@@ -59,6 +59,7 @@ namespace libqt4report {
 		rendererObject->setText(text);
 		rendererObject->setFont(font);
 		rendererObject->setPoint(point);
+		rendererObject->setColor(hasAttribute("color") ? getAttribute("color") : "#000000");
 		
 		rendererObjects->append(rendererObject);
 	}
@@ -107,6 +108,25 @@ namespace libqt4report {
 			.arg(x1).arg(y1).arg(x2).arg(y2);
 	}
 	//------------------------------------------------------------------------------
+	void CItemLineObject::prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {
+		CRendererObjectLine * rendererObject=new CRendererObjectLine();
+		int height=(int)((getAttribute("height").toDouble())*coef);
+		QPoint startPoint;
+		QPoint endPoint;
+		
+		startPoint.setX((int)(getAttribute("x").toDouble()*coef));
+		startPoint.setY((int)((getAttribute("y").toDouble())*coef)+y);
+		endPoint.setX(startPoint.x()+(int)(getAttribute("width").toDouble()*coef));
+		endPoint.setY(startPoint.y()+height);
+		
+		rendererObject->setStartPoint(startPoint);
+		rendererObject->setEndPoint(endPoint);
+		
+		rendererObject->setColor(hasAttribute("color") ? getAttribute("color") : "#000000");
+		
+		rendererObjects->append(rendererObject);
+	}
+	//------------------------------------------------------------------------------
 	int CItemLineObject::getHeight(double coef) { 
 		int y, height;
 		
@@ -131,6 +151,22 @@ namespace libqt4report {
 		
 		return QString("<rect x='%1' y='%2' width='%3' height='%4' style='stroke:"+color+";stroke-width:1;fill:none;' />")
 		.arg(x).arg(yR).arg(width).arg(height);
+	}
+	//------------------------------------------------------------------------------
+	void CItemRectObject::prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {
+		CRendererObjectRect * rendererObject=new CRendererObjectRect();
+		QRect rect;
+		
+		rect.setX((int)(getAttribute("x").toDouble()*coef));
+		rect.setY((int)((getAttribute("y").toDouble())*coef)+y);
+		rect.setWidth((int)(getAttribute("width").toDouble()*coef));
+		rect.setHeight((int)((getAttribute("height").toDouble())*coef));
+		
+		rendererObject->setRect(rect);
+		
+		rendererObject->setColor(hasAttribute("color") ? getAttribute("color") : "#000000");
+		
+		rendererObjects->append(rendererObject);
 	}
 	//------------------------------------------------------------------------------
 }//namespace
