@@ -12,9 +12,11 @@ RESSOURCES = viewer.qrc
 		
 qrc_FILES = qrc_viewer.cpp
 
-TRANSLATE = viewer_fr_FR.ts
+TRANSLATE = 	viewer_fr_FR.ts \
+		viewer_cs_CZ.ts
 
-lrelease_FILES = viewer_fr_FR.qm
+lrelease_FILES =	viewer_fr_FR.qm \
+			viewer_cs_CZ.qm
 
 viewer_SOURCES = 	viewer.cpp \
 			CMainFrm.cpp CMainFrm.h
