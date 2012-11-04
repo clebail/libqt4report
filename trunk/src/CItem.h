@@ -47,13 +47,13 @@ namespace libqt4report {
 		public:
 			QString toSvg(int y, double coef);
 			int getHeight(double coef);
-			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {}
+			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
 	};
 	//------------------------------------------------------------------------------
 	class CItemRectObject : public CItemLineObject {
 		public:
 			QString toSvg(int y, double coef);
-			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {}
+			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
 	};
 } //namespace
 //------------------------------------------------------------------------------
