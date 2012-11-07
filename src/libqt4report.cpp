@@ -19,7 +19,7 @@ namespace libqt4report {
 	static CDocument * document;
 	static QTranslator *translator=0;
 	//------------------------------------------------------------------------------
-	CReport::CReport(QString connectionNam) : QObject() {
+	CReport::CReport(QString connectionName) : QObject() {
 		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
 		
 		this->connectionName=connectionName;
@@ -30,11 +30,6 @@ namespace libqt4report {
 	CReport::~CReport(void) {
 		if(document != 0) {
 			delete document;
-		}
-		
-		
-		if(translator != 0) {
-			delete translator;
 		}
 	}
 	//------------------------------------------------------------------------------

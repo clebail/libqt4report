@@ -55,7 +55,6 @@ namespace libqt4report {
 					unit=atts.value(i);
 				}
 			}
-			
 			document=new CDocument(pageWidth, pageHeight, unit, connectionName);
 			
 			return true;
