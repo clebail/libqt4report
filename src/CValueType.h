@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include <QVariant>
 #include <QDate>
+#include <QDateTime>
 //------------------------------------------------------------------------------
 namespace libqt4report {
 	class CValueType {
@@ -43,6 +44,14 @@ namespace libqt4report {
 			QString toFormatedString(QString format);
 		private:
 			QDate value;
+	};
+	//------------------------------------------------------------------------------
+	class CValueTypeDateTime: public CValueType {
+		public:
+			void setValue(QVariant value) { this->value=value.toDateTime(); }
+			QString toFormatedString(QString format);
+		private:
+			QDateTime value;
 	};
 }//namespace
 //------------------------------------------------------------------------------

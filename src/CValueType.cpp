@@ -1,5 +1,6 @@
 //------------------------------------------------------------------------------
 #include <QRegExp>
+#include <QtDebug>
 #include "CValueType.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
@@ -24,6 +25,14 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	QString CValueTypeDate::toFormatedString(QString format) {
+		if(format.isEmpty()) {
+			return value.toString(Qt::SystemLocaleShortDate);
+		}
+		
+		return value.toString(format.mid(1));
+	}
+	//------------------------------------------------------------------------------
+	QString CValueTypeDateTime::toFormatedString(QString format) {
 		if(format.isEmpty()) {
 			return value.toString(Qt::SystemLocaleShortDate);
 		}
