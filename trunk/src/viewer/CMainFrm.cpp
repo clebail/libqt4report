@@ -156,6 +156,7 @@ void CMainFrm::on_actionPrint_triggered(bool) {
 		printer->setPageMargins(0, 0, 0, 0, QPrinter::Millimeter);
 		printer->setPaperSize(report->getPagesSize(), QPrinter::DevicePixel);
 		printer->setResolution(90);
+		printer->setOutputFormat(QPrinter::NativeFormat);
 		
 		QPainter p;
 		p.begin(printer);
