@@ -18,6 +18,7 @@
 					<xsd:pattern value="integer" /> 
 					<xsd:pattern value="real" /> 
 					<xsd:pattern value="date" /> 
+					<xsd:pattern value="dateTime" /> 
 				</xsd:restriction>
 			</xsd:simpleType>	
 		</xsd:attribute>

@@ -25,6 +25,7 @@ namespace libqt4report {
 		qRegisterMetaType<CValueTypeInteger>("CValueTypeInteger");
 		qRegisterMetaType<CValueTypeReal>("CValueTypeReal");
 		qRegisterMetaType<CValueTypeDate>("CValueTypeDate");
+		qRegisterMetaType<CValueTypeDateTime>("CValueTypeDateTime");
 		
 		document=0;
 		inFonts=inFields=inDatabase=inQuery=inBody=inField=inCDATA=inParams=false;
