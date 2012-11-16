@@ -135,6 +135,7 @@ namespace libqt4report {
 		int idxRec, lastRec;
 		bool hSpecified=false;
 		CPage *page;
+		QSqlRecord record[2];
 		
 		if(pageHeight != "100%") {
 			hSpecified=true;
@@ -159,9 +160,10 @@ namespace libqt4report {
 		
 		while(!fini) {
 			query->next();
-			QSqlRecord record=query->record();
+			record[1]=QSqlRecord(record[0]);
+			record[0]=query->record();
 			
-			processFields(&record);
+			processFields(&record[0]);
 			
 			if(nouvellePage) {
 				page=new CPage();
@@ -188,6 +190,16 @@ namespace libqt4report {
 				
 				nouvellePage=false;
 			}
+			
+			if(!record[1].isEmpty()) {
+				if(record[1].value("commande") != record[0].value("commande")) {
+					qDebug() << "Group footer";
+					qDebug() << "Group header";
+				}
+			}else {
+				qDebug() << "Group header";
+			}
+			
 			svg+=docBody->toSvg(y, coef);
 			docBody->prepareRender(page->getRendererObjects(), y, coef);
 			y+=docBody->getHeight(coef);
