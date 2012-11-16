@@ -11,6 +11,7 @@
 		<font id="fontTotal" family="arial" size="10" weight="Bold" />
 	</fonts>
 	<fields>
+		<field xsi:type="dbFieldObject" id="dbCommande" fieldName="commande" dataType="integer" />
 		<field xsi:type="dbFieldObject" id="dbArticle" fieldName="article" dataType="string" />
 		<field xsi:type="dbFieldObject" id="dbQte" fieldName="quantite" dataType="integer" />
 		<field xsi:type="dbFieldObject" id="dbPuHT" fieldName="prixUnitaireHT" dataType="real" />
@@ -31,11 +32,12 @@
 			<param id="toCommande" /> 
 		</params>
 		<connection driver="QMYSQL" host="127.0.0.1" userName="test" password="" dbName="test" />
-		<query><![CDATA[SELECT article, quantite, prixUnitaireHT, tauxTva, CURDATE() as td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne]]></query>
+		<query><![CDATA[SELECT commande, article, quantite, prixUnitaireHT, tauxTva, CURDATE() as td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne]]></query>
 	</database>
 	<body>
 		<pageHeader>
-			<item xsi:type="textFixedObject" id="codeTitle" fontId="fontColumnName" x="5" y="5" value="Article" />
+			<item xsi:type="textFixedObject" id="cdeTitle" fontId="fontColumnName" x="5" y="5" value="Cde." />
+			<item xsi:type="textFixedObject" id="codeTitle" fontId="fontColumnName" x="15" y="5" value="Article" />
 			<item xsi:type="textFixedObject" id="nomTitle" fontId="fontColumnName" x="50" y="5" value="Quantité" align="end" />
 			<item xsi:type="textFixedObject" id="puHTTitle" fontId="fontColumnName" x="100" y="5" value="Prix unitaire HT" align="end" />
 			<item xsi:type="textFixedObject" id="tTvaTitle" fontId="fontColumnName" x="130" y="5" value="Taux de tva" align="end" />
@@ -48,7 +50,8 @@
 			<item xsi:type="textFieldObject" id="titleDate" fontId="fontTitre" x="20" y="10" fieldId="dbTD" color="#0000FF" />
 		</docHeader>
 		<docBody>
-			<item xsi:type="textFieldObject" id="code" fontId="font1" x="5" y="5" fieldId="dbArticle" />
+			<item xsi:type="textFieldObject" id="cde" fontId="font1" x="5" y="5" fieldId="dbCommande" />
+			<item xsi:type="textFieldObject" id="code" fontId="font1" x="15" y="5" fieldId="dbArticle" />
 			<item xsi:type="textFieldObject" id="nom" fontId="font1" x="50" y="5" fieldId="dbQte" align="end" />
 			<item xsi:type="textFieldObject" id="puHt" fontId="font1" x="100" y="5" fieldId="dbPuHT" align="end" format="rf2" />
 			<item xsi:type="textFieldObject" id="tTva" fontId="font1" x="130" y="5" fieldId="dbTTva" align="end" format="rf3" />
