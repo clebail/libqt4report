@@ -9,6 +9,7 @@
 namespace libqt4report {
 	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName) {
 		pageHeader=docHeader=docBody=docFooter=pageFooter=0;
+		lastGroup=firstGroup=0;
 		
 		this->pageWidth=pageWidth;
 		this->pageHeight=pageHeight;
@@ -94,6 +95,22 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::cleanup(void) {
+		CGroup *pGroup=firstGroup;
+		CGroup *dGroup;
+		
+		if(pGroup != 0) {
+			while(pGroup->getChild() != 0) {
+				pGroup=pGroup->getChild();
+			}
+			
+			dGroup=pGroup;
+			do {
+				pGroup=dGroup;
+				delete dGroup;
+				dGroup=pGroup->getParent();
+			}while(dGroup != 0);
+		}
+		
 		if(pageHeader != 0) {
 			pageHeader->cleanup();
 			delete pageHeader;
@@ -120,6 +137,31 @@ namespace libqt4report {
 		CFonts::getInstance()->cleanup();
 		CFields::getInstance()->cleanup();
 		CScript::getInstance()->cleanup();
+		
+		
+	}
+	//------------------------------------------------------------------------------
+	void CDocument::addGroup(QString id, QString refer) {
+		CGroup *nGroup=new CGroup();
+			
+		nGroup->setId(id);
+		nGroup->setRefer(refer);
+		
+		
+		if(firstGroup == 0) {
+			firstGroup=nGroup;
+		}else {
+			CGroup *pGroup=firstGroup;
+			
+			while(pGroup->getChild() != 0) {
+				pGroup=pGroup->getChild();
+			}
+			
+			pGroup->setChild(nGroup);
+			nGroup->setParent(pGroup);
+		}
+		
+		lastGroup=nGroup;
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::createPages(QSqlQuery *query) {
@@ -191,13 +233,41 @@ namespace libqt4report {
 				nouvellePage=false;
 			}
 			
-			if(!record[1].isEmpty()) {
-				if(record[1].value("commande") != record[0].value("commande")) {
-					qDebug() << "Group footer";
-					qDebug() << "Group header";
+			if(firstGroup != 0) {
+				CGroup *pGroup=firstGroup;
+				
+				if(!record[1].isEmpty()) {
+					while(pGroup != 0) {
+						QString refer=CFields::getInstance()->getField(pGroup->getRefer())->getAttribute("fieldName");
+						
+						if(record[1].value(refer) != record[0].value(refer)) {
+							qDebug() << "group" << refer << "change";
+							
+							CGroup *pGroupChanged=pGroup;
+							
+							pGroup=lastGroup;
+							while(pGroup != pGroupChanged) {
+								qDebug() << "group footer" << pGroup->getRefer();
+								pGroup=pGroup->getParent();
+							}
+							
+							qDebug() << "group footer" << pGroup->getRefer();
+							
+							while(pGroup != 0) {
+								qDebug() << "group header" << pGroup->getRefer();
+								pGroup=pGroup->getChild();
+							}
+							
+							break;
+						}
+						pGroup=pGroup->getChild();
+					}
+				}else {
+					while(pGroup != 0) {
+						qDebug() << "group header" << pGroup->getRefer();
+						pGroup=pGroup->getChild();
+					}
 				}
-			}else {
-				qDebug() << "Group header";
 			}
 			
 			svg+=docBody->toSvg(y, coef);
@@ -212,6 +282,15 @@ namespace libqt4report {
 			
 			if(finPage) {
 				if(idxRec == lastRec) {
+					if(firstGroup != 0) {
+						CGroup *pGroup=lastGroup;
+						
+						while(pGroup != 0) {
+							qDebug() << "group footer" << pGroup->getRefer();
+							pGroup=pGroup->getParent();
+						}
+					}
+					
 					if(docFooter != 0) {
 						svg+=docFooter->toSvg(y, coef);
 						docFooter->prepareRender(page->getRendererObjects(), y, coef);

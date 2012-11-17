@@ -177,6 +177,21 @@
 		</xsd:complexType>
 	</xsd:element>
 	
+	<xsd:element name="group">
+		<xsd:complexType>
+			<xsd:attribute name="id" type="xsd:string" use="required" />
+			<xsd:attribute name="refer" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="groups">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="lqr:group" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
 	<xsd:element name="field" type="lqr:fieldObject" />
 	
 	<xsd:element name="fields">
@@ -287,6 +302,7 @@
 				<xsd:element ref="lqr:params" minOccurs="0" />
 				<xsd:element ref="lqr:connection" minOccurs="0" />
 				<xsd:element ref="lqr:query" />
+				<xsd:element ref="lqr:fields" />
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
@@ -295,8 +311,9 @@
 		<xsd:complexType>
 			<xsd:sequence>
 				<xsd:element ref="lqr:fonts" minOccurs="0" />
-				<xsd:element ref="lqr:fields" />
 				<xsd:element ref="lqr:database" />
+				<xsd:element ref="lqr:groups" minOccurs="0" />
+				<xsd:element ref="lqr:fields" />
 				<xsd:element ref="lqr:body" />
 			</xsd:sequence>
 			<xsd:attribute name="pageWidth" type="xsd:int" use="required" />
@@ -324,12 +341,27 @@
 		</xsd:unique>
 		
 		<xsd:unique name="uniqueFieldId">
-			<xsd:selector xpath="lqr:fields/lqr:field" />
+			<xsd:selector xpath="lqr:fields/lqr:field|lqr:database/lqr:fields/lqr:field" />
 			<xsd:field xpath="@id" />
 		</xsd:unique>
 		
+		<xsd:key name="keyDatabaseFieldId">
+			<xsd:selector xpath="lqr:database/lqr:fields/lqr:field" />
+			<xsd:field xpath="@id" />
+		</xsd:key>
+		
 		<xsd:unique name="uniqueItemId">
 			<xsd:selector xpath="lqr:body/*/lqr:item" />
+			<xsd:field xpath="@id" />
+		</xsd:unique>
+		
+		<xsd:unique name="uniqueParamId">
+			<xsd:selector xpath="lqr:database/lqr:params/lqr:param" />
+			<xsd:field xpath="@id" />
+		</xsd:unique>
+		
+		<xsd:unique name="uniqueGroupId">
+			<xsd:selector xpath="lqr:groups/lqr:group" />
 			<xsd:field xpath="@id" />
 		</xsd:unique>
 		
@@ -343,9 +375,9 @@
 			<xsd:field xpath="@fieldId" />
 		</xsd:keyref>
 		
-		<xsd:unique name="uniqueParamId">
-			<xsd:selector xpath="lqr:database/lqr:params/lqr:param" />
-			<xsd:field xpath="@id" />
-		</xsd:unique>
+		<xsd:keyref name="keyDatabaseFieldIdRef" refer="lqr:keyDatabaseFieldId">
+			<xsd:selector xpath="lqr:groups/lqr:group" />
+			<xsd:field xpath="@refer" />
+		</xsd:keyref>
 	</xsd:element>
 </xsd:schema>

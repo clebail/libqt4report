@@ -28,7 +28,7 @@ namespace libqt4report {
 		qRegisterMetaType<CValueTypeDateTime>("CValueTypeDateTime");
 		
 		document=0;
-		inFonts=inFields=inDatabase=inQuery=inBody=inField=inCDATA=inParams=false;
+		inFonts=inFields=inDatabase=inQuery=inBody=inField=inCDATA=inParams=inGroups=false;
 		curDocBand=edbtNone;
 		this->connectionName=connectionName;
 	}
@@ -76,6 +76,11 @@ namespace libqt4report {
 			return true;
 		}
 		
+		if(qName == "groups") {
+			inGroups=true;
+			return true;
+		}
+		
 		if(qName == "params" && inDatabase) {
 			inParams=true;
 			return true;
@@ -101,6 +106,22 @@ namespace libqt4report {
 		
 		if(qName == "query" && inDatabase) {
 			inQuery=true;
+			return true;
+		}
+		
+		if(qName == "group" && inGroups) {
+			QString id, refer;
+			
+			for(i=0;i<atts.count();i++) {
+				if(atts.localName(i) == "id") {
+					id=atts.value(i);
+				}else if(atts.localName(i) == "refer") {
+					refer=atts.value(i);
+				}
+			}
+			
+			document->addGroup(id, refer);
+			
 			return true;
 		}
 		
@@ -273,6 +294,11 @@ namespace libqt4report {
 		
 		if(qName == "database") {
 			inDatabase=false;
+			return true;
+		}
+		
+		if(qName == "groups") {
+			inGroups=false;
 			return true;
 		}
 		
