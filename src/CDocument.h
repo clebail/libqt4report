@@ -10,6 +10,7 @@
 #include "CDocBand.h"
 #include "CFields.h"
 #include "CPage.h"
+#include "CGroup.h"
 //------------------------------------------------------------------------------
 #define COEF_MM		3.515625 	//90 dpi 1 pouce = 25.6 mm => 90/25.6
 #define COEF_IN		90.0		//90 dpi
@@ -40,6 +41,7 @@ namespace libqt4report {
 			void cleanup(void);
 			QSize getPagesSize(void) { return pagesSize; }
 			void setParamValue(QString paramName, QVariant value) { params[paramName]=value; }
+			void addGroup(QString id, QString refer);
 		private:
 			CDocBand *pageHeader;
 			CDocBand *docHeader;
@@ -56,6 +58,8 @@ namespace libqt4report {
 			QSize pagesSize;
 			QString connectionName;
 			QHash<QString, QVariant> params;
+			CGroup *firstGroup;
+			CGroup *lastGroup;
 			
 			void createPages(QSqlQuery * query);
 			void processFields(QSqlRecord *record) { CFields::getInstance()->process(record); }

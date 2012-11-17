@@ -10,13 +10,29 @@
 		<font id="fontTitre" family="arial" size="40" weight="Black" />
 		<font id="fontTotal" family="arial" size="10" weight="Bold" />
 	</fonts>
+	<database>
+		<params>
+			<param id="fromCommande" /> 
+			<param id="toCommande" /> 
+		</params>
+		<connection driver="QMYSQL" host="127.0.0.1" userName="test" password="" dbName="test" />
+		<query><![CDATA[SELECT commande, numeroLigne, article, quantite, prixUnitaireHT, tauxTva, CURDATE() as td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne]]></query>
+		<fields>
+			<field xsi:type="dbFieldObject" id="dbCommande" fieldName="commande" dataType="integer" />
+			<field xsi:type="dbFieldObject" id="dbNumeroLigne" fieldName="numeroLigne" dataType="integer" />
+			<field xsi:type="dbFieldObject" id="dbArticle" fieldName="article" dataType="string" />
+			<field xsi:type="dbFieldObject" id="dbQte" fieldName="quantite" dataType="integer" />
+			<field xsi:type="dbFieldObject" id="dbPuHT" fieldName="prixUnitaireHT" dataType="real" />
+			<field xsi:type="dbFieldObject" id="dbTTva" fieldName="tauxTva" dataType="real" />
+			<field xsi:type="dbFieldObject" id="dbTD" fieldName="td" dataType="date" />
+		</fields>
+	</database>
+	<groups>
+		<group id="grCde" refer="dbCommande" />
+		<group id="grNumLigne" refer="dbNumeroLigne" />
+		<group id="grArticle" refer="dbArticle" />
+	</groups>
 	<fields>
-		<field xsi:type="dbFieldObject" id="dbCommande" fieldName="commande" dataType="integer" />
-		<field xsi:type="dbFieldObject" id="dbArticle" fieldName="article" dataType="string" />
-		<field xsi:type="dbFieldObject" id="dbQte" fieldName="quantite" dataType="integer" />
-		<field xsi:type="dbFieldObject" id="dbPuHT" fieldName="prixUnitaireHT" dataType="real" />
-		<field xsi:type="dbFieldObject" id="dbTTva" fieldName="tauxTva" dataType="real" />
-		<field xsi:type="dbFieldObject" id="dbTD" fieldName="td" dataType="date" />
 		<field xsi:type="totalFieldObject" id="tTotalHT" operation="sum" fieldId="cMntHT" dataType="real" />
 		<field xsi:type="totalFieldObject" id="tTotalTTC" operation="sum" fieldId="cMntTTC" dataType="real" />
 		<field xsi:type="calculatedFieldObject" id="cMntHT" dataType="real">
@@ -26,14 +42,6 @@
 			<expression><![CDATA[${cMntHT}*(1+${dbTTva})]]></expression>
 		</field>
 	</fields>
-	<database>
-		<params>
-			<param id="fromCommande" /> 
-			<param id="toCommande" /> 
-		</params>
-		<connection driver="QMYSQL" host="127.0.0.1" userName="test" password="" dbName="test" />
-		<query><![CDATA[SELECT commande, article, quantite, prixUnitaireHT, tauxTva, CURDATE() as td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne]]></query>
-	</database>
 	<body>
 		<pageHeader>
 			<item xsi:type="textFixedObject" id="cdeTitle" fontId="fontColumnName" x="5" y="5" value="Cde." />

@@ -32,6 +32,7 @@ namespace libqt4report {
 			bool inFieldExpression;
 			bool inCDATA;
 			bool inParams;
+			bool inGroups;
 			EDBType curDocBand;
 			CField *curField;
 			QString lastError;
