@@ -5,6 +5,7 @@
 namespace libqt4report {
 	CGroup::CGroup(void) {
 		child=parent=0;
+		changed=false;
 	}
 	//------------------------------------------------------------------------------
 }// namespace
