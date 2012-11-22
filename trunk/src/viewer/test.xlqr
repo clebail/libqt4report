@@ -16,31 +16,34 @@
 			<param id="toCommande" /> 
 		</params>
 		<connection driver="QMYSQL" host="127.0.0.1" userName="test" password="" dbName="test" />
-		<query><![CDATA[SELECT commande, numeroLigne, article, quantite, prixUnitaireHT, tauxTva, CURDATE() as td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne]]></query>
-		<fields>
-			<field xsi:type="dbFieldObject" id="dbCommande" fieldName="commande" dataType="integer" />
-			<field xsi:type="dbFieldObject" id="dbNumeroLigne" fieldName="numeroLigne" dataType="integer" />
-			<field xsi:type="dbFieldObject" id="dbArticle" fieldName="article" dataType="string" />
-			<field xsi:type="dbFieldObject" id="dbQte" fieldName="quantite" dataType="integer" />
-			<field xsi:type="dbFieldObject" id="dbPuHT" fieldName="prixUnitaireHT" dataType="real" />
-			<field xsi:type="dbFieldObject" id="dbTTva" fieldName="tauxTva" dataType="real" />
-			<field xsi:type="dbFieldObject" id="dbTD" fieldName="td" dataType="date" />
-		</fields>
+		<query>
+			<![CDATA[SELECT commande, numeroLigne, article, quantite, prixUnitaireHT, tauxTva, CURDATE() as td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne]]>
+		</query>
+		<dbFields>
+			<dbField id="dbCommande" fieldName="commande" dataType="integer" />
+			<dbField id="dbNumeroLigne" fieldName="numeroLigne" dataType="integer" />
+			<dbField id="dbArticle" fieldName="article" dataType="string" />
+			<dbField id="dbQte" fieldName="quantite" dataType="integer" />
+			<dbField id="dbPuHT" fieldName="prixUnitaireHT" dataType="real" />
+			<dbField id="dbTTva" fieldName="tauxTva" dataType="real" />
+			<dbField id="dbTD" fieldName="td" dataType="date" />
+		</dbFields>
 	</database>
 	<groups>
 		<group id="grCde" refer="dbCommande" />
-		<group id="grNumLigne" refer="dbNumeroLigne" />
-		<group id="grArticle" refer="dbArticle" />
 	</groups>
 	<fields>
-		<field xsi:type="totalFieldObject" id="tTotalHT" operation="sum" fieldId="cMntHT" dataType="real" />
-		<field xsi:type="totalFieldObject" id="tTotalTTC" operation="sum" fieldId="cMntTTC" dataType="real" />
 		<field xsi:type="calculatedFieldObject" id="cMntHT" dataType="real">
 			<expression><![CDATA[${dbPuHT}*${dbQte}]]></expression>
 		</field>
 		<field xsi:type="calculatedFieldObject" id="cMntTTC" dataType="real">
 			<expression><![CDATA[${cMntHT}*(1+${dbTTva})]]></expression>
 		</field>
+		<field xsi:type="totalFieldObject" id="tTotalHT" operation="sum" fieldId="cMntHT" dataType="real" />
+		<field xsi:type="totalFieldObject" id="tTotalTTC" operation="sum" fieldId="cMntTTC" dataType="real" />
+		<field xsi:type="totalFieldObject" id="tTotalHTCde" operation="sum" fieldId="cMntHT" dataType="real" resetOn="grCde" />
+		<field xsi:type="totalFieldObject" id="tTotalTTCCde" operation="sum" fieldId="cMntTTC" dataType="real" resetOn="grCde" />
+		<field xsi:type="totalFieldObject" id="tNbCde" operation="count" fieldId="dbCommande" dataType="integer" accumulateOn="grCde" />
 	</fields>
 	<body>
 		<pageHeader>
