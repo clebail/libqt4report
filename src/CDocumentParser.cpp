@@ -66,7 +66,7 @@ namespace libqt4report {
 			return true;
 		}
 		
-		if(qName == "fields") {
+		if(qName == "fields" || qName == "dbFields") {
 			inFields=true;
 			return true;
 		}
@@ -157,8 +157,8 @@ namespace libqt4report {
 			return true;
 		}
 		
-		if(qName == "field" && inFields) {
-			CField *field=parseField(atts);
+		if((qName == "field" || qName == "dbField") && inFields) {
+			CField *field=parseField(qName, atts);
 			QString id=field->getAttribute("id");
 			
 			CFields::getInstance()->addField(id, field);
@@ -283,7 +283,7 @@ namespace libqt4report {
 			return true;
 		}
 		
-		if(qName == "fields") {
+		if(qName == "fields" || qName == "dbFields") {
 			inFields=false;
 			if(!CFields::getInstance()->processDepends()) {
 				lastError=CFields::getInstance()->getDependsError();
@@ -322,7 +322,7 @@ namespace libqt4report {
 			return true;
 		}
 		
-		if(qName == "field" && inFields) {
+		if((qName == "field" || qName == "dbField") && inFields) {
 			curField=0;
 			inField=false;
 			return true;
@@ -388,10 +388,14 @@ namespace libqt4report {
 		return item;
 	}
 	//--------------------------------------------------------------------------------------------------------------
-	CField * CDocumentParser::parseField(const QXmlAttributes& atts) {
+	CField * CDocumentParser::parseField(QString qName, const QXmlAttributes& atts) {
 		int i;
 		QString className;
 		CField * field=0;
+		
+		if(qName == "dbField") {
+			field=new CDbFieldObject();
+		}
 		
 		for(i=0;i<atts.count();i++) {
 			if(atts.localName(i) == "type") {

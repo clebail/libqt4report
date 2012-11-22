@@ -177,8 +177,7 @@ namespace libqt4report {
 		int idxRec, lastRec;
 		bool hSpecified=false;
 		CPage *page;
-		QSqlRecord record[2];
-		
+				
 		if(pageHeight != "100%") {
 			hSpecified=true;
 			hPage=pageHeight.toInt()*coef;
@@ -202,10 +201,9 @@ namespace libqt4report {
 		
 		while(!fini) {
 			query->next();
-			record[1]=QSqlRecord(record[0]);
-			record[0]=query->record();
+			QSqlRecord record=query->record();
 			
-			processFields(&record[0]);
+			processFields(&record);
 			
 			if(nouvellePage) {
 				page=new CPage();
@@ -233,43 +231,6 @@ namespace libqt4report {
 				nouvellePage=false;
 			}
 			
-			if(firstGroup != 0) {
-				CGroup *pGroup=firstGroup;
-				
-				if(!record[1].isEmpty()) {
-					while(pGroup != 0) {
-						QString refer=CFields::getInstance()->getField(pGroup->getRefer())->getAttribute("fieldName");
-						
-						if(record[1].value(refer) != record[0].value(refer)) {
-							qDebug() << "group" << refer << "change";
-							
-							CGroup *pGroupChanged=pGroup;
-							
-							pGroup=lastGroup;
-							while(pGroup != pGroupChanged) {
-								qDebug() << "group footer" << pGroup->getRefer();
-								pGroup=pGroup->getParent();
-							}
-							
-							qDebug() << "group footer" << pGroup->getRefer();
-							
-							while(pGroup != 0) {
-								qDebug() << "group header" << pGroup->getRefer();
-								pGroup=pGroup->getChild();
-							}
-							
-							break;
-						}
-						pGroup=pGroup->getChild();
-					}
-				}else {
-					while(pGroup != 0) {
-						qDebug() << "group header" << pGroup->getRefer();
-						pGroup=pGroup->getChild();
-					}
-				}
-			}
-			
 			svg+=docBody->toSvg(y, coef);
 			docBody->prepareRender(page->getRendererObjects(), y, coef);
 			y+=docBody->getHeight(coef);
@@ -282,15 +243,6 @@ namespace libqt4report {
 			
 			if(finPage) {
 				if(idxRec == lastRec) {
-					if(firstGroup != 0) {
-						CGroup *pGroup=lastGroup;
-						
-						while(pGroup != 0) {
-							qDebug() << "group footer" << pGroup->getRefer();
-							pGroup=pGroup->getParent();
-						}
-					}
-					
 					if(docFooter != 0) {
 						svg+=docFooter->toSvg(y, coef);
 						docFooter->prepareRender(page->getRendererObjects(), y, coef);

@@ -32,6 +32,12 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 	
+	<xsd:complexType name="userFieldObject" abstract="true" >
+		<xsd:complexContent>
+			<xsd:extension base="lqr:fieldObject" />
+		</xsd:complexContent>
+	</xsd:complexType>
+	
 	<xsd:element name="expression">
 		<xsd:simpleType>
 			<xsd:restriction base="xsd:string"/>
@@ -40,7 +46,7 @@
 	
 	<xsd:complexType name="calculatedFieldObject">
 		<xsd:complexContent>
-			<xsd:extension base="lqr:fieldObject">
+			<xsd:extension base="lqr:userFieldObject">
 				<xsd:sequence>
 					<xsd:element ref="lqr:expression" />
 				</xsd:sequence>
@@ -50,7 +56,7 @@
 	
 	<xsd:complexType name="totalFieldObject">
 		<xsd:complexContent>
-			<xsd:extension base="lqr:fieldObject">
+			<xsd:extension base="lqr:userFieldObject">
 				<xsd:attribute name="operation" use="required">
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:string">
@@ -63,8 +69,16 @@
 					</xsd:simpleType>
 				</xsd:attribute>
 				<xsd:attribute name="fieldId" type="xsd:string" use="required" />
+				<xsd:attribute name="resetOn" type="xsd:string" />
+				<xsd:attribute name="accumulateOn" type="xsd:string" />
 			</xsd:extension>
 		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="dbFields">
+		<xsd:sequence>
+			<xsd:element name="field" type="lqr:dbFieldObject" maxOccurs="unbounded" />
+		</xsd:sequence>
 	</xsd:complexType>
 	
 	<xsd:complexType name="object" abstract="true">
@@ -192,7 +206,7 @@
 		</xsd:complexType>
 	</xsd:element>
 	
-	<xsd:element name="field" type="lqr:fieldObject" />
+	<xsd:element name="field" type="lqr:userFieldObject" />
 	
 	<xsd:element name="fields">
 		<xsd:complexType>
@@ -200,16 +214,16 @@
 				<xsd:element ref="lqr:field" maxOccurs="unbounded" />
 			</xsd:sequence>
 		</xsd:complexType>
-		
-		<xsd:key name="keyFieldId">
-			<xsd:selector xpath="lqr:field" />
-			<xsd:field xpath="@id" />
-		</xsd:key>
-		
-		<xsd:keyref name="keyFieldIdRef" refer="lqr:keyFieldId">
-			<xsd:selector xpath="lqr:field" />
-			<xsd:field xpath="@fieldId" />
-		</xsd:keyref>
+	</xsd:element>
+	
+	<xsd:element name="dbField" type="lqr:dbFieldObject" />
+	
+	<xsd:element name="dbFields">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="lqr:dbField" maxOccurs="unbounded" /> 
+			</xsd:sequence>
+		</xsd:complexType>
 	</xsd:element>
 	
 	<xsd:element name="item" type="lqr:object" />
@@ -302,7 +316,7 @@
 				<xsd:element ref="lqr:params" minOccurs="0" />
 				<xsd:element ref="lqr:connection" minOccurs="0" />
 				<xsd:element ref="lqr:query" />
-				<xsd:element ref="lqr:fields" />
+				<xsd:element ref="lqr:dbFields" />
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
@@ -341,12 +355,12 @@
 		</xsd:unique>
 		
 		<xsd:unique name="uniqueFieldId">
-			<xsd:selector xpath="lqr:fields/lqr:field|lqr:database/lqr:fields/lqr:field" />
+			<xsd:selector xpath="lqr:fields/lqr:field|lqr:database/lqr:dbFields/lqr:dbField" />
 			<xsd:field xpath="@id" />
 		</xsd:unique>
 		
 		<xsd:key name="keyDatabaseFieldId">
-			<xsd:selector xpath="lqr:database/lqr:fields/lqr:field" />
+			<xsd:selector xpath="lqr:database/lqr:dbFields/lqr:dbField" />
 			<xsd:field xpath="@id" />
 		</xsd:key>
 		
@@ -378,6 +392,21 @@
 		<xsd:keyref name="keyDatabaseFieldIdRef" refer="lqr:keyDatabaseFieldId">
 			<xsd:selector xpath="lqr:groups/lqr:group" />
 			<xsd:field xpath="@refer" />
+		</xsd:keyref>
+		
+		<xsd:keyref name="keyUniqueGroupIdRefForResetOn" refer="lqr:uniqueGroupId">
+			<xsd:selector xpath="lqr:fields/lqr:field" />
+			<xsd:field xpath="@resetOn" />
+		</xsd:keyref>
+		
+		<xsd:keyref name="keyUniqueGroupIdRefForAccumulateOn" refer="lqr:uniqueGroupId">
+			<xsd:selector xpath="lqr:fields/lqr:field" />
+			<xsd:field xpath="@accumulateOn" />
+		</xsd:keyref>
+		
+		<xsd:keyref name="keyFieldIdRef" refer="lqr:uniqueFieldId">
+			<xsd:selector xpath="lqr:fields/lqr:field" />
+			<xsd:field xpath="@fieldId" />
 		</xsd:keyref>
 	</xsd:element>
 </xsd:schema>

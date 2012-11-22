@@ -39,7 +39,7 @@ namespace libqt4report {
 			QString connectionName;
 			
 			libqt4report::CItem * parseItem(const QXmlAttributes& atts);
-			libqt4report::CField * parseField(const QXmlAttributes& atts);
+			libqt4report::CField * parseField(QString qName, const QXmlAttributes& atts);
 		signals:
 			void queryParam(QString paramName, QVariant& value);
 	};
