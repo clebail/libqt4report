@@ -6,6 +6,7 @@
 #include <QSqlRecord>
 #include <QStringList>
 #include <QVariant>
+#include "CGroup.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
 	class CField {
@@ -45,14 +46,18 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	class CTotalFieldObject : public CField {
 		public:
-			CTotalFieldObject(void) { value=0; firstTime=true; sum=0; nb=0; }
+			CTotalFieldObject(void) { value=0; firstTime=true; sum=0; nb=0; groupToResetOn=groupToAccumulateOn=0; }
 			void process(QSqlRecord *record);
 			const QList<CField *> getDepends(void);
+			void setGroupToResetOn(CGroup *group) { groupToResetOn=group; }
+			void setGroupToAccumulateOn(CGroup *group) { groupToAccumulateOn=group; }
 		private:
 			double value;
 			double sum;
 			int nb;
 			bool firstTime;
+			CGroup *groupToResetOn;
+			CGroup *groupToAccumulateOn;
 	};
 } //namespace
 //------------------------------------------------------------------------------

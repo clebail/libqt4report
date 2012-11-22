@@ -16,11 +16,14 @@ namespace libqt4report {
 			CGroup * getChild(void) { return child; }
 			void setParent(CGroup * parent) { this->parent=parent; }
 			CGroup * getParent(void) { return parent; }
+			void setChanged(bool changed) { this->changed=changed; }
+			bool isChanged(void) { return changed; }
 		private:
 			QString id;
 			QString refer;
 			CGroup *child;
 			CGroup *parent;
+			bool changed;
 	};
 	//------------------------------------------------------------------------------
 }// namespace

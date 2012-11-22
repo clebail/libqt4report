@@ -42,22 +42,37 @@ namespace libqt4report {
 		QString operation=getAttribute("operation");
 		double fValue=field->getFieldValue().toDouble();
 		
-		if(operation == "sum") {
-			value+=fValue;
-		}else if(operation == "avg") {
-			sum+=fValue;
-			nb++;
-			value=sum/nb;
-		}else if(operation == "count") {
-			value++;
-		}else if(operation == "min") {
-			if(fValue < value || firstTime) {
-				value=fValue;
-				firstTime=false;
+		if(groupToResetOn != 0 && groupToResetOn->isChanged()) {
+			value=0;
+			sum=0;
+			nb=0;
+			firstTime=true;
+			
+			groupToResetOn->setChanged(false);
+		}
+		
+		if(groupToAccumulateOn == 0 || groupToAccumulateOn->isChanged()) {
+			if(operation == "sum") {
+				value+=fValue;
+			}else if(operation == "avg") {
+				sum+=fValue;
+				nb++;
+				value=sum/nb;
+			}else if(operation == "count") {
+				value++;
+			}else if(operation == "min") {
+				if(fValue < value || firstTime) {
+					value=fValue;
+					firstTime=false;
+				}
+			}else if(operation == "max") {
+				if(fValue > value) {
+					value=fValue;
+				}
 			}
-		}else if(operation == "max") {
-			if(fValue > value) {
-				value=fValue;
+			
+			if(groupToAccumulateOn != 0) {
+				groupToAccumulateOn->setChanged(false);
 			}
 		}
 		
