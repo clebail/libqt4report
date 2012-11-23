@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include <QHash>
 #include <QVariant>
+#include <QXmlAttributes>
 #include "CPrintableObject.h"
 #include "CValueType.h"
 //------------------------------------------------------------------------------
@@ -15,6 +16,7 @@ namespace libqt4report {
 			QString getAttribute(QString name) { return attributes.value(name) ;}
 			bool hasAttribute(QString name) { return attributes.contains(name); }
 			virtual int getHeight(double coef) = 0;
+			virtual void processAttributes(const QXmlAttributes& atts);
 		private:
 			QHash<QString ,QString> attributes;
 	};
@@ -38,6 +40,7 @@ namespace libqt4report {
 		public:
 			~CItemTextFieldObject(void);
 			void createValue(QString fieldId);
+			virtual void processAttributes(const QXmlAttributes& atts);
 		protected:
 			CValueType *value;
 			QString getValue(void);

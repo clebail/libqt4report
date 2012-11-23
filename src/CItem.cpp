@@ -9,6 +9,14 @@
 #include "CValueType.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
+	void CItem::processAttributes(const QXmlAttributes& atts) {
+		int i;
+		
+		for(i=0;i<atts.count();i++) {
+			setAttribute(atts.localName(i), atts.value(i));
+		}
+	}
+	//------------------------------------------------------------------------------
 	QString CItemText::toSvg(int y, double coef) {
 		QString value=xmlEncode(getValue());
 		QString align="";
@@ -88,6 +96,19 @@ namespace libqt4report {
 		value->setValue(field->getFieldValue());
 		
 		return value->toFormatedString(getAttribute("format"));
+	}
+	//------------------------------------------------------------------------------
+	void CItemTextFieldObject::processAttributes(const QXmlAttributes& atts) {
+		int i;
+		
+		for(i=0;i<atts.count();i++) {
+			setAttribute(atts.localName(i), atts.value(i));
+			
+			if(atts.localName(i) == "fieldId") {
+				CField *field=CFields::getInstance()->getField(atts.value(i));
+				createValue(field->getAttribute("dataType"));
+			}
+		}
 	}
 	//------------------------------------------------------------------------------
 	QString CItemLineObject::toSvg(int y, double coef) {

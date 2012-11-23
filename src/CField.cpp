@@ -6,8 +6,17 @@
 #include "CField.h"
 #include "CFields.h"
 #include "CScript.h"
+#include "CGroups.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
+	//------------------------------------------------------------------------------
+	void CField::processAttributes(const QXmlAttributes& atts) {
+		int i;
+		
+		for(i=0;i<atts.count();i++) {
+			setAttribute(atts.localName(i), atts.value(i));
+		}
+	}
 	//------------------------------------------------------------------------------
 	void CDbFieldObject::process(QSqlRecord *record) {
 		QString fieldName=getAttribute("fieldName");
@@ -86,6 +95,22 @@ namespace libqt4report {
 		depend << field;
 		
 		return depend;
+	}
+	//------------------------------------------------------------------------------
+	void CTotalFieldObject::processAttributes(const QXmlAttributes& atts) {
+		int i;
+		
+		for(i=0;i<atts.count();i++) {
+			setAttribute(atts.localName(i), atts.value(i));
+			
+			if(atts.localName(i) == "resetOn") {
+				setGroupToResetOn(CGroups::getInstance()->getGroup(atts.value(i)));
+			}
+			
+			if(atts.localName(i) == "accumulateOn") {
+				setGroupToAccumulateOn(CGroups::getInstance()->getGroup(atts.value(i)));
+			}
+		}
 	}
 	//------------------------------------------------------------------------------
 }//namespace

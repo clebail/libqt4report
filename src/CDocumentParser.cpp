@@ -7,6 +7,7 @@
 #include "CFields.h"
 #include "CFonts.h"
 #include "CValueType.h"
+#include "CGroups.h"
 //--------------------------------------------------------------------------------------------------------------
 namespace libqt4report {
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CDocumentParser");
@@ -28,8 +29,8 @@ namespace libqt4report {
 		qRegisterMetaType<CValueTypeDateTime>("CValueTypeDateTime");
 		
 		document=0;
-		inFonts=inFields=inDatabase=inQuery=inBody=inField=inCDATA=inParams=inGroups=false;
-		curDocBand=edbtNone;
+		inFonts=inFields=inDatabase=inQuery=inBody=inField=inCDATA=inParams=inGroups=inGroupHeaders=inGroupFooters=false;
+		curDocBand=0;
 		this->connectionName=connectionName;
 	}
 	//--------------------------------------------------------------------------------------------------------------
@@ -120,7 +121,7 @@ namespace libqt4report {
 				}
 			}
 			
-			document->addGroup(id, refer);
+			CGroups::getInstance()->addGroup(id, refer);
 			
 			return true;
 		}
@@ -203,57 +204,58 @@ namespace libqt4report {
 		}
 		
 		if(qName == "pageHeader" && inBody) {
-			document->createPageHeader();
-			curDocBand=edbtPageHeader;
+			curDocBand=document->createPageHeader();
 			return true;
 		}
 		
 		if(qName == "docHeader" && inBody) {
-			document->createDocHeader();
-			curDocBand=edbtDocHeader;
+			curDocBand=document->createDocHeader();
 			return true;
 		}
 		
 		if(qName == "docBody" && inBody) {
-			document->createDocBody();
-			curDocBand=edbtDocBody;
+			curDocBand=document->createDocBody();
 			return true;
 		}
 		
 		if(qName == "docFooter" && inBody) {
-			document->createDocFooter();
-			curDocBand=edbtDocFooter;
+			curDocBand=document->createDocFooter();
 			return true;
 		}
 		
 		if(qName == "pageFooter" && inBody) {
-			document->createPageFooter();
-			curDocBand=edbtPageFooter;
+			curDocBand=document->createPageFooter();
 			return true;
 		}
 		
-		if(qName == "item" && curDocBand != edbtNone) {
+		if(qName == "groupHeaders" && inBody) {
+			inGroupHeaders=true;
+			return true;
+		}
+		
+		if(qName == "groupFooters" && inBody) {
+			inGroupFooters=true;
+			return true;
+		}
+		
+		if((qName == "groupHeader" && inGroupHeaders) || (qName == "groupFooter" && inGroupFooters)) {
+			QString groupId;
+			
+			for(i=0;i<atts.count();i++) {
+				if(atts.localName(i) == "groupId") {
+					groupId=atts.value(i);
+				}
+			}
+			
+			curDocBand=new CDocBand();
+			document->addGroupBand(CGroups::getInstance()->getGroup(groupId), curDocBand);
+			return true;
+		}
+		
+		if(qName == "item" && curDocBand != 0) {
 			CItem *item=parseItem(atts);
 			if(item != 0) {
-				switch(curDocBand) {
-					case edbtPageHeader:
-						document->getPageHeader()->insert(item->getAttribute("id"), item);
-						break;
-					case edbtDocHeader:
-						document->getDocHeader()->insert(item->getAttribute("id"), item);
-						break;
-					case edbtDocBody:
-						document->getDocBody()->insert(item->getAttribute("id"), item);
-						break;
-					case edbtDocFooter:
-						document->getDocFooter()->insert(item->getAttribute("id"), item);
-						break;
-					case edbtPageFooter:
-						document->getPageFooter()->insert(item->getAttribute("id"), item);
-						break;
-					default:
-						break;
-				}
+				curDocBand->insert(item->getAttribute("id"), item);
 			}
 			return true;
 		}
@@ -318,7 +320,12 @@ namespace libqt4report {
 		}
 		
 		if(inBody && (qName == "pageHeader" || qName == "docHeader" || qName == "docBody"|| qName == "docFooter" || qName == "pageFooter")) {
-			curDocBand=edbtNone;
+			curDocBand=0;
+			return true;
+		}
+		
+		if((qName == "groupHeader" && inGroupHeaders) || (qName == "groupFooter" && inGroupFooters)) {
+			curDocBand=0;
 			return true;
 		}
 		
@@ -332,6 +339,8 @@ namespace libqt4report {
 			inFieldExpression=false;
 			return true;
 		}
+		
+		
 		
 		return true;
 	}
@@ -365,23 +374,15 @@ namespace libqt4report {
 		QString className;
 		CItem * item=0;
 		
-		for(i=0;i<atts.count();i++) {
-			if(atts.localName(i) == "type") {
-				className="CItem"+atts.value(i).left(1).toUpper()+atts.value(i).mid(1);
+		i=atts.index("http://www.w3.org/2001/XMLSchema-instance", "type");
+		if(i != -1) {
+			className="CItem"+atts.value(i).left(1).toUpper()+atts.value(i).mid(1);
 				
-				int id=QMetaType::type(className.toUtf8().data());
-				
-				if(id != 0) {
-					item=static_cast<CItem *>(QMetaType::construct(id));
-				}
-			}else  {
-				if(item != 0) {
-					if(atts.localName(i) == "fieldId") {
-						CField *field=CFields::getInstance()->getField(atts.value(i));
-						((CItemTextFieldObject *)item)->createValue(field->getAttribute("dataType"));
-					}
-					item->setAttribute(atts.localName(i), atts.value(i));
-				}
+			int id=QMetaType::type(className.toUtf8().data());
+			
+			if(id != 0) {
+				item=static_cast<CItem *>(QMetaType::construct(id));
+				item->processAttributes(atts);
 			}
 		}
 		
@@ -395,24 +396,23 @@ namespace libqt4report {
 		
 		if(qName == "dbField") {
 			field=new CDbFieldObject();
-		}
-		
-		for(i=0;i<atts.count();i++) {
-			if(atts.localName(i) == "type") {
+		}else {
+			i=atts.index("http://www.w3.org/2001/XMLSchema-instance", "type");
+			if(i != -1) {
 				className="C"+atts.value(i).left(1).toUpper()+atts.value(i).mid(1);
-				
+					
 				int id=QMetaType::type(className.toUtf8().data());
 				
 				if(id != 0) {
 					field=static_cast<CField *>(QMetaType::construct(id));
 				}
-			}else {
-				if(field != 0) {
-					field->setAttribute(atts.localName(i), atts.value(i));
-				}
 			}
 		}
-
+		
+		if(field != 0) {
+			field->processAttributes(atts);
+		}
+		
 		return field;
 	}
 	//--------------------------------------------------------------------------------------------------------------

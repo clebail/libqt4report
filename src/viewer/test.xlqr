@@ -5,10 +5,11 @@
 			xsi:schemaLocation="http://corentin-lebail.eu/libqt4report libqt4report.xsd"
 			pageWidth="210" pageHeight="297" unit="mm">
 	<fonts>
-		<font id="font1" family="arial" size="10" style="StyleOblique" />
+		<font id="font1" family="arial" size="9" />
 		<font id="fontColumnName" family="arial" size="14" style="StyleItalic" />
 		<font id="fontTitre" family="arial" size="40" weight="Black" />
 		<font id="fontTotal" family="arial" size="10" weight="Bold" />
+		<font id="fontTotalCde" family="arial" size="9" weight="Bold" />
 	</fonts>
 	<database>
 		<params>
@@ -69,6 +70,13 @@
 			<item xsi:type="textFieldObject" id="tMntHT" fontId="font1" x="170" y="5" fieldId="cMntHT" align="end" format="rf2" />
 			<item xsi:type="textFieldObject" id="tMntTTC" fontId="font1" x="190" y="5" fieldId="cMntTTC" align="end" format="rf2" />
 		</docBody>
+		<groupFooters>
+			<groupFooter groupId="grCde">
+				<item xsi:type="textFixedObject" id="totalTitleCde" fontId="fontTotalCde" x="145" y="5" value="Total :" align="end" />
+				<item xsi:type="textFieldObject" id="totalHTCde" fontId="fontTotalCde" x="170" y="5" fieldId="tTotalHTCde"  align="end" format="rf2" />
+				<item xsi:type="textFieldObject" id="totalTTCCde" fontId="fontTotalCde" x="190" y="5" fieldId="tTotalTTCCde"  align="end" format="rf2" />
+			</groupFooter>
+		</groupFooters>
 		<docFooter>
 			<item xsi:type="textFixedObject" id="totalTitle" fontId="fontTotal" x="145" y="5" value="Total :" align="end" />
 			<item xsi:type="textFieldObject" id="totalHT" fontId="fontTotal" x="170" y="5" fieldId="tTotalHT"  align="end" format="rf2" />

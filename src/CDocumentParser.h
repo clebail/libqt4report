@@ -21,7 +21,6 @@ namespace libqt4report {
 			CDocument *getDocument(void) { return document; }
 			QString errorString(void) { return lastError; }
 		private:
-			enum EDBType { edbtNone, edbtPageHeader, edbtDocHeader, edbtDocBody, edbtDocFooter, edbtPageFooter };
 			CDocument *document;
 			bool inFonts;
 			bool inFields;
@@ -33,7 +32,9 @@ namespace libqt4report {
 			bool inCDATA;
 			bool inParams;
 			bool inGroups;
-			EDBType curDocBand;
+			bool inGroupHeaders;
+			bool inGroupFooters;
+			CDocBand *curDocBand;
 			CField *curField;
 			QString lastError;
 			QString connectionName;
