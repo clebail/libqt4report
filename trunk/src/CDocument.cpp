@@ -5,11 +5,13 @@
 #include "CDocument.h"
 #include "CFonts.h"
 #include "CScript.h"
+#include "CGroups.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
 	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName) {
 		pageHeader=docHeader=docBody=docFooter=pageFooter=0;
-		lastGroup=firstGroup=0;
+
+		groupBands=new QHash<CGroup *, CDocBand *>();
 		
 		this->pageWidth=pageWidth;
 		this->pageHeight=pageHeight;
@@ -25,6 +27,8 @@ namespace libqt4report {
 		}
 		
 		pages.clear();
+		
+		delete groupBands;
 	}
 	//------------------------------------------------------------------------------
 	int CDocument::getNbPage(void) {
@@ -95,21 +99,7 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::cleanup(void) {
-		CGroup *pGroup=firstGroup;
-		CGroup *dGroup;
-		
-		if(pGroup != 0) {
-			while(pGroup->getChild() != 0) {
-				pGroup=pGroup->getChild();
-			}
-			
-			dGroup=pGroup;
-			do {
-				pGroup=dGroup;
-				delete dGroup;
-				dGroup=pGroup->getParent();
-			}while(dGroup != 0);
-		}
+		CGroups::getInstance()->cleanup();
 		
 		if(pageHeader != 0) {
 			pageHeader->cleanup();
@@ -138,30 +128,12 @@ namespace libqt4report {
 		CFields::getInstance()->cleanup();
 		CScript::getInstance()->cleanup();
 		
-		
-	}
-	//------------------------------------------------------------------------------
-	void CDocument::addGroup(QString id, QString refer) {
-		CGroup *nGroup=new CGroup();
-			
-		nGroup->setId(id);
-		nGroup->setRefer(refer);
-		
-		
-		if(firstGroup == 0) {
-			firstGroup=nGroup;
-		}else {
-			CGroup *pGroup=firstGroup;
-			
-			while(pGroup->getChild() != 0) {
-				pGroup=pGroup->getChild();
-			}
-			
-			pGroup->setChild(nGroup);
-			nGroup->setParent(pGroup);
+		QHashIterator<CGroup *, CDocBand *> i(*groupBands);
+		while (i.hasNext()) {
+			i.next();
+			delete i.value();
 		}
-		
-		lastGroup=nGroup;
+		groupBands->clear();
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::createPages(QSqlQuery *query) {
@@ -248,6 +220,7 @@ namespace libqt4report {
 						docFooter->prepareRender(page->getRendererObjects(), y, coef);
 						y+=docFooter->getHeight(coef);
 					}
+					
 					fini=true;
 				}else {
 					nouvellePage=true;

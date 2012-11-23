@@ -268,14 +268,64 @@
 		</xsd:complexType>
 	</xsd:element>
 	
+	<xsd:element name="groupHeader">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="lqr:docBand">
+					<xsd:attribute name="groupId" type="xsd:string" use="required" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="groupFooter">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="lqr:docBand">
+					<xsd:attribute name="groupId" type="xsd:string" use="required" />
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="groupHeaders">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="lqr:groupHeader" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+		
+		<xsd:unique name="uniqueGroupHeaderId">
+			<xsd:selector xpath="lqr:groupHeader" />
+			<xsd:field xpath="@groupId" />
+		</xsd:unique>
+		
+	</xsd:element>
+	
+	<xsd:element name="groupFooters">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="lqr:groupFooter" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+		
+		<xsd:unique name="uniqueGroupFooterId">
+			<xsd:selector xpath="lqr:groupFooter" />
+			<xsd:field xpath="@groupId" />
+		</xsd:unique>
+		
+	</xsd:element>
+	
 	<xsd:element name="body">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element ref="lqr:pageHeader" minOccurs="0" maxOccurs="1" />
-				<xsd:element ref="lqr:docHeader" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="lqr:pageHeader" minOccurs="0" />
+				<xsd:element ref="lqr:docHeader" minOccurs="0" />
+				<xsd:element ref="lqr:groupHeaders" minOccurs="0" />
 				<xsd:element ref="lqr:docBody" />
-				<xsd:element ref="lqr:docFooter" minOccurs="0" maxOccurs="1" />
-				<xsd:element ref="lqr:pageFooter" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="lqr:groupFooters" minOccurs="0" />
+				<xsd:element ref="lqr:docFooter" minOccurs="0" />
+				<xsd:element ref="lqr:pageFooter" minOccurs="0" />
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
@@ -380,12 +430,12 @@
 		</xsd:unique>
 		
 		<xsd:keyref name="uniqueFontIdRef" refer="lqr:uniqueFontId">
-			<xsd:selector xpath="lqr:body/*/lqr:item" />
+			<xsd:selector xpath="lqr:body/*/lqr:item|lqr:body/lqr:groupHeaders/lqr:groupHeader/lqr:item|lqr:body/lqr:groupFooters/lqr:groupFooter/lqr:item" />
 			<xsd:field xpath="@fontId" />
 		</xsd:keyref>
 		
 		<xsd:keyref name="uniqueFieldIdRef" refer="lqr:uniqueFieldId">
-			<xsd:selector xpath="lqr:body/*/lqr:item" />
+			<xsd:selector xpath="lqr:body/*/lqr:item|lqr:body/lqr:groupHeaders/lqr:groupHeader/lqr:item|lqr:body/lqr:groupFooters/lqr:groupFooter/lqr:item" />
 			<xsd:field xpath="@fieldId" />
 		</xsd:keyref>
 		
@@ -407,6 +457,16 @@
 		<xsd:keyref name="keyFieldIdRef" refer="lqr:uniqueFieldId">
 			<xsd:selector xpath="lqr:fields/lqr:field" />
 			<xsd:field xpath="@fieldId" />
+		</xsd:keyref>
+		
+		<xsd:keyref name="keyUniqueGroupHeaderRef" refer="lqr:uniqueGroupId">
+			<xsd:selector xpath="lqr:body/lqr:groupHeaders/lqr:groupHeader" />
+			<xsd:field xpath="@groupId" />
+		</xsd:keyref>
+		
+		<xsd:keyref name="keyUniqueGroupFooterRef" refer="lqr:uniqueGroupId">
+			<xsd:selector xpath="lqr:body/lqr:groupFooters/lqr:groupFooter" />
+			<xsd:field xpath="@groupId" />
 		</xsd:keyref>
 	</xsd:element>
 </xsd:schema>

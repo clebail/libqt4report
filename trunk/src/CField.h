@@ -6,6 +6,7 @@
 #include <QSqlRecord>
 #include <QStringList>
 #include <QVariant>
+#include <QXmlAttributes>
 #include "CGroup.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
@@ -20,6 +21,7 @@ namespace libqt4report {
 			void decPoid(void) { poid--; }
 			int getPoid(void) { return poid; }
 			virtual const QList<CField *> getDepends(void) { return QList<CField *>(); }
+			virtual void processAttributes(const QXmlAttributes& atts);
 		protected:
 			QHash<QString ,QString> attributes;
 			int poid;
@@ -51,6 +53,7 @@ namespace libqt4report {
 			const QList<CField *> getDepends(void);
 			void setGroupToResetOn(CGroup *group) { groupToResetOn=group; }
 			void setGroupToAccumulateOn(CGroup *group) { groupToAccumulateOn=group; }
+			virtual void processAttributes(const QXmlAttributes& atts);
 		private:
 			double value;
 			double sum;
