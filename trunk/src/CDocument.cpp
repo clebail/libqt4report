@@ -126,7 +126,7 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::createPages(QSqlQuery *query) {
-		int wPage=pageWidth.toInt()*coef;
+		/*int wPage=pageWidth.toInt()*coef;
 		QString w=QString::number(wPage);
 		int hPage=0;
 		int y;
@@ -138,7 +138,6 @@ namespace libqt4report {
 		int idxRec, lastRec;
 		bool hSpecified=false;
 		CPage *page;
-		CPageManager *pageManager=new CPageManager(this);
 				
 		if(pageHeight != "100%") {
 			hSpecified=true;
@@ -234,7 +233,33 @@ namespace libqt4report {
 			
 			idxRec++;
 		}
-		pagesSize=QSize(wPage, hSpecified ? hPage : y);
+		pagesSize=QSize(wPage, hSpecified ? hPage : y);*/
+		CPageManager *pageManager=new CPageManager(this);
+		QSqlRecord record[2];
+		bool fini=false;
+		int lastRec=query->size()-1;
+		int idxRec=0;
+		
+		if(query->next()) {		
+			record[1]=QSqlRecord();
+			record[0]=query->record();
+			
+			processFields(&record[0]);
+			
+			while(!fini) {
+				pageManager->process(docBody, idxRec == 0, idxRec == lastRec);
+				
+				record[1]=record[0];
+				
+				if(query->next()) {
+					idxRec++;
+					record[0]=query->record();
+					processFields(&record[0]);
+				}else {
+					fini=true;
+				}
+			}
+		}
 		
 		delete pageManager;
 	}
