@@ -29,7 +29,8 @@ libqt4report_la_SOURCES =	libqt4report.cpp libqt4report.h \
 				CPage.cpp CPage.h \
 				CRendererObject.cpp CRendererObject.h \
 				CGroup.cpp CGroup.h \
-				CGroups.cpp CGroups.h
+				CGroups.cpp CGroups.h \
+				CPageManager.cpp
 						
 nodist_libqt4report_la_SOURCES = $(moc_FILES)
 			

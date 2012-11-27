@@ -15,7 +15,6 @@ namespace libqt4report {
 			void setAttribute(QString name, QString value) { attributes.insert(name, value); }
 			QString getAttribute(QString name) { return attributes.value(name) ;}
 			bool hasAttribute(QString name) { return attributes.contains(name); }
-			virtual int getHeight(double coef) = 0;
 			virtual void processAttributes(const QXmlAttributes& atts);
 		private:
 			QHash<QString ,QString> attributes;

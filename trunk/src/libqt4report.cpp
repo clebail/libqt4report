@@ -100,14 +100,14 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	int CReport::getNbPage(void) {
 		if(document != 0) {
-			return document->getNbPage();
+			return document->count();
 		}
 		return 0;
 	}
 	//------------------------------------------------------------------------------
 	QString CReport::toSvg(int pageIdx) {
-		if(document != 0 && pageIdx >= 0 && pageIdx < document->getNbPage()) {
-			return document->getPage(pageIdx)->getSvg();
+		if(document != 0 && pageIdx >= 0 && pageIdx < document->count()) {
+			return document->at(pageIdx)->getSvg();
 		}
 		return "";
 	}
@@ -122,7 +122,7 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	void CReport::renderPage(int pageIdx, QPainter *painter) {
 		if(document != 0) {
-			CPage *page=document->getPage(pageIdx);
+			CPage *page=document->at(pageIdx);
 			if(page != 0) {
 				int i;
 				QList<CRendererObject *> * rendererObjects=page->getRendererObjects();
