@@ -8,7 +8,7 @@
 #include "CGroups.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
-	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName) {
+	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName) : QList<CPage *>() {
 		pageHeader=docHeader=docBody=docFooter=pageFooter=0;
 
 		groupBands=new QHash<CGroup *, CDocBand *>();
@@ -22,24 +22,13 @@ namespace libqt4report {
 	CDocument::~CDocument(void) {
 		int i;
 		
-		for(i=0;i<pages.size();i++) {
-			delete pages.at(i);
+		for(i=0;i<count();i++) {
+			delete at(i);
 		}
 		
-		pages.clear();
+		clear();
 		
 		delete groupBands;
-	}
-	//------------------------------------------------------------------------------
-	int CDocument::getNbPage(void) {
-		return pages.size();;
-	}
-	//------------------------------------------------------------------------------
-	CPage * CDocument::getPage(int pageIdx) {
-		if(pageIdx >= 0 &&  pageIdx < pages.size()) {
-			return pages.at(pageIdx);
-		}
-		return 0;
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName) {
@@ -149,6 +138,7 @@ namespace libqt4report {
 		int idxRec, lastRec;
 		bool hSpecified=false;
 		CPage *page;
+		CPageManager *pageManager=new CPageManager(this);
 				
 		if(pageHeight != "100%") {
 			hSpecified=true;
@@ -237,7 +227,7 @@ namespace libqt4report {
 				
 				page->setSvg(svg);
 				
-				pages.append(page);
+				append(page);
 				
 				finPage=false;
 			}
@@ -245,6 +235,8 @@ namespace libqt4report {
 			idxRec++;
 		}
 		pagesSize=QSize(wPage, hSpecified ? hPage : y);
+		
+		delete pageManager;
 	}
 	//------------------------------------------------------------------------------
 }
