@@ -10,30 +10,31 @@ namespace libqt4report {
 		newPage=true;
 		endPage=false;
 		hFooter=0;
+		coef=document->getCoef();
 		if(document->getPageFooter() != 0) {
-			hFooter=document->getPageFooter()->getHeight(document->getCoef());
+			hFooter=document->getPageFooter()->getHeight(coef);
 		}
 		
 		hSpecified=false;
 		hPage=0;
 		if(pageHeight != "100%") {
 			hSpecified=true;
-			hPage=pageHeight.toInt()*document->getCoef();
+			hPage=pageHeight.toInt()*coef;
 		}
 	}
 	//------------------------------------------------------------------------------
-	void CPageManager::process(CPrintableObject *printableObject, double coef, bool firstEnr, bool lastEnr) {
+	void CPageManager::process(CPrintableObject *printableObject, bool firstEnr, bool lastEnr) {
 		if(endPage) {
+			CPage *page=document->last();
+			QString svg;
+			
 			endPage=false;
 			if(lastEnr) {
-				draw(document->getDocFooter(), coef);
+				draw(document->getDocFooter());
 			}
-			draw(document->getPageFooter(), coef);
+			draw(document->getPageFooter());
 			
-			CPage *page=document->last();
-			QString svg=page->getSvg();
-			
-			svg+="</svg>";
+			svg=page->getSvg()+"</svg>";
 			svg.replace("${height}", QString::number(hSpecified ? hPage : hPage=y));
 			
 			page->setSvg(svg);
@@ -57,29 +58,29 @@ namespace libqt4report {
 			
 			y=0;
 			newPage=false;
-			draw(document->getPageHeader(), coef);
+			draw(document->getPageHeader());
 			if(firstEnr) {
-				draw(document->getDocHeader(), coef);
+				draw(document->getDocHeader());
 			}
 		}
 		
 		if(printableObject != 0) {
 			bool resteOk=true;
 			if(hSpecified) {
-				resteOk=(pageHeight.toInt()-y-printableObject->getHeight(coef)-hFooter) >= 0;
+				resteOk=(hPage-y-printableObject->getHeight(coef)-hFooter) >= 0;
 			}
 			
 			if(!resteOk) {
 				endPage=true;
 				newPage=true;
-				process(printableObject, coef, firstEnr, lastEnr);
+				process(printableObject, firstEnr, lastEnr);
 			}else {
-				draw(printableObject, coef);
+				draw(printableObject);
 			}
 		}
 	}
 	//------------------------------------------------------------------------------
-	void CPageManager::draw(CPrintableObject *printableObject, double coef) {
+	void CPageManager::draw(CPrintableObject *printableObject) {
 		if(printableObject != 0) {
 			CPage *page=document->last();
 			QString svg=page->getSvg();

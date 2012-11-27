@@ -69,7 +69,7 @@ namespace libqt4report {
 		public:
 			CPageManager(CDocument *document);
 			
-			void process(CPrintableObject *printableObject, double coef, bool firstEnr=false, bool lastEnr=false);
+			void process(CPrintableObject *printableObject, bool firstEnr=false, bool lastEnr=false);
 			double getRealPageHeight(void) { return hPage; }
 		private:
 			CDocument *document;
@@ -81,8 +81,9 @@ namespace libqt4report {
 			int hFooter;
 			bool hSpecified;
 			double hPage;
+			double coef;
 			
-			void draw(CPrintableObject *printableObject, double coef);
+			void draw(CPrintableObject *printableObject);
 	};
 	//------------------------------------------------------------------------------
 } //namespace
