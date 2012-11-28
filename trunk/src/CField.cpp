@@ -51,13 +51,13 @@ namespace libqt4report {
 		QString operation=getAttribute("operation");
 		double fValue=field->getFieldValue().toDouble();
 		
-		if(groupToResetOn != 0 && groupToResetOn->isChanged()) {
-			value=0;
-			sum=0;
-			nb=0;
-			firstTime=true;
-			
-			groupToResetOn->setChanged(false);
+		if(groupToResetOn != 0) {
+			if(groupToResetOn->isChanged()) {
+				value=0;
+				sum=0;
+				nb=0;
+				firstTime=true;
+			}
 		}
 		
 		if(groupToAccumulateOn == 0 || groupToAccumulateOn->isChanged()) {
@@ -78,10 +78,6 @@ namespace libqt4report {
 				if(fValue > value) {
 					value=fValue;
 				}
-			}
-			
-			if(groupToAccumulateOn != 0) {
-				groupToAccumulateOn->setChanged(false);
 			}
 		}
 		

@@ -11,7 +11,8 @@ namespace libqt4report {
 	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName) : QList<CPage *>() {
 		pageHeader=docHeader=docBody=docFooter=pageFooter=0;
 
-		groupBands=new QHash<CGroup *, CDocBand *>();
+		groupBands[egbHeader]=new QHash<CGroup *, CDocBand *>();
+		groupBands[egbFooter]=new QHash<CGroup *, CDocBand *>();
 		
 		this->pageWidth=pageWidth;
 		this->pageHeight=pageHeight;
@@ -28,7 +29,8 @@ namespace libqt4report {
 		
 		clear();
 		
-		delete groupBands;
+		delete groupBands[egbHeader];
+		delete groupBands[egbFooter];
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName) {
@@ -117,136 +119,42 @@ namespace libqt4report {
 		CFields::getInstance()->cleanup();
 		CScript::getInstance()->cleanup();
 		
-		QHashIterator<CGroup *, CDocBand *> i(*groupBands);
-		while (i.hasNext()) {
-			i.next();
-			delete i.value();
+		for(int i=0;i<2;i++) {
+			QHashIterator<CGroup *, CDocBand *> ite(*groupBands[i]);
+			while (ite.hasNext()) {
+				ite.next();
+				delete ite.value();
+			}
+			groupBands[i]->clear();
 		}
-		groupBands->clear();
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::createPages(QSqlQuery *query) {
-		/*int wPage=pageWidth.toInt()*coef;
-		QString w=QString::number(wPage);
-		int hPage=0;
-		int y;
-		int hDocBody, hDocFooter=0, hPageFooter=0;
-		int hFooter;
-		bool fini;
-		bool nouvellePage=true, finPage=false;
-		QString svg;
-		int idxRec, lastRec;
-		bool hSpecified=false;
-		CPage *page;
-				
-		if(pageHeight != "100%") {
-			hSpecified=true;
-			hPage=pageHeight.toInt()*coef;
-		}
-		
-		hDocBody=docBody->getHeight(coef);
-		
-		if(docFooter != 0) {
-			hDocFooter=docFooter->getHeight(coef);
-		}
-		
-		if(pageFooter != 0) {
-			hPageFooter=pageFooter->getHeight(coef);
-		}
-		
-		hFooter=hPageFooter;
-		
-		lastRec=query->size()-1;
-		idxRec=0;
-		fini=(lastRec == -1);
-		
-		while(!fini) {
-			query->next();
-			QSqlRecord record=query->record();
-			
-			processFields(&record);
-			
-			if(nouvellePage) {
-				page=new CPage();
-				
-				svg="<?xml version='1.0' encoding='utf-8'?>";
-				svg+="<svg xmlns='http://www.w3.org/2000/svg' version='1.2' ";
-				svg+="baseProfile='tiny' width='"+w+"' ";
-				svg+="height='${height}'>";
-				svg+="<rect x='0' y='0' width='"+w+"' height='${height}' fill='white' stroke='none' />";
-			
-				y=0;
-				
-				if(pageHeader != 0) {
-					svg+=pageHeader->toSvg(y, coef);
-					pageHeader->prepareRender(page->getRendererObjects(), y, coef);
-					y+=pageHeader->getHeight(coef);
-				}
-				
-				if(idxRec == 0 && docHeader != 0) {
-					svg+=docHeader->toSvg(y, coef);
-					docHeader->prepareRender(page->getRendererObjects(), y, coef);
-					y+=docHeader->getHeight(coef);
-				}
-				
-				nouvellePage=false;
-			}
-			
-			svg+=docBody->toSvg(y, coef);
-			docBody->prepareRender(page->getRendererObjects(), y, coef);
-			y+=docBody->getHeight(coef);
-			
-			hFooter=hPageFooter + (idxRec == lastRec-1 ? hDocFooter : 0);
-			
-			if(idxRec == lastRec || (hSpecified && hPage - y - hFooter - hDocBody < 0)) {
-				finPage=true;
-			}
-			
-			if(finPage) {
-				if(idxRec == lastRec) {
-					if(docFooter != 0) {
-						svg+=docFooter->toSvg(y, coef);
-						docFooter->prepareRender(page->getRendererObjects(), y, coef);
-						y+=docFooter->getHeight(coef);
-					}
-					
-					fini=true;
-				}else {
-					nouvellePage=true;
-				}
-				
-				if(pageFooter != 0) {
-					svg+=pageFooter->toSvg(y, coef);
-					pageFooter->prepareRender(page->getRendererObjects(), y, coef);
-					y+=pageFooter->getHeight(coef);
-				}
-				
-				svg+="</svg>";
-				svg.replace("${height}", QString::number(hSpecified ? hPage : y));
-				
-				page->setSvg(svg);
-				
-				append(page);
-				
-				finPage=false;
-			}
-			
-			idxRec++;
-		}
-		pagesSize=QSize(wPage, hSpecified ? hPage : y);*/
 		CPageManager *pageManager=new CPageManager(this);
 		QSqlRecord record[2];
 		bool fini=false;
 		int lastRec=query->size()-1;
 		int idxRec=0;
+		CGroup *pGroup;
+		CGroup *groupChanged=CGroups::getInstance()->getFirstGroup();
 		
-		if(query->next()) {		
+		if(query->next()) {
 			record[1]=QSqlRecord();
 			record[0]=query->record();
 			
 			processFields(&record[0]);
 			
 			while(!fini) {
+				if(groupChanged != 0) {
+					pGroup=groupChanged;
+					while(pGroup) {
+						pageManager->process(getGroupBand(pGroup, egbHeader), idxRec == 0, idxRec == lastRec);
+						pGroup->setChanged(false);
+						pGroup=pGroup->getChild();
+					}
+					groupChanged=0;
+				}
+				
 				pageManager->process(docBody, idxRec == 0, idxRec == lastRec);
 				
 				record[1]=record[0];
@@ -254,14 +162,52 @@ namespace libqt4report {
 				if(query->next()) {
 					idxRec++;
 					record[0]=query->record();
+					
+					groupChanged=testGroupChanged(&record[0], &record[1]);
+					if(groupChanged != 0) {
+						pGroup=groupChanged;
+						while(pGroup) {
+							pageManager->process(getGroupBand(pGroup, egbFooter), idxRec == 0, idxRec == lastRec);
+							pGroup->setChanged(true);
+							pGroup=pGroup->getParent();
+						}
+					}
+					
 					processFields(&record[0]);
 				}else {
 					fini=true;
 				}
 			}
+			
+			pGroup=CGroups::getInstance()->getLastGroup();
+			while(pGroup) {
+				pageManager->process(getGroupBand(pGroup, egbFooter), idxRec == 0, idxRec == lastRec);
+				pGroup=pGroup->getParent();
+			}	
+			
+			pageManager->end();
 		}
 		
+		pagesSize=pageManager->getPageSize();
+		
 		delete pageManager;
+	}
+	//------------------------------------------------------------------------------
+	CGroup * CDocument::testGroupChanged(QSqlRecord *rec0, QSqlRecord *rec1) {
+		CGroup *groupChanged=0;
+		CGroup *pGroup=CGroups::getInstance()->getFirstGroup();
+		
+		while(pGroup != 0) {
+			QString fieldName=CFields::getInstance()->getField(pGroup->getRefer())->getAttribute("fieldName");
+			
+			if(rec0->value(fieldName) != rec1->value(fieldName)) {
+				groupChanged=pGroup;
+			}
+			
+			pGroup=pGroup->getChild();
+		}
+		
+		return groupChanged;
 	}
 	//------------------------------------------------------------------------------
 }

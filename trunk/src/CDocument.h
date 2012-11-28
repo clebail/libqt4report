@@ -19,6 +19,8 @@
 namespace libqt4report {
 	class CDocument : public QList<CPage *> {
 		public:
+			enum EGBType { egbHeader=0, egbFooter=1 };
+			
 			CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName);
 			~CDocument(void);
 			QString getLastError(void) { return lastError; }
@@ -38,8 +40,8 @@ namespace libqt4report {
 			void cleanup(void);
 			QSize getPagesSize(void) { return pagesSize; }
 			void setParamValue(QString paramName, QVariant value) { params[paramName]=value; }
-			void addGroupBand(CGroup *group, CDocBand *docBand) { groupBands->insert(group, docBand); }
-			CDocBand * getGroupBand(CGroup *group) { return groupBands->value(group); }
+			void addGroupBand(CGroup *group, EGBType groupBandType, CDocBand *docBand) { groupBands[groupBandType]->insert(group, docBand); }
+			CDocBand * getGroupBand(CGroup *group, EGBType groupBandType) { return groupBands[groupBandType]->value(group); }
 			QString getPageHeight(void) { return pageHeight; }
 			QString getPageWidth(void) { return pageWidth; }
 			double getCoef(void) { return coef; }
@@ -49,7 +51,7 @@ namespace libqt4report {
 			CDocBand *docBody;
 			CDocBand *docFooter;
 			CDocBand *pageFooter;
-			QHash<CGroup *, CDocBand *> *groupBands;
+			QHash<CGroup *, CDocBand *> *groupBands[2];
 			QSqlDatabase database;
 			QString sqlQuery;
 			QString lastError;
@@ -63,6 +65,7 @@ namespace libqt4report {
 			void createPages(QSqlQuery * query);
 			void processFields(QSqlRecord *record) { CFields::getInstance()->process(record); }
 			void setUnit(QString unit) { coef=(unit == "mm" ? COEF_MM : (unit == "in" ? COEF_IN : COEF_PX)); }
+			CGroup * testGroupChanged(QSqlRecord *rec0, QSqlRecord *rec1);
 	};
 	//------------------------------------------------------------------------------
 	class CPageManager {
@@ -70,7 +73,9 @@ namespace libqt4report {
 			CPageManager(CDocument *document);
 			
 			void process(CPrintableObject *printableObject, bool firstEnr=false, bool lastEnr=false);
+			void end(void);
 			double getRealPageHeight(void) { return hPage; }
+			QSize getPageSize(void) { return QSize(wPage, hSpecified ? hPage : y); }
 		private:
 			CDocument *document;
 			int y;
@@ -81,6 +86,7 @@ namespace libqt4report {
 			int hFooter;
 			bool hSpecified;
 			double hPage;
+			double wPage;
 			double coef;
 			
 			void draw(CPrintableObject *printableObject);

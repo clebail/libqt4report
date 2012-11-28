@@ -6,10 +6,11 @@
 			pageWidth="210" pageHeight="297" unit="mm">
 	<fonts>
 		<font id="font1" family="arial" size="9" />
-		<font id="fontColumnName" family="arial" size="14" style="StyleItalic" />
+		<font id="fontColumnName" family="arial" size="13" style="StyleItalic" />
 		<font id="fontTitre" family="arial" size="40" weight="Black" />
-		<font id="fontTotal" family="arial" size="10" weight="Bold" />
-		<font id="fontTotalCde" family="arial" size="9" weight="Bold" />
+		<font id="fontTotal" family="arial" size="12" weight="Bold" />
+		<font id="fontTotalCde" family="arial" size="10" />
+		<font id="fontCdeHeader" family="arial" size="12" />
 	</fonts>
 	<database>
 		<params>
@@ -18,7 +19,7 @@
 		</params>
 		<connection driver="QMYSQL" host="127.0.0.1" userName="test" password="" dbName="test" />
 		<query>
-			<![CDATA[SELECT commande, numeroLigne, article, quantite, prixUnitaireHT, tauxTva, CURDATE() as td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne]]>
+			<![CDATA[SELECT commande, numeroLigne, article, quantite, prixUnitaireHT, tauxTva, td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne]]>
 		</query>
 		<dbFields>
 			<dbField id="dbCommande" fieldName="commande" dataType="integer" />
@@ -48,43 +49,46 @@
 	</fields>
 	<body>
 		<pageHeader>
-			<item xsi:type="textFixedObject" id="cdeTitle" fontId="fontColumnName" x="5" y="5" value="Cde." />
-			<item xsi:type="textFixedObject" id="codeTitle" fontId="fontColumnName" x="15" y="5" value="Article" />
-			<item xsi:type="textFixedObject" id="nomTitle" fontId="fontColumnName" x="50" y="5" value="Quantité" align="end" />
-			<item xsi:type="textFixedObject" id="puHTTitle" fontId="fontColumnName" x="100" y="5" value="Prix unitaire HT" align="end" />
-			<item xsi:type="textFixedObject" id="tTvaTitle" fontId="fontColumnName" x="130" y="5" value="Taux de tva" align="end" />
-			<item xsi:type="textFixedObject" id="mntHTTitle" fontId="fontColumnName" x="170" y="5" value="Mnt. HT" align="end" />
-			<item xsi:type="textFixedObject" id="mntTTCTitle" fontId="fontColumnName" x="190" y="5" value="Mnt. TTC" align="end" />
+			<item xsi:type="textFixedObject" id="codeTitle" fontId="fontColumnName" x="5" y="5" value="Product" />
+			<item xsi:type="textFixedObject" id="nomTitle" fontId="fontColumnName" x="38" y="5" value="Quantity" align="end" />
+			<item xsi:type="textFixedObject" id="puHTTitle" fontId="fontColumnName" x="85" y="5" value="Unit price exclusive VAT" align="end" />
+			<item xsi:type="textFixedObject" id="tTvaTitle" fontId="fontColumnName" x="110" y="5" value="VAT rate" align="end" />
+			<item xsi:type="textFixedObject" id="mntTitle" fontId="fontColumnName" x="115" y="5" value="Amount :" />
+			<item xsi:type="textFixedObject" id="mntHTTitle" fontId="fontColumnName" x="160" y="5" value="exclusive VAT" align="end" />
+			<item xsi:type="textFixedObject" id="mntTTCTitle" fontId="fontColumnName" x="190" y="5" value="inclusive VAT" align="end" />
 			<item xsi:type="lineObject" id="lineH1" x="5" y="6" width="200" height="0" />
 		</pageHeader>
-		 <docHeader>
-			<item xsi:type="textFixedObject" id="title" fontId="fontTitre" x="105" y="10" value="Titre" align="middle" color="#FF0000" />
-			<item xsi:type="textFieldObject" id="titleDate" fontId="fontTitre" x="20" y="10" fieldId="dbTD" color="#0000FF" />
-		</docHeader>
+		<groupHeaders>
+			<groupHeader groupId="grCde">
+				<item xsi:type="textFixedObject" id="numCdeTitle" fontId="fontCdeHeader" x="30" y="5" value="Order #" align="end"  color="#FF0000" />
+				<item xsi:type="textFieldObject" id="numCde" fontId="fontCdeHeader" x="32" y="5" fieldId="dbCommande" color="#FF0000" />
+				<item xsi:type="textFixedObject" id="dateTitle" fontId="fontCdeHeader" x="50" y="5" value="From the" align="end"  color="#FF0000" />
+				<item xsi:type="textFieldObject" id="date" fontId="fontCdeHeader" x="52" y="5" fieldId="dbTD" color="#FF0000" />
+			</groupHeader>
+		</groupHeaders>
 		<docBody>
-			<item xsi:type="textFieldObject" id="cde" fontId="font1" x="5" y="5" fieldId="dbCommande" />
-			<item xsi:type="textFieldObject" id="code" fontId="font1" x="15" y="5" fieldId="dbArticle" />
-			<item xsi:type="textFieldObject" id="nom" fontId="font1" x="50" y="5" fieldId="dbQte" align="end" />
-			<item xsi:type="textFieldObject" id="puHt" fontId="font1" x="100" y="5" fieldId="dbPuHT" align="end" format="rf2" />
-			<item xsi:type="textFieldObject" id="tTva" fontId="font1" x="130" y="5" fieldId="dbTTva" align="end" format="rf3" />
-			<item xsi:type="textFieldObject" id="tMntHT" fontId="font1" x="170" y="5" fieldId="cMntHT" align="end" format="rf2" />
+			<item xsi:type="textFieldObject" id="code" fontId="font1" x="5" y="5" fieldId="dbArticle" />
+			<item xsi:type="textFieldObject" id="nom" fontId="font1" x="38" y="5" fieldId="dbQte" align="end" />
+			<item xsi:type="textFieldObject" id="puHt" fontId="font1" x="85" y="5" fieldId="dbPuHT" align="end" format="rf2" />
+			<item xsi:type="textFieldObject" id="tTva" fontId="font1" x="110" y="5" fieldId="dbTTva" align="end" format="rf3" />
+			<item xsi:type="textFieldObject" id="tMntHT" fontId="font1" x="160" y="5" fieldId="cMntHT" align="end" format="rf2" />
 			<item xsi:type="textFieldObject" id="tMntTTC" fontId="font1" x="190" y="5" fieldId="cMntTTC" align="end" format="rf2" />
 		</docBody>
 		<groupFooters>
 			<groupFooter groupId="grCde">
-				<item xsi:type="textFixedObject" id="totalTitleCde" fontId="fontTotalCde" x="145" y="5" value="Total :" align="end" />
-				<item xsi:type="textFieldObject" id="totalHTCde" fontId="fontTotalCde" x="170" y="5" fieldId="tTotalHTCde"  align="end" format="rf2" />
-				<item xsi:type="textFieldObject" id="totalTTCCde" fontId="fontTotalCde" x="190" y="5" fieldId="tTotalTTCCde"  align="end" format="rf2" />
+				<item xsi:type="lineObject" id="lineH2" x="135" y="3" width="60" height="0"  color="#0000FF" />
+				<item xsi:type="textFixedObject" id="totalTitleCde" fontId="fontTotalCde" x="145" y="6" value="Total :" align="end"  color="#0000FF" />
+				<item xsi:type="textFieldObject" id="totalHTCde" fontId="fontTotalCde" x="160" y="6" fieldId="tTotalHTCde"  align="end" format="rf2"  color="#0000FF" />
+				<item xsi:type="textFieldObject" id="totalTTCCde" fontId="fontTotalCde" x="190" y="6" fieldId="tTotalTTCCde"  align="end" format="rf2"  color="#0000FF" />
 			</groupFooter>
 		</groupFooters>
 		<docFooter>
-			<item xsi:type="textFixedObject" id="totalTitle" fontId="fontTotal" x="145" y="5" value="Total :" align="end" />
-			<item xsi:type="textFieldObject" id="totalHT" fontId="fontTotal" x="170" y="5" fieldId="tTotalHT"  align="end" format="rf2" />
-			<item xsi:type="textFieldObject" id="totalTTC" fontId="fontTotal" x="190" y="5" fieldId="tTotalTTC"  align="end" format="rf2" />
+			<item xsi:type="lineObject" id="lineH3" x="5" y="10" width="200" height="0" />
+			<item xsi:type="textFixedObject" id="nbCdeTitle" fontId="fontTotal" x="90" y="15" value="Number of order(s) :" align="end" />
+			<item xsi:type="textFieldObject" id="nbCde" fontId="fontTotal" x="92" y="15" fieldId="tNbCde" />
+			<item xsi:type="textFixedObject" id="totalTitle" fontId="fontTotal" x="145" y="15" value="Total :" align="end" />
+			<item xsi:type="textFieldObject" id="totalHT" fontId="fontTotal" x="160" y="15" fieldId="tTotalHT"  align="end" format="rf2" />
+			<item xsi:type="textFieldObject" id="totalTTC" fontId="fontTotal" x="190" y="15" fieldId="tTotalTTC"  align="end" format="rf2" />
 		</docFooter>
-		<pageFooter>
-			<item xsi:type="rectObject" id="rectFooter" x="2" y="2" width="206" height="5" color="#00FF00" /> 
-			<item xsi:type="textFixedObject" id="pageFooter" fontId="font1" x="5" y="5" value="pageFooter" />
-		</pageFooter>
 	</body>
 </document>
