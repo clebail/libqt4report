@@ -2,9 +2,25 @@
 <xsd:schema	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 			targetNamespace="http://corentin-lebail.eu/libqt4report"
 			xmlns:lqr="http://corentin-lebail.eu/libqt4report">
-			
+	
+	<xsd:annotation>
+		<xsd:documentation>
+			Schema for libqt4report file Last modified date: 28th November, 2012 From Corentin Le Bail
+		</xsd:documentation>
+	</xsd:annotation>
+	
 	<xsd:complexType name="fieldObject" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is the base element of all objects from the database.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:attribute name="id" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					Must be unique and respect the [a-zA-Z0-9]* regexp.
+				</xsd:documentation>
+			</xsd:annotation>
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:string">
 					<xsd:pattern value="[a-zA-Z0-9]*" /> 
@@ -12,6 +28,11 @@
 			</xsd:simpleType>	
 		</xsd:attribute>
 		<xsd:attribute name="dataType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					Must take a value from string, integer, real, date or dateTime.
+				</xsd:documentation>
+			</xsd:annotation>
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:string">
 					<xsd:pattern value="string" />
@@ -25,14 +46,30 @@
 	</xsd:complexType>
 	
 	<xsd:complexType name="dbFieldObject">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is derived from fieldObject, it represent a field from the database used in the report.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="lqr:fieldObject">
-				<xsd:attribute name="fieldName" type="xsd:string" use="required" />
+				<xsd:attribute name="fieldName" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must be a database filed name.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 	
 	<xsd:complexType name="userFieldObject" abstract="true" >
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is derived from fieldObject, it represent a user field.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="lqr:fieldObject" />
 		</xsd:complexContent>
@@ -45,19 +82,40 @@
 	</xsd:element>
 	
 	<xsd:complexType name="calculatedFieldObject">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is derived from userFieldObject, it represent a calculated field.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="lqr:userFieldObject">
 				<xsd:sequence>
-					<xsd:element ref="lqr:expression" />
+					<xsd:element ref="lqr:expression">
+						<xsd:annotation>
+							<xsd:documentation>
+								This element must be an expression compatible with QtScript, you can refer to other fields by surrounding it like this: ${ fieldId }.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 	
 	<xsd:complexType name="totalFieldObject">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is derived from userFieldObject, it represent a total field.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="lqr:userFieldObject">
 				<xsd:attribute name="operation" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must take a value from sum, avg, count, min or max.
+						</xsd:documentation>
+					</xsd:annotation>
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:string">
 							<xsd:enumeration value="sum" />
@@ -68,24 +126,75 @@
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:attribute>
-				<xsd:attribute name="fieldId" type="xsd:string" use="required" />
-				<xsd:attribute name="resetOn" type="xsd:string" />
-				<xsd:attribute name="accumulateOn" type="xsd:string" />
+				<xsd:attribute name="fieldId" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must be an id of an other field.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="resetOn" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>
+							May be an id of a group, if it is set, the value is resetting when the group change.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="accumulateOn" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>
+							May be an id of a group, if it is set, the value is agregatte when the group change.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 	
 	<xsd:complexType name="dbFields">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type represent the list off all the fields from the database.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element name="field" type="lqr:dbFieldObject" maxOccurs="unbounded" />
 		</xsd:sequence>
 	</xsd:complexType>
 	
 	<xsd:complexType name="object" abstract="true">
-		<xsd:attribute name="id" type="xsd:string" use="required" />
-		<xsd:attribute name="x" type="xsd:int" use="required" />
-		<xsd:attribute name="y" type="xsd:int" use="required" />
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is the base element of all objects you want to draw in the result report.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="id" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					Must be unique, represent the object id.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="x" type="xsd:int" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					Represent the x coordinate of the object in the result report, it must be in the same scale as document unit.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="y" type="xsd:int" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					Represent the y coordinate of the object in the result report, it must be in the same scale as document unit.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
 		<xsd:attribute name="color">
+			<xsd:annotation>
+				<xsd:documentation>
+					Represent the color of the object in the result report, it must be HTML color code #00FF00.
+				</xsd:documentation>
+			</xsd:annotation>
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:string">
 					<xsd:pattern value="#[0-9a-fA-F]{6,6}" />
@@ -95,10 +204,26 @@
 	</xsd:complexType>
 
 	<xsd:complexType name="textObject" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is derived from object, it represent a text object.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="lqr:object">
-				<xsd:attribute name="fontId" type="xsd:string" use="required" />
+				<xsd:attribute name="fontId" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must be an id of a font object.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
 				<xsd:attribute name="align">
+					<xsd:annotation>
+						<xsd:documentation>
+							May specify his alignment relative to the x coordinate, by default the object is left align.
+						</xsd:documentation>
+					</xsd:annotation>
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:string">
 							<xsd:enumeration value="start" />
@@ -108,6 +233,13 @@
 					</xsd:simpleType>
 				</xsd:attribute>
 				<xsd:attribute name="format">
+					<xsd:annotation>
+						<xsd:documentation>
+							May specify his format for real, date and dateTime value, it start with r letter for real or d letter for date and dateTime.
+							real: first letter see format field of arg(double, ) method in Qt doc, follow by the number of decimal.
+							date: see toString() method of QDate object in Qt doc.
+						</xsd:documentation>
+					</xsd:annotation>
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:string">
 							<xsd:pattern value="r[eEfgG]?[0-9]*|d.*" />
@@ -119,37 +251,86 @@
 	</xsd:complexType>
 	
 	<xsd:complexType name="lineObject">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is derived from object, it represent a line object.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="lqr:object">
-				<xsd:attribute name="width" type="xsd:int" use="required" />
-				<xsd:attribute name="height" type="xsd:int" use="required" />
+				<xsd:attribute name="width" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must be the width of the line, it must be in the same scale as document unit.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="height" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must be the height of the line, it must be in the same scale as document unit.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 	
 	<xsd:complexType name="rectObject">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is derived from lineObject, it represent a rect object.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="lqr:lineObject" />
 		</xsd:complexContent>
 	</xsd:complexType>
 	
 	<xsd:complexType name="textFixedObject">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is derived from textObject, it represent a text fixed object.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="lqr:textObject">
-				<xsd:attribute name="value" type="xsd:string" use="required" />
+				<xsd:attribute name="value" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must be the value you want to be drawn on the result report.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 	
 	<xsd:complexType name="textFieldObject">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is derived from textObject, it represent a text field object.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:extension base="lqr:textObject">
-				<xsd:attribute name="fieldId" type="xsd:string" use="required" />
+				<xsd:attribute name="fieldId" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must be the fieldId of the field to be drawn on the result report.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 	
 	<xsd:complexType name="docBand" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is the base element of a band object you want to draw in the result report, it contains a list of drawable object like textFixedObject, textFieldObject, lineObject or rectObject.
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element ref="lqr:item" minOccurs="1" maxOccurs="unbounded" />
 		</xsd:sequence>
