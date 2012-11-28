@@ -248,7 +248,8 @@ namespace libqt4report {
 			}
 			
 			curDocBand=new CDocBand();
-			document->addGroupBand(CGroups::getInstance()->getGroup(groupId), curDocBand);
+			document->addGroupBand(CGroups::getInstance()->getGroup(groupId), 
+								(qName == "groupHeader" ? CDocument::egbHeader : CDocument::egbFooter), curDocBand);
 			return true;
 		}
 		

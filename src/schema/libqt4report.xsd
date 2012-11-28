@@ -415,7 +415,7 @@
 		</xsd:key>
 		
 		<xsd:unique name="uniqueItemId">
-			<xsd:selector xpath="lqr:body/*/lqr:item" />
+			<xsd:selector xpath="lqr:body/*/lqr:item|lqr:body/lqr:groupHeaders/lqr:groupHeader/lqr:item|lqr:body/lqr:groupFooters/lqr:groupFooter/lqr:item" />
 			<xsd:field xpath="@id" />
 		</xsd:unique>
 		

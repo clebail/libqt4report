@@ -21,12 +21,15 @@ namespace libqt4report {
 			hSpecified=true;
 			hPage=pageHeight.toInt()*coef;
 		}
+		wPage=pageWidth.toInt()*coef;
 	}
 	//------------------------------------------------------------------------------
 	void CPageManager::process(CPrintableObject *printableObject, bool firstEnr, bool lastEnr) {
-		if(endPage) {
-			CPage *page=document->last();
-			QString svg;
+		CPage *page;
+		QString svg;
+		
+		if(endPage ) {
+			page=document->last();
 			
 			endPage=false;
 			if(lastEnr) {
@@ -41,9 +44,8 @@ namespace libqt4report {
 		}
 		
 		if(newPage) {
-			CPage *page=new CPage();
-			QString svg;
-			int wPage=pageWidth.toInt()*coef;
+			page=new CPage();
+			svg;
 			QString w=QString::number(wPage);
 			
 			svg="<?xml version='1.0' encoding='utf-8'?>";
@@ -78,6 +80,11 @@ namespace libqt4report {
 				draw(printableObject);
 			}
 		}
+	}
+	//------------------------------------------------------------------------------
+	void CPageManager::end(void) {
+		endPage=true;
+		process(0, false, true);
 	}
 	//------------------------------------------------------------------------------
 	void CPageManager::draw(CPrintableObject *printableObject) {
