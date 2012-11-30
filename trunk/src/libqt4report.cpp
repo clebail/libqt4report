@@ -18,6 +18,7 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	static CDocument * document;
 	static QTranslator *translator=0;
+	static log4cpp::Category& logger = log4cpp::Category::getInstance("CReport");
 	//------------------------------------------------------------------------------
 	CReport::CReport(QString connectionName) : QObject() {
 		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
@@ -28,6 +29,7 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	CReport::~CReport(void) {
+		logger.debug("Delete CReport instance");
 		if(document != 0) {
 			delete document;
 		}
@@ -39,6 +41,8 @@ namespace libqt4report {
 		xsdFile->open(QIODevice::ReadOnly);
 		bool ret=false;
 		
+		logger.debug("Start validating report");
+		
 		xmlSchema->load(xsdFile, QUrl::fromLocalFile(xsdFile->fileName()));
 		if(xmlSchema->isValid()) {
 			QXmlSchemaValidator *validator=new QXmlSchemaValidator(*xmlSchema);
@@ -49,6 +53,8 @@ namespace libqt4report {
 			
 			delete validator;
 		}
+
+		logger.debug((QString("Validating result : ")+(ret ? "OK" : "NOK")).toStdString());
 		
 		delete xsdFile;
 		delete xmlSchema;	
@@ -62,11 +68,14 @@ namespace libqt4report {
 		CDocumentParser *parser=new CDocumentParser(connectionName);
 		bool ret=false;
 		
+		logger.debug("Start process report");
 		connect(parser, SIGNAL(queryParam(QString,QVariant&)), this, SLOT(onParserQueryParam(QString,QVariant&)));
 		
 		if(document != 0) {
 			delete document;
 		}
+		
+		logger.debug("Start parse report file");
 		xmlReader->setContentHandler(parser);
 		xmlReader->setLexicalHandler(parser);
 		if(xmlReader->parse(source)) {
@@ -75,6 +84,7 @@ namespace libqt4report {
 			QHashIterator<QString, QVariant> i(params);
 			while (i.hasNext()) {
 				i.next();
+				logger.debug((tr("Param")+" "+i.key()+" = "+i.value().toString()).toStdString());
 				document->setParamValue(i.key(), i.value());
 			}
 			
@@ -87,6 +97,7 @@ namespace libqt4report {
 		}else {
 			lastSourceError=QObject::tr("Invalid file");
 			lastError=QObject::tr("Unable to parse the file : ")+parser->errorString();
+			logger.debug(("Unable to parse the file : "+parser->errorString()).toStdString());
 		}
 		
 		cleanup();
@@ -149,6 +160,7 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CReport::onParserQueryParam(QString paramName, QVariant& value) {
+		logger.debug(("Emit query param for "+paramName).toStdString());
 		emit queryParam(paramName, value);
 	}
 	//------------------------------------------------------------------------------

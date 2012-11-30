@@ -2,13 +2,19 @@
 #include <QtDebug>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <log4cpp/Category.hh>
 #include "CDocument.h"
 #include "CFonts.h"
 #include "CScript.h"
 #include "CGroups.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
+	//------------------------------------------------------------------------------
+	static log4cpp::Category& logger = log4cpp::Category::getInstance("CDocument");
+	//------------------------------------------------------------------------------
 	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName) : QList<CPage *>() {
+		logger.debug("Create CDocument instance");
+		
 		pageHeader=docHeader=docBody=docFooter=pageFooter=0;
 
 		groupBands[egbHeader]=new QHash<CGroup *, CDocBand *>();
@@ -23,6 +29,8 @@ namespace libqt4report {
 	CDocument::~CDocument(void) {
 		int i;
 		
+		logger.debug("Delete CDocument instance");
+		
 		for(i=0;i<count();i++) {
 			delete at(i);
 		}
@@ -34,23 +42,31 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName) {
+		logger.debug("Set database info");
+		
 		if(connectionName.isEmpty()) {
+			logger.debug("Embedded database info");
 			database=QSqlDatabase::addDatabase(driver);
 			database.setHostName(host);
 			database.setUserName(userName);
 			database.setPassword(password);
 			database.setDatabaseName(dbName);
 		}else {
+			logger.debug("Extern database info");
 			database=QSqlDatabase::database(connectionName);
 		}
 	}
 	//------------------------------------------------------------------------------
 	bool CDocument::process(void) {
+		logger.debug("Start process document");
+		
 		if(connectionName.isEmpty()) {
 			if(!database.open()) {
 				lastSourceError=QObject::tr("Database error");
 				lastError=database.lastError().databaseText();
 			
+				logger.debug((QString("Database error ")+lastError).toStdString());
+				
 				return false;
 			}
 		}
