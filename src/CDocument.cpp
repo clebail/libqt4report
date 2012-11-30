@@ -164,6 +164,9 @@ namespace libqt4report {
 				if(groupChanged != 0) {
 					pGroup=groupChanged;
 					while(pGroup) {
+						
+						logger.debug((QString("process ")+pGroup->getRefer()+QString(" header")).toStdString());
+						
 						pageManager->process(getGroupBand(pGroup, egbHeader), idxRec == 0, idxRec == lastRec);
 						pGroup->setChanged(false);
 						pGroup=pGroup->getChild();
@@ -181,12 +184,17 @@ namespace libqt4report {
 					
 					groupChanged=testGroupChanged(&record[0], &record[1]);
 					if(groupChanged != 0) {
-						pGroup=groupChanged;
-						while(pGroup) {
+						bool printGroupFooterFini=false;
+						pGroup=CGroups::getInstance()->getLastGroup();
+						do {
+							printGroupFooterFini = (pGroup == groupChanged);
+							
+							logger.debug((QString("process ")+pGroup->getRefer()+QString(" footer")).toStdString());
+							
 							pageManager->process(getGroupBand(pGroup, egbFooter), idxRec == 0, idxRec == lastRec);
 							pGroup->setChanged(true);
 							pGroup=pGroup->getParent();
-						}
+						}while(!printGroupFooterFini);
 					}
 					
 					processFields(&record[0]);
@@ -210,20 +218,20 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	CGroup * CDocument::testGroupChanged(QSqlRecord *rec0, QSqlRecord *rec1) {
-		CGroup *groupChanged=0;
 		CGroup *pGroup=CGroups::getInstance()->getFirstGroup();
 		
 		while(pGroup != 0) {
 			QString fieldName=CFields::getInstance()->getField(pGroup->getRefer())->getAttribute("fieldName");
 			
 			if(rec0->value(fieldName) != rec1->value(fieldName)) {
-				groupChanged=pGroup;
+				logger.debug((QString("group ")+pGroup->getRefer()+QString(" changed")).toStdString());
+				return pGroup;
 			}
 			
 			pGroup=pGroup->getChild();
 		}
 		
-		return groupChanged;
+		return 0;
 	}
 	//------------------------------------------------------------------------------
 }
