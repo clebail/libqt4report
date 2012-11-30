@@ -17,6 +17,16 @@ namespace libqt4report {
 		}
 	}
 	//------------------------------------------------------------------------------
+	void CItem::serialize(QDataStream &out) {
+		QHashIterator<QString, QString> i(attributes);
+		
+		while(i.hasNext()) {
+			i.next();
+			out << i.key();
+			out << i.value();
+		}
+	}
+	//------------------------------------------------------------------------------
 	QString CItemText::toSvg(int y, double coef) {
 		QString value=xmlEncode(getValue());
 		QString align="";
@@ -76,6 +86,11 @@ namespace libqt4report {
 		return getAttribute("value");
 	}
 	//------------------------------------------------------------------------------
+	void CItemTextFixedObject::serialize(QDataStream &out) {
+		out << "CItemTextFixedObject";
+		CItem::serialize(out);
+	}
+	//------------------------------------------------------------------------------
 	CItemTextFieldObject::~CItemTextFieldObject(void) {
 		delete value;
 	}
@@ -109,6 +124,11 @@ namespace libqt4report {
 				createValue(field->getAttribute("dataType"));
 			}
 		}
+	}
+	//------------------------------------------------------------------------------
+	void CItemTextFieldObject::serialize(QDataStream &out) {
+		out << "CItemTextFieldObject";
+		CItem::serialize(out);
 	}
 	//------------------------------------------------------------------------------
 	QString CItemLineObject::toSvg(int y, double coef) {
@@ -157,6 +177,11 @@ namespace libqt4report {
 		return y+height;
 	}
 	//------------------------------------------------------------------------------
+	void CItemLineObject::serialize(QDataStream &out) {
+		out << "CItemLineObject";
+		CItem::serialize(out);
+	}
+	//------------------------------------------------------------------------------
 	QString CItemRectObject::toSvg(int y, double coef) {
 		int x, yR, width, height;
 		QString color="black";
@@ -188,6 +213,11 @@ namespace libqt4report {
 		rendererObject->setColor(hasAttribute("color") ? getAttribute("color") : "#000000");
 		
 		rendererObjects->append(rendererObject);
+	}
+	//------------------------------------------------------------------------------
+	void CItemRectObject::serialize(QDataStream &out) {
+		out << "CItemRectObject";
+		CItem::serialize(out);
 	}
 	//------------------------------------------------------------------------------
 }//namespace

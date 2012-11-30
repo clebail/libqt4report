@@ -16,6 +16,7 @@ namespace libqt4report {
 			QString getAttribute(QString name) { return attributes.value(name) ;}
 			bool hasAttribute(QString name) { return attributes.contains(name); }
 			virtual void processAttributes(const QXmlAttributes& atts);
+			virtual void serialize(QDataStream &out);
 		private:
 			QHash<QString ,QString> attributes;
 	};
@@ -31,6 +32,8 @@ namespace libqt4report {
 	};
 	//------------------------------------------------------------------------------
 	class CItemTextFixedObject : public CItemText {
+		public:
+			virtual void serialize(QDataStream &out);
 		protected:
 			QString getValue(void);
 	};
@@ -40,6 +43,7 @@ namespace libqt4report {
 			~CItemTextFieldObject(void);
 			void createValue(QString fieldId);
 			virtual void processAttributes(const QXmlAttributes& atts);
+			virtual void serialize(QDataStream &out);
 		protected:
 			CValueType *value;
 			QString getValue(void);
@@ -50,13 +54,16 @@ namespace libqt4report {
 			QString toSvg(int y, double coef);
 			int getHeight(double coef);
 			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
+			virtual void serialize(QDataStream &out);
 	};
 	//------------------------------------------------------------------------------
 	class CItemRectObject : public CItemLineObject {
 		public:
 			QString toSvg(int y, double coef);
 			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
+			virtual void serialize(QDataStream &out);
 	};
+	//------------------------------------------------------------------------------
 } //namespace
 //------------------------------------------------------------------------------
 #endif //__CITEM_H__

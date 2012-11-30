@@ -145,6 +145,14 @@ namespace libqt4report {
 		}
 	}
 	//------------------------------------------------------------------------------
+	void CDocument::serialize(QDataStream &out) {
+		QHashIterator<QString, CItem *> i(*docBody);
+		while(i.hasNext()) {
+			i.next();
+			i.value()->serialize(out);
+		}
+	}
+	//------------------------------------------------------------------------------
 	void CDocument::createPages(QSqlQuery *query) {
 		CPageManager *pageManager=new CPageManager(this);
 		QSqlRecord record[2];

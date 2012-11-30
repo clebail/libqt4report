@@ -45,6 +45,7 @@ namespace libqt4report {
 			QString getPageHeight(void) { return pageHeight; }
 			QString getPageWidth(void) { return pageWidth; }
 			double getCoef(void) { return coef; }
+			void serialize(QDataStream &out);
 		private:
 			CDocBand *pageHeader;
 			CDocBand *docHeader;
