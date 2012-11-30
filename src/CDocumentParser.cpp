@@ -10,9 +10,12 @@
 #include "CGroups.h"
 //--------------------------------------------------------------------------------------------------------------
 namespace libqt4report {
+	//--------------------------------------------------------------------------------------------------------------
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CDocumentParser");
 	//--------------------------------------------------------------------------------------------------------------
 	CDocumentParser::CDocumentParser(QString connectionName) : QObject() {
+		logger.debug("Create CDocumentParser instance");
+		
 		qRegisterMetaType<CItemTextFixedObject>("CItemTextFixedObject");
 		qRegisterMetaType<CItemTextFieldObject>("CItemTextFieldObject");
 
@@ -45,9 +48,11 @@ namespace libqt4report {
 	bool CDocumentParser::startElement(const QString& namespaceURI, const QString& localName, const QString& qName, const QXmlAttributes& atts) {
 		int i;
 		
+		logger.debug((QString("Start ")+qName+QString(" element")).toStdString());
+		
 		if(qName == "document") {
 			QString pageWidth, pageHeight, unit;
-
+			
 			for(i=0;i<atts.count();i++) {
 				if(atts.localName(i) == "pageWidth") {
 					pageWidth=atts.value(i);
@@ -247,6 +252,8 @@ namespace libqt4report {
 				}
 			}
 			
+			logger.debug((QObject::tr("Add")+" "+qName+" "+groupId).toStdString());
+			
 			curDocBand=new CDocBand();
 			document->addGroupBand(CGroups::getInstance()->getGroup(groupId), 
 								(qName == "groupHeader" ? CDocument::egbHeader : CDocument::egbFooter), curDocBand);
@@ -277,6 +284,9 @@ namespace libqt4report {
 	}
 //--------------------------------------------------------------------------------------------------------------
 	bool CDocumentParser::endElement(const QString& namespaceURI, const QString& localName, const QString& qName) {
+		
+		logger.debug((QString("End ")+qName+QString(" element")).toStdString());
+		
 		if(qName == "document") {
 			return true;
 		}
@@ -375,6 +385,8 @@ namespace libqt4report {
 		QString className;
 		CItem * item=0;
 		
+		logger.debug("Start parse item");
+		
 		i=atts.index("http://www.w3.org/2001/XMLSchema-instance", "type");
 		if(i != -1) {
 			className="CItem"+atts.value(i).left(1).toUpper()+atts.value(i).mid(1);
@@ -394,6 +406,8 @@ namespace libqt4report {
 		int i;
 		QString className;
 		CField * field=0;
+		
+		logger.debug("Start parse field");
 		
 		if(qName == "dbField") {
 			field=new CDbFieldObject();

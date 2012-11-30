@@ -18,7 +18,6 @@ namespace libqt4report {
 		nGroup->setId(id);
 		nGroup->setRefer(refer);
 		
-		
 		if(firstGroup == 0) {
 			firstGroup=nGroup;
 		}else {
@@ -51,6 +50,8 @@ namespace libqt4report {
 				dGroup=pGroup->getParent();
 			}while(dGroup != 0);
 		}
+		
+		firstGroup=lastGroup=0;
 	}
 	//------------------------------------------------------------------------------
 	CGroup *CGroups::getGroup(QString id) {
