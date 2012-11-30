@@ -558,7 +558,7 @@
 				<xsd:element ref="lqr:fonts" minOccurs="0" />
 				<xsd:element ref="lqr:database" />
 				<xsd:element ref="lqr:groups" minOccurs="0" />
-				<xsd:element ref="lqr:fields" />
+				<xsd:element ref="lqr:fields" minOccurs="0" />
 				<xsd:element ref="lqr:body" />
 			</xsd:sequence>
 			<xsd:attribute name="pageWidth" type="xsd:int" use="required" />
