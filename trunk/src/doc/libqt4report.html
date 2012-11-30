@@ -75,10 +75,13 @@
 		<div class='code'>
 			<span class='motCle'>class</span> CReport {<br/>
 			<span class='oneTab'><span class='motCle'>public:</span></span><br />
-			<span class='twoTab'>CReport(<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> connectionName=<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString()</a>);</span>
+			<span class='twoTab'>CReport(<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString</a> connectionName=<a href='http://doc.qt.digia.com/4.6/qstring.html' class='qt'>QString()</a>, <span class='motCle'>bool</span> useSerialize=<span class='motCle'>false</span>);</span>
 			<div class='doc'>
 				// Constructor.<br />
-				// connectionName of an allready open database connection.
+				// connectionName of an allready open database connection.<br /><br />
+				// !!!! Not yet implemented !!!!<br />
+				// useSerialize to use serialization / deserialization of objects to accelerate the process.<br />
+				// !!!! Not yet implemented !!!!
 			</div>
 			<br />
 			<span class='twoTab'><span class='motCle'>bool</span> validDocument(<a href='http://doc.qt.digia.com/4.6/qfile.html' class='qt'>QFile<a> *docFile);</span>

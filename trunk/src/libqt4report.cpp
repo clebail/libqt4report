@@ -20,10 +20,11 @@ namespace libqt4report {
 	static QTranslator *translator=0;
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CReport");
 	//------------------------------------------------------------------------------
-	CReport::CReport(QString connectionName) : QObject() {
+	CReport::CReport(QString connectionName, bool useSerialize) : QObject() {
 		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
 		
 		this->connectionName=connectionName;
+		this->useSerialize=useSerialize;
 		
 		document=0;
 	}
@@ -75,6 +76,20 @@ namespace libqt4report {
 			delete document;
 		}
 		
+		if(useSerialize) {
+			QFile f("/home/corentin/file.dat");
+			if(f.open(QIODevice::ReadOnly)) {
+				QDataStream in(&f);
+				while(!in.atEnd()) {
+					QString s;
+					in >> s;
+					qDebug() << s;
+				}
+				
+				f.close();
+			}
+		}
+		
 		logger.debug("Start parse report file");
 		xmlReader->setContentHandler(parser);
 		xmlReader->setLexicalHandler(parser);
@@ -98,6 +113,16 @@ namespace libqt4report {
 			lastSourceError=QObject::tr("Invalid file");
 			lastError=QObject::tr("Unable to parse the file : ")+parser->errorString();
 			logger.debug(("Unable to parse the file : "+parser->errorString()).toStdString());
+		}
+		
+		if(useSerialize) {
+			QFile f("/home/corentin/file.dat");
+			if(f.open(QIODevice::WriteOnly)) {
+				QDataStream out(&f);
+				document->serialize(out);
+				
+				f.close();
+			}
 		}
 		
 		cleanup();

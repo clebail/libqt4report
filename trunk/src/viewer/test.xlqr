@@ -19,7 +19,7 @@
 		</params>
 		<connection driver="QMYSQL" host="127.0.0.1" userName="test" password="" dbName="test" />
 		<query>
-			<![CDATA[SELECT commande, numeroLigne, article, quantite, prixUnitaireHT, tauxTva, td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne]]>
+			<![CDATA[ SELECT commande, numeroLigne, article, quantite, prixUnitaireHT, tauxTva, td FROM ligneCommandes WHERE commande BETWEEN :fromCommande AND :toCommande ORDER BY commande, numeroLigne ]]>
 		</query>
 		<dbFields>
 			<dbField id="dbCommande" fieldName="commande" dataType="integer" />
