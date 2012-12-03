@@ -23,7 +23,7 @@ viewer_SOURCES = 	viewer.cpp \
 			
 nodist_viewer_SOURCES = $(moc_FILES) $(qrc_FILES)
 			
-viewer_LDADD = $(QT4_LIBS) ../.libs/libqt4report.la
+viewer_LDADD = $(QT4_LIBS) -L../.libs -lqt4report
 
 viewerdir = $(datarootdir)/@PACKAGE@
 
