@@ -20,11 +20,26 @@ namespace libqt4report {
 	static QTranslator *translator=0;
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CReport");
 	//------------------------------------------------------------------------------
-	CReport::CReport(QString connectionName, bool useSerialize) : QObject() {
+	CReport::CReport(QString connectionName, bool forceReload) : QObject() {
 		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
 		
+		qRegisterMetaType<CItemTextFixedObject>("CItemTextFixedObject");
+		qRegisterMetaType<CItemTextFieldObject>("CItemTextFieldObject");
+		
+		qRegisterMetaType<CDbFieldObject>("CDbFieldObject");
+		qRegisterMetaType<CItemLineObject>("CItemLineObject");
+		qRegisterMetaType<CItemRectObject>("CItemRectObject");
+		qRegisterMetaType<CCalculatedFieldObject>("CCalculatedFieldObject");
+		qRegisterMetaType<CTotalFieldObject>("CTotalFieldObject");
+		
+		qRegisterMetaType<CValueTypeString>("CValueTypeString");
+		qRegisterMetaType<CValueTypeInteger>("CValueTypeInteger");
+		qRegisterMetaType<CValueTypeReal>("CValueTypeReal");
+		qRegisterMetaType<CValueTypeDate>("CValueTypeDate");
+		qRegisterMetaType<CValueTypeDateTime>("CValueTypeDateTime");
+		
 		this->connectionName=connectionName;
-		this->useSerialize=useSerialize;
+		this->forceReload=forceReload;
 		
 		document=0;
 	}
@@ -74,53 +89,50 @@ namespace libqt4report {
 		
 		if(document != 0) {
 			delete document;
+			document=0;
 		}
 		
-		if(useSerialize) {
+		if(!forceReload) {
 			QFile f("/home/corentin/file.dat");
 			if(f.open(QIODevice::ReadOnly)) {
 				QDataStream in(&f);
-				while(!in.atEnd()) {
-					QString s;
-					in >> s;
-					qDebug() << s;
-				}
+				document=CDocument::fromCache(in);
 				
 				f.close();
 			}
 		}
 		
-		logger.debug("Start parse report file");
-		xmlReader->setContentHandler(parser);
-		xmlReader->setLexicalHandler(parser);
-		if(xmlReader->parse(source)) {
-			document=parser->getDocument();
-			
-			QHashIterator<QString, QVariant> i(params);
-			while (i.hasNext()) {
-				i.next();
-				logger.debug((tr("Param")+" "+i.key()+" = "+i.value().toString()).toStdString());
-				document->setParamValue(i.key(), i.value());
-			}
-			
-			if(document->process()) {
-				ret=true;
+		if(document == 0) {
+			logger.debug("Start parse report file");
+			xmlReader->setContentHandler(parser);
+			xmlReader->setLexicalHandler(parser);
+			if(xmlReader->parse(source)) {
+				document=parser->getDocument();
+				
+				QHashIterator<QString, QVariant> i(params);
+				while (i.hasNext()) {
+					i.next();
+					logger.debug((tr("Param")+" "+i.key()+" = "+i.value().toString()).toStdString());
+					document->setParamValue(i.key(), i.value());
+				}
+				
+				if(document->process()) {
+					ret=true;
+				}else {
+					lastSourceError=document->getLastSourceError();
+					lastError=document->getLastError();
+				}
 			}else {
-				lastSourceError=document->getLastSourceError();
-				lastError=document->getLastError();
+				lastSourceError=QObject::tr("Invalid file");
+				lastError=QObject::tr("Unable to parse the file : ")+parser->errorString();
+				logger.debug(("Unable to parse the file : "+parser->errorString()).toStdString());
 			}
-		}else {
-			lastSourceError=QObject::tr("Invalid file");
-			lastError=QObject::tr("Unable to parse the file : ")+parser->errorString();
-			logger.debug(("Unable to parse the file : "+parser->errorString()).toStdString());
-		}
-		
-		if(useSerialize) {
+			
 			QFile f("/home/corentin/file.dat");
 			if(f.open(QIODevice::WriteOnly)) {
 				QDataStream out(&f);
 				document->serialize(out);
-				
+					
 				f.close();
 			}
 		}

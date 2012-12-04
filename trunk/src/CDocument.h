@@ -46,6 +46,7 @@ namespace libqt4report {
 			QString getPageWidth(void) { return pageWidth; }
 			double getCoef(void) { return coef; }
 			void serialize(QDataStream &out);
+			static CDocument * fromCache(QDataStream &in);
 		private:
 			CDocBand *pageHeader;
 			CDocBand *docHeader;
@@ -60,6 +61,7 @@ namespace libqt4report {
 			QString pageWidth, pageHeight;
 			double coef;
 			QSize pagesSize;
+			QString unit;
 			QString connectionName;
 			QHash<QString, QVariant> params;
 			

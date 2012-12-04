@@ -13,7 +13,7 @@ namespace libqt4report {
 	class CReport : public QObject {
 		Q_OBJECT
 		public:
-			CReport(QString connectionName=QString(), bool useSerialize=false);
+			CReport(QString connectionName=QString(), bool forceReload=true);
 			~CReport(void);
 			bool validDocument(QFile *docFile);
 			bool process(QFile *docFile);
@@ -31,7 +31,7 @@ namespace libqt4report {
 			QString lastSourceError;
 			QString connectionName;
 			QHash<QString, QVariant> params;
-			bool useSerialize;
+			bool forceReload;
 			
 			void cleanup(void);
 		private slots:

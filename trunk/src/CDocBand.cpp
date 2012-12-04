@@ -1,8 +1,12 @@
 //------------------------------------------------------------------------------
 #include <QtDebug>
+#include <log4cpp/Category.hh>
 #include "CDocBand.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
+	//------------------------------------------------------------------------------
+	static log4cpp::Category& logger = log4cpp::Category::getInstance("CDocBand");
+	//------------------------------------------------------------------------------
 	QString CDocBand::toSvg(int y, double coef) {
 		QString svg="<g>";
 		QHashIterator<QString, CItem *> i(*this);
@@ -49,6 +53,40 @@ namespace libqt4report {
 		while (i.hasNext()) {
 			i.next();
 			i.value()->prepareRender(rendererObjects, y, coef);
+		}
+	}
+	//------------------------------------------------------------------------------
+	void CDocBand::serialize(QDataStream &out) {
+		QHashIterator<QString, CItem *> i(*this);
+		
+		out << qint32(count());
+		while(i.hasNext()) {
+			i.next();
+			i.value()->serialize(out);
+		}
+	}
+	//------------------------------------------------------------------------------
+	void CDocBand::fromCache(QDataStream &in, qint32 size) {
+		int i;
+		
+		logger.debug("Fill docBand from cache");
+		
+		for(i=0;i<size;i++) {
+			QString itemClassName;
+			qint32 nbItemAttributs;
+			
+			in >> itemClassName;
+			in >> nbItemAttributs;
+			int id=QMetaType::type(itemClassName.toUtf8().data());
+			
+			logger.debug((itemClassName+" with "+QString::number(nbItemAttributs)+" attributs").toStdString());
+			
+			if(id != 0) {
+				CItem *item=static_cast<CItem *>(QMetaType::construct(id));
+				item->fromCache(in, nbItemAttributs);
+				
+				insert(item->getAttribute("id"), item);
+			}
 		}
 	}
 	//------------------------------------------------------------------------------

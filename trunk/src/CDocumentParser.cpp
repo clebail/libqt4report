@@ -16,21 +16,6 @@ namespace libqt4report {
 	CDocumentParser::CDocumentParser(QString connectionName) : QObject() {
 		logger.debug("Create CDocumentParser instance");
 		
-		qRegisterMetaType<CItemTextFixedObject>("CItemTextFixedObject");
-		qRegisterMetaType<CItemTextFieldObject>("CItemTextFieldObject");
-
-		qRegisterMetaType<CDbFieldObject>("CDbFieldObject");
-		qRegisterMetaType<CItemLineObject>("CItemLineObject");
-		qRegisterMetaType<CItemRectObject>("CItemRectObject");
-		qRegisterMetaType<CCalculatedFieldObject>("CCalculatedFieldObject");
-		qRegisterMetaType<CTotalFieldObject>("CTotalFieldObject");
-		
-		qRegisterMetaType<CValueTypeString>("CValueTypeString");
-		qRegisterMetaType<CValueTypeInteger>("CValueTypeInteger");
-		qRegisterMetaType<CValueTypeReal>("CValueTypeReal");
-		qRegisterMetaType<CValueTypeDate>("CValueTypeDate");
-		qRegisterMetaType<CValueTypeDateTime>("CValueTypeDateTime");
-		
 		document=0;
 		inFonts=inFields=inDatabase=inQuery=inBody=inField=inCDATA=inParams=inGroups=inGroupHeaders=inGroupFooters=false;
 		curDocBand=0;
