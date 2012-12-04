@@ -22,6 +22,7 @@ namespace libqt4report {
 		
 		this->pageWidth=pageWidth;
 		this->pageHeight=pageHeight;
+		this->unit=unit;
 		this->connectionName=connectionName;
 		setUnit(unit);
 	}
@@ -146,11 +147,62 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::serialize(QDataStream &out) {
-		QHashIterator<QString, CItem *> i(*docBody);
-		while(i.hasNext()) {
-			i.next();
-			i.value()->serialize(out);
+		
+		out << pageWidth;
+		out << pageHeight;
+		out << unit;
+		out << connectionName;
+		
+		if(pageHeader != 0) {
+			pageHeader->serialize(out);
+		}else {
+			out << qint32(0);
 		}
+		
+		if(docHeader != 0) {
+			docHeader->serialize(out);
+		}else {
+			out << qint32(0);
+		}
+		
+		docBody->serialize(out);
+		
+		if(docFooter != 0) {
+			docFooter->serialize(out);
+		}else {
+			out << qint32(0);
+		}
+		
+		if(pageFooter != 0) {
+			pageFooter->serialize(out);
+		}else {
+			out << qint32(0);
+		}
+	}
+	//------------------------------------------------------------------------------
+	CDocument * CDocument::fromCache(QDataStream &in) {
+		qint32 docBandSize;
+		QString pageWidth;
+		QString pageHeight;
+		QString unit;
+		QString connectionName;
+		CDocument *document;
+		
+		logger.debug("Create document from cache");
+		
+		in >> pageWidth;
+		in >> pageHeight;
+		in >> unit;
+		in >> connectionName;
+		
+		document=new CDocument(pageWidth, pageHeight, unit, connectionName);
+		
+		in >> docBandSize;
+		if(docBandSize != 0) {
+			document->createPageHeader()->fromCache(in, docBandSize);
+		}
+		
+		return document;
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::createPages(QSqlQuery *query) {

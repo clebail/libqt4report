@@ -3,12 +3,16 @@
 #include <QVariant>
 #include <QDate>
 #include <QFontMetrics>
+#include <log4cpp/Category.hh>
 #include "CItem.h"
 #include "CFields.h"
 #include "CFonts.h"
 #include "CValueType.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
+	//------------------------------------------------------------------------------
+	static log4cpp::Category& logger = log4cpp::Category::getInstance("CItem");
+	//------------------------------------------------------------------------------
 	void CItem::processAttributes(const QXmlAttributes& atts) {
 		int i;
 		
@@ -20,10 +24,28 @@ namespace libqt4report {
 	void CItem::serialize(QDataStream &out) {
 		QHashIterator<QString, QString> i(attributes);
 		
+		out << qint32(attributes.count());
 		while(i.hasNext()) {
 			i.next();
-			out << i.key();
-			out << i.value();
+			out << i.key() << i.value();
+		}
+	}
+	//------------------------------------------------------------------------------
+	void CItem::fromCache(QDataStream &in, qint32 nbAttributs) {
+		int i;
+		
+		logger.debug("Fill item from cache");
+		
+		for(i=0;i<nbAttributs;i++) {
+			QString attributeName;
+			QString attributeValue;
+			
+			in >> attributeName;
+			in >> attributeValue;
+			
+			logger.debug((attributeName+" = "+attributeValue).toStdString());
+			
+			setAttribute(attributeName, attributeValue);
 		}
 	}
 	//------------------------------------------------------------------------------
@@ -87,7 +109,7 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CItemTextFixedObject::serialize(QDataStream &out) {
-		out << "CItemTextFixedObject";
+		out << QString("CItemTextFixedObject");
 		CItem::serialize(out);
 	}
 	//------------------------------------------------------------------------------
@@ -127,7 +149,7 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CItemTextFieldObject::serialize(QDataStream &out) {
-		out << "CItemTextFieldObject";
+		out << QString("CItemTextFieldObject");
 		CItem::serialize(out);
 	}
 	//------------------------------------------------------------------------------
@@ -178,7 +200,7 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CItemLineObject::serialize(QDataStream &out) {
-		out << "CItemLineObject";
+		out << QString("CItemLineObject");
 		CItem::serialize(out);
 	}
 	//------------------------------------------------------------------------------
@@ -216,7 +238,7 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CItemRectObject::serialize(QDataStream &out) {
-		out << "CItemRectObject";
+		out << QString("CItemRectObject");
 		CItem::serialize(out);
 	}
 	//------------------------------------------------------------------------------

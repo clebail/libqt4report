@@ -17,6 +17,7 @@ namespace libqt4report {
 			bool hasAttribute(QString name) { return attributes.contains(name); }
 			virtual void processAttributes(const QXmlAttributes& atts);
 			virtual void serialize(QDataStream &out);
+			virtual void fromCache(QDataStream &in, qint32 nbAttributs);
 		private:
 			QHash<QString ,QString> attributes;
 	};
