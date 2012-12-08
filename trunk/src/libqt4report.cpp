@@ -21,7 +21,7 @@ namespace libqt4report {
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CReport");
 	//------------------------------------------------------------------------------
 	CReport::CReport(QString connectionName, bool forceReload) : QObject() {
-		log4cpp::PropertyConfigurator::configure((QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
+		log4cpp::PropertyConfigurator::configure(QDir::toNativeSeparators(QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
 		
 		qRegisterMetaType<CItemTextFixedObject>("CItemTextFixedObject");
 		qRegisterMetaType<CItemTextFieldObject>("CItemTextFieldObject");
