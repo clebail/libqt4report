@@ -7,6 +7,7 @@
 #include <QXmlInputSource>
 #include <QtDebug>
 #include <QDir>
+#include <QApplication>
 #include <log4cpp/Category.hh>
 #include <log4cpp/PropertyConfigurator.hh>
 #include <config.h>
@@ -22,6 +23,10 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	CReport::CReport(QString connectionName, bool forceReload) : QObject() {
 		log4cpp::PropertyConfigurator::configure(QDir::toNativeSeparators(QString(DATADIR)+"/"+QString(PACKAGE)+"/log4cpp.properties").toStdString());
+		
+		#ifdef WIN32
+			QApplication::addLibraryPath(QApplication::applicationDirPath());
+		#endif //WIN32
 		
 		qRegisterMetaType<CItemTextFixedObject>("CItemTextFixedObject");
 		qRegisterMetaType<CItemTextFieldObject>("CItemTextFieldObject");
