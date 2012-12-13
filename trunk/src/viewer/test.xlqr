@@ -25,7 +25,7 @@
 			<dbField id="dbCommande" fieldName="commande" dataType="integer" />
 			<dbField id="dbNumeroLigne" fieldName="numeroLigne" dataType="integer" />
 			<dbField id="dbArticle" fieldName="article" dataType="string" />
-			<dbField id="dbQte" fieldName="quantite" dataType="integer" />
+			<dbField id="dbQte" fieldName="quantite" dataType="real" />
 			<dbField id="dbPuHT" fieldName="prixUnitaireHT" dataType="real" />
 			<dbField id="dbTTva" fieldName="tauxTva" dataType="real" />
 			<dbField id="dbTD" fieldName="td" dataType="date" />
@@ -68,7 +68,7 @@
 		</groupHeaders>
 		<docBody>
 			<item xsi:type="textFieldObject" id="code" fontId="font1" x="5" y="5" fieldId="dbArticle" />
-			<item xsi:type="textFieldObject" id="nom" fontId="font1" x="38" y="5" fieldId="dbQte" align="end" />
+			<item xsi:type="textFieldObject" id="nom" fontId="font1" x="38" y="5" fieldId="dbQte" align="end" format="rf2" />
 			<item xsi:type="textFieldObject" id="puHt" fontId="font1" x="85" y="5" fieldId="dbPuHT" align="end" format="rf2" />
 			<item xsi:type="textFieldObject" id="tTva" fontId="font1" x="110" y="5" fieldId="dbTTva" align="end" format="rf3" />
 			<item xsi:type="textFieldObject" id="tMntHT" fontId="font1" x="160" y="5" fieldId="cMntHT" align="end" format="rf2" />
