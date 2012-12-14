@@ -88,6 +88,7 @@ namespace libqt4report {
 		QXmlInputSource *source = new QXmlInputSource(docFile);
 		CDocumentParser *parser=new CDocumentParser(connectionName);
 		bool ret=false;
+		QString seriFileName=docFile->fileName()+".cache";
 		
 		logger.debug("Start process report");
 		connect(parser, SIGNAL(queryParam(QString,QVariant&)), this, SLOT(onParserQueryParam(QString,QVariant&)));
@@ -98,8 +99,9 @@ namespace libqt4report {
 		}
 		
 		if(!forceReload) {
-			QFile f("/home/corentin/file.dat");
-			if(f.open(QIODevice::ReadOnly)) {
+			logger.debug("Read document from cache");
+			QFile f(seriFileName);
+			if(f.exists() && f.open(QIODevice::ReadOnly)) {
 				QDataStream in(&f);
 				document=CDocument::fromCache(in);
 				
@@ -133,8 +135,9 @@ namespace libqt4report {
 				logger.debug(("Unable to parse the file : "+parser->errorString()).toStdString());
 			}
 			
-			QFile f("/home/corentin/file.dat");
+			QFile f(seriFileName);
 			if(f.open(QIODevice::WriteOnly)) {
+				logger.debug("Save document in cache");
 				QDataStream out(&f);
 				document->serialize(out);
 					
