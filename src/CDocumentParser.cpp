@@ -380,7 +380,7 @@ namespace libqt4report {
 			
 			if(id != 0) {
 				item=static_cast<CItem *>(QMetaType::construct(id));
-				item->processAttributes(atts);
+				item->processAttributes(atts, reportPath);
 			}
 		}
 		

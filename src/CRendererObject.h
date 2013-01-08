@@ -6,6 +6,7 @@
 #include <QString>
 #include <QPoint>
 #include <QFont>
+#include <QImage>
 //------------------------------------------------------------------------------
 namespace libqt4report {
 	class CRendererObject {
@@ -43,6 +44,16 @@ namespace libqt4report {
 			void setRect(QRect rect) { this->rect=rect; }
 			void draw(QPainter * painter);
 		private:
+			QRect rect;
+	};
+	//------------------------------------------------------------------------------
+	class CRendererObjectImage : public CRendererObject {
+		public:
+			void setImage(QImage image) { this->image=image; }
+			void setRect(QRect rect) { this->rect=rect; }
+			void draw(QPainter * painter);
+		private:
+			QImage image;
 			QRect rect;
 	};
 	//------------------------------------------------------------------------------

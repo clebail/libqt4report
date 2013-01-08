@@ -49,14 +49,16 @@
 	</fields>
 	<body>
 		<pageHeader>
-			<item xsi:type="textFixedObject" id="codeTitle" fontId="fontColumnName" x="5" y="5" value="Product" />
-			<item xsi:type="textFixedObject" id="nomTitle" fontId="fontColumnName" x="38" y="5" value="Quantity" align="end" />
-			<item xsi:type="textFixedObject" id="puHTTitle" fontId="fontColumnName" x="85" y="5" value="Unit price exclusive VAT" align="end" />
-			<item xsi:type="textFixedObject" id="tTvaTitle" fontId="fontColumnName" x="110" y="5" value="VAT rate" align="end" />
-			<item xsi:type="textFixedObject" id="mntTitle" fontId="fontColumnName" x="115" y="5" value="Amount :" />
-			<item xsi:type="textFixedObject" id="mntHTTitle" fontId="fontColumnName" x="160" y="5" value="exclusive VAT" align="end" />
-			<item xsi:type="textFixedObject" id="mntTTCTitle" fontId="fontColumnName" x="190" y="5" value="inclusive VAT" align="end" />
-			<item xsi:type="lineObject" id="lineH1" x="5" y="6" width="200" height="0" />
+			<item xsi:type="imageObject" id="image" x="2" y="2" width="25" height="25" path="image.png" />
+			<item xsi:type="textFixedObject" id="title" fontId="fontTitre" x="105" y="18" value="ORDER LIST " align="middle" />
+			<item xsi:type="textFixedObject" id="codeTitle" fontId="fontColumnName" x="5" y="30" value="Product" />
+			<item xsi:type="textFixedObject" id="nomTitle" fontId="fontColumnName" x="38" y="30" value="Quantity" align="end" />
+			<item xsi:type="textFixedObject" id="puHTTitle" fontId="fontColumnName" x="85" y="30" value="Unit price exclusive VAT" align="end" />
+			<item xsi:type="textFixedObject" id="tTvaTitle" fontId="fontColumnName" x="110" y="30" value="VAT rate" align="end" />
+			<item xsi:type="textFixedObject" id="mntTitle" fontId="fontColumnName" x="115" y="30" value="Amount :" />
+			<item xsi:type="textFixedObject" id="mntHTTitle" fontId="fontColumnName" x="160" y="30" value="exclusive VAT" align="end" />
+			<item xsi:type="textFixedObject" id="mntTTCTitle" fontId="fontColumnName" x="190" y="30" value="inclusive VAT" align="end" />
+			<item xsi:type="lineObject" id="lineH1" x="5" y="31" width="200" height="0" />
 		</pageHeader>
 		<groupHeaders>
 			<groupHeader groupId="grCde">

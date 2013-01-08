@@ -15,7 +15,7 @@ namespace libqt4report {
 			void setAttribute(QString name, QString value) { attributes.insert(name, value); }
 			QString getAttribute(QString name) { return attributes.value(name) ;}
 			bool hasAttribute(QString name) { return attributes.contains(name); }
-			virtual void processAttributes(const QXmlAttributes& atts);
+			virtual void processAttributes(const QXmlAttributes& atts, QString reportPath);
 			virtual void serialize(QDataStream &out);
 			virtual void fromCache(QDataStream &in, qint32 nbAttributs);
 		private:
@@ -43,7 +43,7 @@ namespace libqt4report {
 		public:
 			~CItemTextFieldObject(void);
 			void createValue(QString fieldId);
-			virtual void processAttributes(const QXmlAttributes& atts);
+			virtual void processAttributes(const QXmlAttributes& atts, QString reportPath);
 			virtual void serialize(QDataStream &out);
 		protected:
 			CValueType *value;
@@ -63,6 +63,17 @@ namespace libqt4report {
 			QString toSvg(int y, double coef);
 			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
 			virtual void serialize(QDataStream &out);
+	};
+	//------------------------------------------------------------------------------
+	class CItemImageObject : public CItem {
+		public:
+			QString toSvg(int y, double coef);
+			int getHeight(double coef);
+			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
+			virtual void serialize(QDataStream &out);
+			virtual void processAttributes(const QXmlAttributes& atts, QString reportPath);
+		private:
+			QString absolutePath;
 	};
 	//------------------------------------------------------------------------------
 } //namespace

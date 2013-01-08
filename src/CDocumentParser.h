@@ -20,6 +20,7 @@ namespace libqt4report {
 			bool characters(const QString& ch);
 			CDocument *getDocument(void) { return document; }
 			QString errorString(void) { return lastError; }
+			void setReportPath(QString reportPath) { this->reportPath=reportPath; }
 		private:
 			CDocument *document;
 			bool inFonts;
@@ -38,6 +39,7 @@ namespace libqt4report {
 			CField *curField;
 			QString lastError;
 			QString connectionName;
+			QString reportPath;
 			
 			libqt4report::CItem * parseItem(const QXmlAttributes& atts);
 			libqt4report::CField * parseField(QString qName, const QXmlAttributes& atts);

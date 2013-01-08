@@ -13,7 +13,7 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CItem");
 	//------------------------------------------------------------------------------
-	void CItem::processAttributes(const QXmlAttributes& atts) {
+	void CItem::processAttributes(const QXmlAttributes& atts, QString reportPath) {
 		int i;
 		
 		for(i=0;i<atts.count();i++) {
@@ -135,7 +135,7 @@ namespace libqt4report {
 		return value->toFormatedString(getAttribute("format"));
 	}
 	//------------------------------------------------------------------------------
-	void CItemTextFieldObject::processAttributes(const QXmlAttributes& atts) {
+	void CItemTextFieldObject::processAttributes(const QXmlAttributes& atts, QString reportPath) {
 		int i;
 		
 		for(i=0;i<atts.count();i++) {
@@ -240,6 +240,63 @@ namespace libqt4report {
 	void CItemRectObject::serialize(QDataStream &out) {
 		out << QString("CItemRectObject");
 		CItem::serialize(out);
+	}
+	//------------------------------------------------------------------------------
+	QString CItemImageObject::toSvg(int y, double coef) {
+		int x, yR, width, height;
+				
+		x=(int)(getAttribute("x").toDouble()*coef);
+		yR=(int)((getAttribute("y").toDouble())*coef)+y;
+		width=(int)(getAttribute("width").toDouble()*coef);
+		height=(int)(getAttribute("height").toDouble()*coef);
+		
+		return QString("<image x='%1' y='%2' width='%3' height='%4' xlink:href='%5' />")
+			.arg(x).arg(yR).arg(width).arg(height).arg(absolutePath);
+	}
+	//------------------------------------------------------------------------------
+	void CItemImageObject::prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {
+		CRendererObjectImage * rendererObject=new CRendererObjectImage();
+		QRect rect;
+		QImage image(absolutePath);
+		
+		rect.setX((int)(getAttribute("x").toDouble()*coef));
+		rect.setY((int)((getAttribute("y").toDouble())*coef)+y);
+		rect.setWidth((int)(getAttribute("width").toDouble()*coef));
+		rect.setHeight((int)((getAttribute("height").toDouble())*coef));
+		
+		rendererObject->setRect(rect);
+		rendererObject->setImage(image);
+		
+		rendererObjects->append(rendererObject);
+	}
+	//------------------------------------------------------------------------------
+	int CItemImageObject::getHeight(double coef) { 
+		int y, height;
+		
+		y=(int)((getAttribute("y").toDouble())*coef);
+		height=(int)((getAttribute("height").toDouble())*coef);
+		
+		return y+height;
+	}
+	//------------------------------------------------------------------------------
+	void CItemImageObject::serialize(QDataStream &out) {
+		out << QString("CItemImageObject");
+		CItem::serialize(out);
+	}
+	//------------------------------------------------------------------------------
+	void CItemImageObject::processAttributes(const QXmlAttributes& atts, QString reportPath) {
+		int i;
+		
+		for(i=0;i<atts.count();i++) {
+			setAttribute(atts.localName(i), atts.value(i));
+		}
+		
+		absolutePath=getAttribute("path");
+		QFile f(absolutePath);
+		
+		if(!f.exists()) {
+			absolutePath=reportPath+"/"+absolutePath;
+		}
 	}
 	//------------------------------------------------------------------------------
 }//namespace

@@ -287,6 +287,39 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 	
+	<xsd:complexType name="imageObject">
+		<xsd:annotation>
+			<xsd:documentation>
+				This type is derived from object, it represent an image object.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="lqr:object">
+				<xsd:attribute name="width" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must be the width of the image, it must be in the same scale as document unit.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="height" type="xsd:int" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must be the height of the image, it must be in the same scale as document unit.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="path" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>
+							Must the path relative to the location of the report, or absolute path.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
 	<xsd:complexType name="textFixedObject">
 		<xsd:annotation>
 			<xsd:documentation>
