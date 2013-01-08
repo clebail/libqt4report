@@ -53,7 +53,7 @@ clean-qt-extra:
 clean-am: clean-qt-extra
 
 install-data-hook:
-	cp $(srcdir)/$(lrelease_FILES)	$(viewerdir)
+	cp $(srcdir)/$(lrelease_FILES)	$(viewerdir);
 
 dist-hook:
 	mkdir $(distdir)/images; \
@@ -61,4 +61,5 @@ dist-hook:
 	cp $(srcdir)/$(TRANSLATE) $(distdir); \
 	cp $(srcdir)/$(RESSOURCES) $(distdir); \
 	cp $(srcdir)/images/*.png $(distdir)/images; \
+	cp $(srcdir)/image.png $(distdir); \
 	cp $(srcdir)/test.xlqr $(distdir);

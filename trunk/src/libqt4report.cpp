@@ -34,6 +34,7 @@ namespace libqt4report {
 		qRegisterMetaType<CDbFieldObject>("CDbFieldObject");
 		qRegisterMetaType<CItemLineObject>("CItemLineObject");
 		qRegisterMetaType<CItemRectObject>("CItemRectObject");
+		qRegisterMetaType<CItemImageObject>("CItemImageObject");
 		qRegisterMetaType<CCalculatedFieldObject>("CCalculatedFieldObject");
 		qRegisterMetaType<CTotalFieldObject>("CTotalFieldObject");
 		
@@ -87,11 +88,13 @@ namespace libqt4report {
 		QXmlSimpleReader *xmlReader=new QXmlSimpleReader();
 		QXmlInputSource *source = new QXmlInputSource(docFile);
 		CDocumentParser *parser=new CDocumentParser(connectionName);
+		QFileInfo fileInfo(*docFile);
 		bool ret=false;
 		QString seriFileName=docFile->fileName()+".cache";
 		
 		logger.debug("Start process report");
 		connect(parser, SIGNAL(queryParam(QString,QVariant&)), this, SLOT(onParserQueryParam(QString,QVariant&)));
+		parser->setReportPath(fileInfo.absoluteDir().absolutePath());
 		
 		if(document != 0) {
 			delete document;

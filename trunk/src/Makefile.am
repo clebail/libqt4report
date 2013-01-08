@@ -74,6 +74,7 @@ install-data-hook:
 	cp $(srcdir)/schema/libqt4report.xsd $(libqt4report_ladir)/schema; \
 	cp $(srcdir)/log4cpp.properties $(libqt4report_ladir); \
 	cp $(srcdir)/viewer/test.xlqr $(libqt4report_ladir)/example; \
+	cp $(srcdir)/viewer/image.png $(libqt4report_ladir)/example; \	
 	cp $(srcdir)/example/test.cpp $(libqt4report_ladir)/example; \
 	cp $(srcdir)/example/makefile $(libqt4report_ladir)/example; \
 	cp $(srcdir)/doc/libqt4report.html $(libqt4report_ladir)/doc; \
