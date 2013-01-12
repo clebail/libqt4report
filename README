@@ -14,6 +14,8 @@ Example:
 There are two examples available in the examples folder, and testMySQL.xlqr testSQLite.xlqr respectively for databases MySQL and SQLite.
 Two sql script for database creation are available in the same folder.
 
+Do not forget to change them to suit your needs, access to the database ...
+
 To launch test just execute bin/viewer and open the dsesird file.
 
 Have fun !
