@@ -73,10 +73,14 @@ install-data-hook:
 	cp $(srcdir)/libqt4report.h $(includedir); \
 	cp $(srcdir)/schema/libqt4report.xsd $(libqt4report_ladir)/schema; \
 	cp $(srcdir)/log4cpp.properties $(libqt4report_ladir); \
-	cp $(srcdir)/viewer/test.xlqr $(libqt4report_ladir)/example; \
-	cp $(srcdir)/viewer/image.png $(libqt4report_ladir)/example; \	
 	cp $(srcdir)/example/test.cpp $(libqt4report_ladir)/example; \
 	cp $(srcdir)/example/makefile $(libqt4report_ladir)/example; \
+	cp $(srcdir)/example/testMySQL.xlqr $(libqt4report_ladir)/example; \
+	cp $(srcdir)/example/testSQLite.xlqr $(libqt4report_ladir)/example; \
+	cp $(srcdir)/example/testSQLite.db $(libqt4report_ladir)/example; \
+	cp $(srcdir)/example/createMySQL.sql $(libqt4report_ladir)/example; \
+	cp $(srcdir)/example/createSQLite.sql $(libqt4report_ladir)/example; \
+	cp $(srcdir)/example/image.png $(libqt4report_ladir)/example; \
 	cp $(srcdir)/doc/libqt4report.html $(libqt4report_ladir)/doc; \
 	cp $(srcdir)/$(lrelease_FILES) $(libqt4report_ladir); \
 	cp $(srcdir)/libqt4report.pc $(libdir)/pkgconfig
@@ -89,5 +93,11 @@ dist-hook:
 	cp $(srcdir)/log4cpp.properties $(distdir); \
 	cp $(srcdir)/schema/libqt4report.xsd $(distdir)/schema; \
 	cp $(srcdir)/doc/libqt4report.html $(distdir)/doc; \
-	cp $(example_file).in $(distdir)/example
-	cp $(example_dir)/makefile $(distdir)/example
+	cp $(example_file).in $(distdir)/example; \
+	cp $(example_dir)/makefile $(distdir)/example; \
+	cp $(example_dir)/testMySQL.xlqr $(distdir)/example; \
+	cp $(example_dir)/testSQLite.xlqr $(distdir)/example; \
+	cp $(example_dir)/testSQLite.db $(distdir)/example; \
+	cp $(example_dir)/createMySQL.sql $(distdir)/example; \
+	cp $(example_dir)/createSQLite.sql $(distdir)/example; \
+	cp $(example_dir)/image.png $(distdir)/example

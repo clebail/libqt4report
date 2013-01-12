@@ -1,4 +1,4 @@
-AC_INIT([libqt4report], [1.0.0-beta2], [corentin.lebail@gmail.com],,[https://sourceforge.net/projects/libqt4report/]) 
+AC_INIT([libqt4report], [1.0.0-beta3], [corentin.lebail@gmail.com],,[https://sourceforge.net/projects/libqt4report/]) 
 
 LT_INIT
 LT_LANG([C++])
