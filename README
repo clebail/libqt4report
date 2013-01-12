@@ -9,30 +9,14 @@ instructions.  Briefly, you can run "./configure; make install".  The
 command "./configure --help" lists the supported --enable and --with
 options.
 
-To view the result of test.xlqr, you need a MySQL database named test, the server will listen on localhost, and a user named test be able to connect on it without a password. In this database you need a table like this :
+Example:
 
-DROP TABLE IF EXISTS `ligneCommandes`;
-CREATE TABLE IF NOT EXISTS `ligneCommandes` (
-  `commande` int(11) NOT NULL,
-  `numeroLigne` int(11) NOT NULL,
-  `article` varchar(20) NOT NULL COMMENT 'Article',
-  `quantite` double(10,2) NOT NULL COMMENT 'Quantité',
-  `prixUnitaireHT` double(10,2) NOT NULL COMMENT 'Prix unitaire hors taxe',
-  `tauxTva` double(10,3) NOT NULL COMMENT 'Taux de tva',
-  `td` date NOT NULL DEFAULT '0000-00-00',
-  PRIMARY KEY (`commande`,`numeroLigne`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+There are two examples available in the examples folder, and testMySQL.xlqr testSQLite.xlqr respectively for databases MySQL and SQLite.
+Two sql script for database creation are available in the same folder.
 
-INSERT INTO `ligneCommandes` (`commande`, `numeroLigne`, `article`, `quantite`, `prixUnitaireHT`, `tauxTva`, `td`) VALUES
-(1, 1, 'PRGINF10', 0.50, 500.00, 0.196, '2012-11-02'),
-(1, 2, 'PRGINF10', 1.00, 500.00, 0.196, '2012-11-02'),
-(1, 3, 'PRGINF10', 1.50, 500.00, 0.196, '2012-11-02'),
-(2, 1, 'PRGINF10', 1.50, 500.00, 0.196, '2012-11-04'),
-(2, 2, 'PRGINF10', 2.50, 500.00, 0.196, '2012-11-04'),
-(3, 1, 'PRGINF10', 1.00, 500.00, 0.196, '2012-11-10'),
-(3, 2, 'PRGINF10', 2.00, 500.00, 0.196, '2012-11-10'),
-(3, 3, 'FORMINF', 0.50, 0.00, 0.196, '2012-11-10'),
-(3, 4, 'BULPAIE', 0.00, 12.00, 0.196, '2012-11-10'),
-(3, 5, 'BULPAIE', 45.00, 12.00, 0.196, '2012-11-10');
+To launch test just execute bin/viewer and open the dsesird file.
+
+Have fun !
+
 
 
