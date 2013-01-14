@@ -11,8 +11,9 @@
 namespace libqt4report {
 	//------------------------------------------------------------------------------
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CDocument");
+	static QString reportPath;
 	//------------------------------------------------------------------------------
-	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName) : QList<CPage *>() {
+	CDocument::CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName, QString _reportPath) : QList<CPage *>() {
 		logger.debug("Create CDocument instance");
 		
 		pageHeader=docHeader=docBody=docFooter=pageFooter=0;
@@ -24,6 +25,7 @@ namespace libqt4report {
 		this->pageHeight=pageHeight;
 		this->unit=unit;
 		this->connectionName=connectionName;
+		reportPath=_reportPath;
 		setUnit(unit);
 	}
 	//------------------------------------------------------------------------------
@@ -180,7 +182,7 @@ namespace libqt4report {
 		}
 	}
 	//------------------------------------------------------------------------------
-	CDocument * CDocument::fromCache(QDataStream &in) {
+	CDocument * CDocument::fromCache(QDataStream &in, QString reportPath) {
 		qint32 docBandSize;
 		QString pageWidth;
 		QString pageHeight;
@@ -195,7 +197,7 @@ namespace libqt4report {
 		in >> unit;
 		in >> connectionName;
 		
-		document=new CDocument(pageWidth, pageHeight, unit, connectionName);
+		document=new CDocument(pageWidth, pageHeight, unit, connectionName, reportPath);
 		
 		in >> docBandSize;
 		if(docBandSize != 0) {
@@ -203,6 +205,10 @@ namespace libqt4report {
 		}
 		
 		return document;
+	}
+	//------------------------------------------------------------------------------
+	QString CDocument::getReportPath(void) { 
+		return reportPath;
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::createPages(QSqlQuery *query) {

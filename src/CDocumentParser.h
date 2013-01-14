@@ -10,7 +10,7 @@ namespace libqt4report {
 	class CDocumentParser : public QObject, public QXmlDefaultHandler {
 		Q_OBJECT
 		public:
-			CDocumentParser(QString connectionName);
+			CDocumentParser(QString connectionName, QString reportPath);
 			bool startDocument(void);
 			bool endDocument(void);
 			bool startElement(const QString& namespaceURI, const QString& localName, const QString& qName, const QXmlAttributes& atts);
@@ -20,7 +20,6 @@ namespace libqt4report {
 			bool characters(const QString& ch);
 			CDocument *getDocument(void) { return document; }
 			QString errorString(void) { return lastError; }
-			void setReportPath(QString reportPath) { this->reportPath=reportPath; }
 		private:
 			CDocument *document;
 			bool inFonts;

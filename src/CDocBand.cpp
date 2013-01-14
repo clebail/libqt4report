@@ -76,14 +76,13 @@ namespace libqt4report {
 			qint32 nbItemAttributs;
 			
 			in >> itemClassName;
-			in >> nbItemAttributs;
 			int id=QMetaType::type(itemClassName.toUtf8().data());
 			
 			logger.debug((itemClassName+" with "+QString::number(nbItemAttributs)+" attributs").toStdString());
 			
 			if(id != 0) {
 				CItem *item=static_cast<CItem *>(QMetaType::construct(id));
-				item->fromCache(in, nbItemAttributs);
+				item->fromCache(in);
 				
 				insert(item->getAttribute("id"), item);
 			}

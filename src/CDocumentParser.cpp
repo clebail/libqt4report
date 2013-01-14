@@ -13,13 +13,14 @@ namespace libqt4report {
 	//--------------------------------------------------------------------------------------------------------------
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CDocumentParser");
 	//--------------------------------------------------------------------------------------------------------------
-	CDocumentParser::CDocumentParser(QString connectionName) : QObject() {
+	CDocumentParser::CDocumentParser(QString connectionName, QString reportPath) : QObject() {
 		logger.debug("Create CDocumentParser instance");
 		
 		document=0;
 		inFonts=inFields=inDatabase=inQuery=inBody=inField=inCDATA=inParams=inGroups=inGroupHeaders=inGroupFooters=false;
 		curDocBand=0;
 		this->connectionName=connectionName;
+		this->reportPath=reportPath;
 	}
 	//--------------------------------------------------------------------------------------------------------------
 	bool CDocumentParser::startDocument(void) {
@@ -47,7 +48,7 @@ namespace libqt4report {
 					unit=atts.value(i);
 				}
 			}
-			document=new CDocument(pageWidth, pageHeight, unit, connectionName);
+			document=new CDocument(pageWidth, pageHeight, unit, connectionName, reportPath);
 			
 			return true;
 		}
@@ -380,7 +381,7 @@ namespace libqt4report {
 			
 			if(id != 0) {
 				item=static_cast<CItem *>(QMetaType::construct(id));
-				item->processAttributes(atts, reportPath);
+				item->processAttributes(CItem::fromXmlAttributes(atts));
 			}
 		}
 		

@@ -16,7 +16,7 @@ Two sql script for database creation are available in the same folder.
 
 Do not forget to change them to suit your needs, access to the database ...
 
-To launch test just execute bin/viewer and open the dsesird file.
+To launch test just execute bin/viewer and open the desired file.
 
 Have fun !
 

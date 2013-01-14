@@ -87,14 +87,13 @@ namespace libqt4report {
 	bool CReport::process(QFile *docFile) {
 		QXmlSimpleReader *xmlReader=new QXmlSimpleReader();
 		QXmlInputSource *source = new QXmlInputSource(docFile);
-		CDocumentParser *parser=new CDocumentParser(connectionName);
 		QFileInfo fileInfo(*docFile);
 		bool ret=false;
 		QString seriFileName=docFile->fileName()+".cache";
 		
 		logger.debug("Start process report");
+		CDocumentParser *parser=new CDocumentParser(connectionName, fileInfo.absoluteDir().absolutePath());
 		connect(parser, SIGNAL(queryParam(QString,QVariant&)), this, SLOT(onParserQueryParam(QString,QVariant&)));
-		parser->setReportPath(fileInfo.absoluteDir().absolutePath());
 		
 		if(document != 0) {
 			delete document;
@@ -104,9 +103,10 @@ namespace libqt4report {
 		if(!forceReload) {
 			logger.debug("Read document from cache");
 			QFile f(seriFileName);
-			if(f.exists() && f.open(QIODevice::ReadOnly)) {
+			QFileInfo cacheFileInfo(f);
+			if(f.exists() && f.open(QIODevice::ReadOnly) && cacheFileInfo.lastModified() > fileInfo.lastModified()) {
 				QDataStream in(&f);
-				document=CDocument::fromCache(in);
+				document=CDocument::fromCache(in, fileInfo.absoluteDir().absolutePath());
 				
 				f.close();
 			}
