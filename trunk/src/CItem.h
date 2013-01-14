@@ -15,9 +15,10 @@ namespace libqt4report {
 			void setAttribute(QString name, QString value) { attributes.insert(name, value); }
 			QString getAttribute(QString name) { return attributes.value(name) ;}
 			bool hasAttribute(QString name) { return attributes.contains(name); }
-			virtual void processAttributes(const QXmlAttributes& atts, QString reportPath);
+			static const QHash<QString, QString> fromXmlAttributes(const QXmlAttributes& atts);
+			virtual void processAttributes(const QHash<QString, QString>& atts);
 			virtual void serialize(QDataStream &out);
-			virtual void fromCache(QDataStream &in, qint32 nbAttributs);
+			virtual void fromCache(QDataStream &in);
 		private:
 			QHash<QString ,QString> attributes;
 	};
@@ -43,7 +44,7 @@ namespace libqt4report {
 		public:
 			~CItemTextFieldObject(void);
 			void createValue(QString fieldId);
-			virtual void processAttributes(const QXmlAttributes& atts, QString reportPath);
+			virtual void processAttributes(const QHash<QString, QString>& atts);
 			virtual void serialize(QDataStream &out);
 		protected:
 			CValueType *value;
@@ -71,7 +72,7 @@ namespace libqt4report {
 			int getHeight(double coef);
 			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
 			virtual void serialize(QDataStream &out);
-			virtual void processAttributes(const QXmlAttributes& atts, QString reportPath);
+			virtual void processAttributes(const QHash<QString, QString>& atts);
 		private:
 			QString absolutePath;
 	};

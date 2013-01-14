@@ -21,7 +21,7 @@ namespace libqt4report {
 		public:
 			enum EGBType { egbHeader=0, egbFooter=1 };
 			
-			CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName);
+			CDocument(QString pageWidth, QString pageHeight, QString unit, QString connectionName, QString reportPath);
 			~CDocument(void);
 			QString getLastError(void) { return lastError; }
 			QString getLastSourceError(void) { return lastSourceError; }
@@ -46,7 +46,8 @@ namespace libqt4report {
 			QString getPageWidth(void) { return pageWidth; }
 			double getCoef(void) { return coef; }
 			void serialize(QDataStream &out);
-			static CDocument * fromCache(QDataStream &in);
+			static CDocument * fromCache(QDataStream &in, QString reportPath);
+			static QString getReportPath(void);
 		private:
 			CDocBand *pageHeader;
 			CDocBand *docHeader;

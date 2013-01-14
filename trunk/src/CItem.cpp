@@ -8,45 +8,41 @@
 #include "CFields.h"
 #include "CFonts.h"
 #include "CValueType.h"
+#include "CDocument.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
 	//------------------------------------------------------------------------------
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CItem");
 	//------------------------------------------------------------------------------
-	void CItem::processAttributes(const QXmlAttributes& atts, QString reportPath) {
+	const QHash<QString, QString> CItem::fromXmlAttributes(const QXmlAttributes& atts) {
 		int i;
+		QHash<QString, QString> hash;
 		
 		for(i=0;i<atts.count();i++) {
-			setAttribute(atts.localName(i), atts.value(i));
+			hash.insert(atts.localName(i), atts.value(i));
+		}
+		
+		return hash;
+	}
+	//------------------------------------------------------------------------------
+	void CItem::processAttributes(const QHash<QString, QString>& atts) {
+		QHashIterator<QString, QString> i(atts);
+		while (i.hasNext()) {
+			i.next();
+			setAttribute(i.key(), i.value());
 		}
 	}
 	//------------------------------------------------------------------------------
 	void CItem::serialize(QDataStream &out) {
-		QHashIterator<QString, QString> i(attributes);
-		
-		out << qint32(attributes.count());
-		while(i.hasNext()) {
-			i.next();
-			out << i.key() << i.value();
-		}
+		out << attributes;
 	}
 	//------------------------------------------------------------------------------
-	void CItem::fromCache(QDataStream &in, qint32 nbAttributs) {
-		int i;
-		
+	void CItem::fromCache(QDataStream &in) {
 		logger.debug("Fill item from cache");
+		QHash<QString, QString> hash;
 		
-		for(i=0;i<nbAttributs;i++) {
-			QString attributeName;
-			QString attributeValue;
-			
-			in >> attributeName;
-			in >> attributeValue;
-			
-			logger.debug((attributeName+" = "+attributeValue).toStdString());
-			
-			setAttribute(attributeName, attributeValue);
-		}
+		in >> hash;
+		processAttributes((const QHash<QString, QString>&) hash);
 	}
 	//------------------------------------------------------------------------------
 	QString CItemText::toSvg(int y, double coef) {
@@ -135,14 +131,14 @@ namespace libqt4report {
 		return value->toFormatedString(getAttribute("format"));
 	}
 	//------------------------------------------------------------------------------
-	void CItemTextFieldObject::processAttributes(const QXmlAttributes& atts, QString reportPath) {
-		int i;
+	void CItemTextFieldObject::processAttributes(const QHash<QString, QString>& atts) {
+		QHashIterator<QString, QString> i(atts);
+		while (i.hasNext()) {
+			i.next();
+			setAttribute(i.key(), i.value());
 		
-		for(i=0;i<atts.count();i++) {
-			setAttribute(atts.localName(i), atts.value(i));
-			
-			if(atts.localName(i) == "fieldId") {
-				CField *field=CFields::getInstance()->getField(atts.value(i));
+			if(i.key() == "fieldId") {
+				CField *field=CFields::getInstance()->getField(i.value());
 				createValue(field->getAttribute("dataType"));
 			}
 		}
@@ -284,18 +280,18 @@ namespace libqt4report {
 		CItem::serialize(out);
 	}
 	//------------------------------------------------------------------------------
-	void CItemImageObject::processAttributes(const QXmlAttributes& atts, QString reportPath) {
-		int i;
-		
-		for(i=0;i<atts.count();i++) {
-			setAttribute(atts.localName(i), atts.value(i));
+	void CItemImageObject::processAttributes(const QHash<QString, QString>& atts) {
+		QHashIterator<QString, QString> i(atts);
+		while (i.hasNext()) {
+			i.next();
+			setAttribute(i.key(), i.value());
 		}
 		
 		absolutePath=getAttribute("path");
 		QFile f(absolutePath);
 		
 		if(!f.exists()) {
-			absolutePath=reportPath+"/"+absolutePath;
+			absolutePath=CDocument::getReportPath()+"/"+absolutePath;
 		}
 	}
 	//------------------------------------------------------------------------------
