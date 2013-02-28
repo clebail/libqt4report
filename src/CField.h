@@ -22,6 +22,8 @@ namespace libqt4report {
 			int getPoid(void) { return poid; }
 			virtual const QList<CField *> getDepends(void) { return QList<CField *>(); }
 			virtual void processAttributes(const QXmlAttributes& atts);
+			virtual void serialize(QDataStream &out);
+			virtual void fromCache(QDataStream &in);
 		protected:
 			QHash<QString ,QString> attributes;
 			int poid;
@@ -33,6 +35,7 @@ namespace libqt4report {
 	class CDbFieldObject : public CField {
 		public:
 			void process(QSqlRecord *record);
+			virtual void serialize(QDataStream &out);
 	};
 	//------------------------------------------------------------------------------
 	class CCalculatedFieldObject : public CField {
@@ -41,6 +44,7 @@ namespace libqt4report {
 			void setExpression(QString expression);
 			QString getExpression(void) { return expression; }
 			const QList<CField *> getDepends(void) { return depends; }
+			virtual void serialize(QDataStream &out);
 		private:
 			QString expression;
 			QList<CField *> depends;
@@ -54,6 +58,7 @@ namespace libqt4report {
 			void setGroupToResetOn(CGroup *group) { groupToResetOn=group; }
 			void setGroupToAccumulateOn(CGroup *group) { groupToAccumulateOn=group; }
 			virtual void processAttributes(const QXmlAttributes& atts);
+			virtual void serialize(QDataStream &out);
 		private:
 			double value;
 			double sum;

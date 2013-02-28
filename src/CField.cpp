@@ -3,12 +3,15 @@
 #include <QtDebug>
 #include <QRegExp>
 #include <QDate>
+#include <log4cpp/Category.hh>
 #include "CField.h"
 #include "CFields.h"
 #include "CScript.h"
 #include "CGroups.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
+	//------------------------------------------------------------------------------
+	static log4cpp::Category& logger = log4cpp::Category::getInstance("CField");
 	//------------------------------------------------------------------------------
 	void CField::processAttributes(const QXmlAttributes& atts) {
 		int i;
@@ -18,10 +21,27 @@ namespace libqt4report {
 		}
 	}
 	//------------------------------------------------------------------------------
+	void CField::serialize(QDataStream &out) {
+		out << attributes;
+	}
+	//------------------------------------------------------------------------------
+	void CField::fromCache(QDataStream &in) {
+		QHash<QString, QString> hash;
+		
+		in >> hash;
+		logger.debug((QString::number(hash.size())+" attributs filled").toStdString());
+		//processAttributes((const QHash<QString, QString>&) hash);
+	}
+	//------------------------------------------------------------------------------
 	void CDbFieldObject::process(QSqlRecord *record) {
 		QString fieldName=getAttribute("fieldName");
 
 		setFieldValue(record->value(fieldName));
+	}
+	//------------------------------------------------------------------------------
+	void CDbFieldObject::serialize(QDataStream &out) {
+		out << QString("CDbFieldObject");
+		CField::serialize(out);
 	}
 	//------------------------------------------------------------------------------
 	void CCalculatedFieldObject::process(QSqlRecord *record) {
@@ -44,6 +64,11 @@ namespace libqt4report {
 			}
 			depends << field;
 		}
+	}
+	//------------------------------------------------------------------------------
+	void CCalculatedFieldObject::serialize(QDataStream &out) {
+		out << QString("CCalculatedFieldObject");
+		CField::serialize(out);
 	}
 	//------------------------------------------------------------------------------
 	void CTotalFieldObject::process(QSqlRecord *record) {
@@ -107,6 +132,11 @@ namespace libqt4report {
 				setGroupToAccumulateOn(CGroups::getInstance()->getGroup(atts.value(i)));
 			}
 		}
+	}
+	//------------------------------------------------------------------------------
+	void CTotalFieldObject::serialize(QDataStream &out) {
+		out << QString("CTotalFieldObject");
+		CField::serialize(out);
 	}
 	//------------------------------------------------------------------------------
 }//namespace
