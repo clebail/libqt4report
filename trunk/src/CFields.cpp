@@ -1,9 +1,12 @@
 //------------------------------------------------------------------------------
 #include <QtDebug>
+#include <log4cpp/Category.hh>
 #include "CFields.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
+	//------------------------------------------------------------------------------
 	CFields *CFields::instance=0;
+	static log4cpp::Category& logger = log4cpp::Category::getInstance("CFields");
 	//------------------------------------------------------------------------------
 	CField * CFields::getField(QString key) { 
 		if(!keyMap->contains(key)) {
@@ -64,6 +67,37 @@ namespace libqt4report {
 		delete this;
 		
 		instance=0;
+	}
+	//------------------------------------------------------------------------------
+	void CFields::serialize(QDataStream &out) {
+		int i;
+		
+		logger.debug("Serialize fields");
+		
+		out << (qint32)map->size();
+		for(i=0;i<map->size();i++) {
+			map->at(i)->serialize(out);
+		}
+	}
+	//------------------------------------------------------------------------------
+	void CFields::fromCache(QDataStream &in, qint32 size) {
+		int i;
+		
+		for(i=0;i<size;i++) {
+			QString fieldClassName;
+			
+			in >> fieldClassName;
+			int id=QMetaType::type(fieldClassName.toUtf8().data());
+			
+			logger.debug((QString("Fill ")+fieldClassName+QString(" from cache")).toStdString());
+			
+			if(id != 0) {
+				CField *field=static_cast<CField *>(QMetaType::construct(id));
+				field->fromCache(in);
+				
+				addField(field->getAttribute("id"), field);
+			}
+		}
 	}
 	//------------------------------------------------------------------------------
 	CFields * CFields::getInstance(void) {

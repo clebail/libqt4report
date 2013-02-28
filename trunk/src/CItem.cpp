@@ -34,14 +34,15 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CItem::serialize(QDataStream &out) {
+		logger.debug("Serialize CItem");
 		out << attributes;
 	}
 	//------------------------------------------------------------------------------
 	void CItem::fromCache(QDataStream &in) {
-		logger.debug("Fill item from cache");
 		QHash<QString, QString> hash;
 		
 		in >> hash;
+		logger.debug((QString::number(hash.size())+" attributs filled").toStdString());
 		processAttributes((const QHash<QString, QString>&) hash);
 	}
 	//------------------------------------------------------------------------------
@@ -100,13 +101,18 @@ namespace libqt4report {
 		rendererObjects->append(rendererObject);
 	}
 	//------------------------------------------------------------------------------
+	void CItemText::serialize(QDataStream &out) {
+		logger.debug("Serialize CItemText");
+		CItem::serialize(out);
+	}
+	//------------------------------------------------------------------------------
 	QString CItemTextFixedObject::getValue(void) {
 		return getAttribute("value");
 	}
 	//------------------------------------------------------------------------------
 	void CItemTextFixedObject::serialize(QDataStream &out) {
 		out << QString("CItemTextFixedObject");
-		CItem::serialize(out);
+		CItemText::serialize(out);
 	}
 	//------------------------------------------------------------------------------
 	CItemTextFieldObject::~CItemTextFieldObject(void) {

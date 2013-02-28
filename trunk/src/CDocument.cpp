@@ -150,10 +150,14 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	void CDocument::serialize(QDataStream &out) {
 		
+		logger.debug("Serialize document");
+		
 		out << pageWidth;
 		out << pageHeight;
 		out << unit;
 		out << connectionName;
+		
+		CFields::getInstance()->serialize(out);
 		
 		if(pageHeader != 0) {
 			pageHeader->serialize(out);
@@ -184,6 +188,7 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	CDocument * CDocument::fromCache(QDataStream &in, QString reportPath) {
 		qint32 docBandSize;
+		qint32 fieldsCount;
 		QString pageWidth;
 		QString pageHeight;
 		QString unit;
@@ -199,9 +204,36 @@ namespace libqt4report {
 		
 		document=new CDocument(pageWidth, pageHeight, unit, connectionName, reportPath);
 		
+		
+		in >> fieldsCount;
+		CFields::getInstance()->fromCache(in, fieldsCount);
+		
 		in >> docBandSize;
 		if(docBandSize != 0) {
+			logger.debug("Serialize PageHeader");
 			document->createPageHeader()->fromCache(in, docBandSize);
+		}
+		
+		in >> docBandSize;
+		if(docBandSize != 0) {
+			logger.debug("Serialize DocHeader");
+			document->createDocHeader()->fromCache(in, docBandSize);
+		}
+		
+		in >> docBandSize;
+		logger.debug("Serialize DocBody");
+		document->createDocBody()->fromCache(in, docBandSize);
+		
+		in >> docBandSize;
+		if(docBandSize != 0) {
+			logger.debug("Serialize DocFooter");
+			document->createDocFooter()->fromCache(in, docBandSize);
+		}
+		
+		in >> docBandSize;
+		if(docBandSize != 0) {
+			logger.debug("Serialize PageFooter");
+			document->createPageFooter()->fromCache(in, docBandSize);
 		}
 		
 		return document;

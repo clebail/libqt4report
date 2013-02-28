@@ -69,16 +69,13 @@ namespace libqt4report {
 	void CDocBand::fromCache(QDataStream &in, qint32 size) {
 		int i;
 		
-		logger.debug("Fill docBand from cache");
-		
 		for(i=0;i<size;i++) {
 			QString itemClassName;
-			qint32 nbItemAttributs;
 			
 			in >> itemClassName;
 			int id=QMetaType::type(itemClassName.toUtf8().data());
 			
-			logger.debug((itemClassName+" with "+QString::number(nbItemAttributs)+" attributs").toStdString());
+			logger.debug((QString("Fill ")+itemClassName+QString(" from cache")).toStdString());
 			
 			if(id != 0) {
 				CItem *item=static_cast<CItem *>(QMetaType::construct(id));

@@ -29,6 +29,7 @@ namespace libqt4report {
 			QString toSvg(int y, double coef);
 			int getHeight(double coef) { return (int)(getAttribute("y").toDouble()*coef); }
 			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
+			virtual void serialize(QDataStream &out);
 		protected:
 			virtual QString getValue(void) = 0;
 	};

@@ -17,6 +17,8 @@ namespace libqt4report {
 			bool processDepends(void);
 			void cleanup(void);
 			static CFields * getInstance(void);
+			void serialize(QDataStream &out);
+			void fromCache(QDataStream &in, qint32 size);
 		private:
 			static CFields *instance;
 			QList<CField *> *map;
