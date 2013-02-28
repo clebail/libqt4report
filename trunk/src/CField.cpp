@@ -13,11 +13,11 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	static log4cpp::Category& logger = log4cpp::Category::getInstance("CField");
 	//------------------------------------------------------------------------------
-	void CField::processAttributes(const QXmlAttributes& atts) {
-		int i;
-		
-		for(i=0;i<atts.count();i++) {
-			setAttribute(atts.localName(i), atts.value(i));
+	void CField::processAttributes(const QHash<QString, QString>& atts) {
+		QHashIterator<QString, QString> i(atts);
+		while (i.hasNext()) {
+			i.next();
+			setAttribute(i.key(), i.value());
 		}
 	}
 	//------------------------------------------------------------------------------
@@ -30,7 +30,18 @@ namespace libqt4report {
 		
 		in >> hash;
 		logger.debug((QString::number(hash.size())+" attributs filled").toStdString());
-		//processAttributes((const QHash<QString, QString>&) hash);
+		processAttributes((const QHash<QString, QString>&) hash);
+	}
+	//------------------------------------------------------------------------------
+	const QHash<QString, QString> CField::fromXmlAttributes(const QXmlAttributes& atts) {
+		int i;
+		QHash<QString, QString> hash;
+		
+		for(i=0;i<atts.count();i++) {
+			hash.insert(atts.localName(i), atts.value(i));
+		}
+		
+		return hash;
 	}
 	//------------------------------------------------------------------------------
 	void CDbFieldObject::process(QSqlRecord *record) {
@@ -118,18 +129,18 @@ namespace libqt4report {
 		return depend;
 	}
 	//------------------------------------------------------------------------------
-	void CTotalFieldObject::processAttributes(const QXmlAttributes& atts) {
-		int i;
+	void CTotalFieldObject::processAttributes(const QHash<QString, QString>& atts) {
+		QHashIterator<QString, QString> i(atts);
+		while (i.hasNext()) {
+			i.next();
+			setAttribute(i.key(), i.value());
 		
-		for(i=0;i<atts.count();i++) {
-			setAttribute(atts.localName(i), atts.value(i));
-			
-			if(atts.localName(i) == "resetOn") {
-				setGroupToResetOn(CGroups::getInstance()->getGroup(atts.value(i)));
+			if(i.key() == "resetOn") {
+				setGroupToResetOn(CGroups::getInstance()->getGroup(i.value()));
 			}
 			
-			if(atts.localName(i) == "accumulateOn") {
-				setGroupToAccumulateOn(CGroups::getInstance()->getGroup(atts.value(i)));
+			if(i.key()== "accumulateOn") {
+				setGroupToAccumulateOn(CGroups::getInstance()->getGroup(i.value()));
 			}
 		}
 	}

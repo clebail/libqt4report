@@ -411,7 +411,7 @@ namespace libqt4report {
 		}
 		
 		if(field != 0) {
-			field->processAttributes(atts);
+			field->processAttributes(CField::fromXmlAttributes(atts));
 		}
 		
 		return field;

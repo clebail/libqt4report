@@ -21,9 +21,10 @@ namespace libqt4report {
 			void decPoid(void) { poid--; }
 			int getPoid(void) { return poid; }
 			virtual const QList<CField *> getDepends(void) { return QList<CField *>(); }
-			virtual void processAttributes(const QXmlAttributes& atts);
+			virtual void processAttributes(const QHash<QString, QString>& atts);
 			virtual void serialize(QDataStream &out);
 			virtual void fromCache(QDataStream &in);
+			static const QHash<QString, QString> fromXmlAttributes(const QXmlAttributes& atts);
 		protected:
 			QHash<QString ,QString> attributes;
 			int poid;
@@ -57,7 +58,7 @@ namespace libqt4report {
 			const QList<CField *> getDepends(void);
 			void setGroupToResetOn(CGroup *group) { groupToResetOn=group; }
 			void setGroupToAccumulateOn(CGroup *group) { groupToAccumulateOn=group; }
-			virtual void processAttributes(const QXmlAttributes& atts);
+			virtual void processAttributes(const QHash<QString, QString>& atts);
 			virtual void serialize(QDataStream &out);
 		private:
 			double value;
