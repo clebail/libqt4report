@@ -155,8 +155,14 @@ namespace libqt4report {
 		out << pageWidth;
 		out << pageHeight;
 		out << unit;
-		out << connectionName;
 		
+		out << database.driverName();
+		out << database.hostName();
+		out << database.userName();
+		out << database.password();
+		out << database.databaseName();
+		
+		CFonts::getInstance()->serialize(out);
 		CFields::getInstance()->serialize(out);
 		
 		if(pageHeader != 0) {
@@ -186,27 +192,42 @@ namespace libqt4report {
 		}
 	}
 	//------------------------------------------------------------------------------
-	CDocument * CDocument::fromCache(QDataStream &in, QString reportPath) {
+	CDocument * CDocument::fromCache(QDataStream &in, QString reportPath, QString connectionName) {
 		qint32 docBandSize;
-		qint32 fieldsCount;
+		qint32 fieldCount;
+		qint32 fontCount;
 		QString pageWidth;
 		QString pageHeight;
 		QString unit;
-		QString connectionName;
 		CDocument *document;
+		QString driverName;
+		QString hostName;
+		QString userName;
+		QString password;
+		QString databaseName;
 		
 		logger.debug("Create document from cache");
 		
 		in >> pageWidth;
 		in >> pageHeight;
 		in >> unit;
-		in >> connectionName;
+		
+		in >> driverName;
+		in >> hostName;
+		in >> userName;
+		in >> password;
+		in >> databaseName;
 		
 		document=new CDocument(pageWidth, pageHeight, unit, connectionName, reportPath);
+		if(connectionName != "") {
+			document->setDatabaseInfos(driverName, hostName, userName, password, databaseName);
+		}
 		
+		in >> fontCount;
+		CFonts::getInstance()->fromCache(in, fontCount);
 		
-		in >> fieldsCount;
-		CFields::getInstance()->fromCache(in, fieldsCount);
+		in >> fieldCount;
+		CFields::getInstance()->fromCache(in, fieldCount);
 		
 		in >> docBandSize;
 		if(docBandSize != 0) {

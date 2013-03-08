@@ -24,7 +24,9 @@ namespace libqt4report {
 			void setStyle(Style style) { this->style=style; }
 			Style getStyle(void) { return style; }
 			void toQFont(QFont &font);
+			void serialize(QDataStream &out);
 			
+			static CFont * fromCache(QDataStream &in);
 			static QString toSvgWeight(Weight weight);
 			static QString toSvgStyle(Style style);
 		private:
