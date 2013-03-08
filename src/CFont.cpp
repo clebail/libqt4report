@@ -22,6 +22,31 @@ namespace libqt4report {
 		font.setStyle((QFont::Style)style);
 	}
 	//------------------------------------------------------------------------------
+	void CFont::serialize(QDataStream &out) {
+		out << family;
+		out << (qint32)size;
+		out << (qint32)weight;
+		out << (qint32)style;
+	}
+	//------------------------------------------------------------------------------
+	CFont * CFont::fromCache(QDataStream &in) {
+		QString family;
+		int size;
+		int weight;
+		int style;
+		
+		in >> family;
+		in >> size;
+		in >> weight;
+		in >> style;
+		
+		CFont *font=new CFont(family, size);
+		font->setWeight((Weight)weight);
+		font->setStyle((Style)style);
+		
+		return font;
+	}
+	//------------------------------------------------------------------------------
 	QString CFont::toSvgWeight(Weight weight) {
 		switch(weight) {
 			case Light:

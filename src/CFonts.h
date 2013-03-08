@@ -12,6 +12,8 @@ namespace libqt4report {
 			void addFont(QString key, CFont *font) { map->insert(key, font); }
 			void cleanup(void);
 			static CFonts * getInstance(void);
+			void serialize(QDataStream &out);
+			void fromCache(QDataStream &in, qint32 size);
 		private:
 			static CFonts *instance;
 			QHash<QString, CFont *> *map;
