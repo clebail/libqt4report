@@ -15,7 +15,6 @@ namespace libqt4report {
 			void cleanup(void);
 			void prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef);
 			void serialize(QDataStream &out);
-			
 			void fromCache(QDataStream &in, qint32 size);
 		private:
 			int height;

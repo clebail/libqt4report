@@ -14,10 +14,13 @@ namespace libqt4report {
 			CGroup *getFirstGroup(void) { return firstGroup; }
 			CGroup *getLastGroup(void) { return lastGroup; }
 			CGroup *getGroup(QString id);
+			void serialize(QDataStream &out);
+			void fromCache(QDataStream &in, qint32 size);
 		private:
 			static CGroups *instance;
 			CGroup *firstGroup;
 			CGroup *lastGroup;
+			int nbGroup;
 			
 			CGroups(void);
 	};

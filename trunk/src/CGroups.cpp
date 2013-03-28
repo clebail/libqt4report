@@ -1,9 +1,11 @@
 //------------------------------------------------------------------------------
 #include <QtDebug>
+#include <log4cpp/Category.hh>
 #include "CGroups.h"
 //------------------------------------------------------------------------------
 namespace libqt4report {
 	CGroups *CGroups::instance=0;
+	static log4cpp::Category& logger = log4cpp::Category::getInstance("CGroups");
 	//------------------------------------------------------------------------------
 	CGroups * CGroups::getInstance(void) {
 		if(instance == 0) {
@@ -17,6 +19,8 @@ namespace libqt4report {
 			
 		nGroup->setId(id);
 		nGroup->setRefer(refer);
+		
+		logger.debug((QString("add group ")+id).toStdString());
 		
 		if(firstGroup == 0) {
 			firstGroup=nGroup;
@@ -32,6 +36,7 @@ namespace libqt4report {
 		}
 		
 		lastGroup=nGroup;
+		nbGroup++;
 	}
 	//------------------------------------------------------------------------------
 	void CGroups::cleanup(void) {
@@ -52,6 +57,7 @@ namespace libqt4report {
 		}
 		
 		firstGroup=lastGroup=0;
+		nbGroup=0;
 	}
 	//------------------------------------------------------------------------------
 	CGroup *CGroups::getGroup(QString id) {
@@ -68,8 +74,38 @@ namespace libqt4report {
 		return 0;
 	}
 	//------------------------------------------------------------------------------
+	void CGroups::serialize(QDataStream &out) {
+		CGroup *pGroup=firstGroup;
+		
+		logger.debug(("Serialize groups ("+QString::number(nbGroup)+")").toStdString());
+		
+		out << (qint32)nbGroup;
+		
+		while(pGroup != 0) {
+			out << pGroup->getId();
+			out << pGroup->getRefer();
+			pGroup=pGroup->getChild();
+		}
+	}
+	//------------------------------------------------------------------------------
+	void CGroups::fromCache(QDataStream &in, qint32 size) {
+		for(int i=0;i<size;i++) {
+			QString groupId;
+			QString groupRefer;
+			
+			in >> groupId;
+			in >> groupRefer;
+			
+			logger.debug((QString("Fill group ")+groupId+QString(" refer ")+groupRefer+QString(" from cache")).toStdString());
+			
+			
+			addGroup(groupId, groupRefer);
+		}
+	}
+	//------------------------------------------------------------------------------
 	CGroups::CGroups(void) {
 		firstGroup=lastGroup=0;
+		nbGroup=0;
 	}
 	//------------------------------------------------------------------------------
 }// namespace

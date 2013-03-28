@@ -149,7 +149,7 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::serialize(QDataStream &out) {
-		
+		QHashIterator<QString, QVariant> i(params);
 		logger.debug("Serialize document");
 		
 		out << pageWidth;
@@ -162,40 +162,59 @@ namespace libqt4report {
 		out << database.password();
 		out << database.databaseName();
 		
+		out << sqlQuery;
+		
+		out << (qint32)params.size();
+		while(i.hasNext()) {
+			i.next();
+			out << i.key();
+		}
+		
 		CFonts::getInstance()->serialize(out);
+		CGroups::getInstance()->serialize(out);
 		CFields::getInstance()->serialize(out);
 		
 		if(pageHeader != 0) {
+			logger.debug("Serialize pageHeader");
 			pageHeader->serialize(out);
 		}else {
 			out << qint32(0);
 		}
 		
 		if(docHeader != 0) {
+			logger.debug("Serialize docHeader");
 			docHeader->serialize(out);
 		}else {
 			out << qint32(0);
 		}
 		
+		logger.debug("Serialize docBody");
 		docBody->serialize(out);
 		
 		if(docFooter != 0) {
+			logger.debug("Serialize docFooter");
 			docFooter->serialize(out);
 		}else {
 			out << qint32(0);
 		}
 		
 		if(pageFooter != 0) {
+			logger.debug("Serialize pageFooter");
 			pageFooter->serialize(out);
 		}else {
 			out << qint32(0);
 		}
+		
+		serializeGroupBands(out);
 	}
 	//------------------------------------------------------------------------------
 	CDocument * CDocument::fromCache(QDataStream &in, QString reportPath, QString connectionName) {
 		qint32 docBandSize;
 		qint32 fieldCount;
 		qint32 fontCount;
+		qint32 paramCount;
+		qint32 groupCount;
+		qint32 i;
 		QString pageWidth;
 		QString pageHeight;
 		QString unit;
@@ -205,6 +224,7 @@ namespace libqt4report {
 		QString userName;
 		QString password;
 		QString databaseName;
+		QString sqlQuery;
 		
 		logger.debug("Create document from cache");
 		
@@ -218,44 +238,60 @@ namespace libqt4report {
 		in >> password;
 		in >> databaseName;
 		
+		logger.debug((driverName+" "+hostName+" "+userName+" "+password+" "+databaseName).toStdString());
+		
 		document=new CDocument(pageWidth, pageHeight, unit, connectionName, reportPath);
-		if(connectionName != "") {
-			document->setDatabaseInfos(driverName, hostName, userName, password, databaseName);
+		document->setDatabaseInfos(driverName, hostName, userName, password, databaseName);
+		
+		in >> sqlQuery;
+		document->setQuery(sqlQuery);
+		
+		in >> paramCount;
+		for(i=0;i<paramCount;i++) {
+			QString key;
+			
+			in >> key;
+			document->setParamValue(key, QVariant());
 		}
 		
 		in >> fontCount;
 		CFonts::getInstance()->fromCache(in, fontCount);
+		
+		in >> groupCount;
+		CGroups::getInstance()->fromCache(in, groupCount);
 		
 		in >> fieldCount;
 		CFields::getInstance()->fromCache(in, fieldCount);
 		
 		in >> docBandSize;
 		if(docBandSize != 0) {
-			logger.debug("Serialize PageHeader");
+			logger.debug("PageHeader from cache");
 			document->createPageHeader()->fromCache(in, docBandSize);
 		}
 		
 		in >> docBandSize;
 		if(docBandSize != 0) {
-			logger.debug("Serialize DocHeader");
+			logger.debug("DocHeader from cache");
 			document->createDocHeader()->fromCache(in, docBandSize);
 		}
 		
 		in >> docBandSize;
-		logger.debug("Serialize DocBody");
+		logger.debug("DocBody from cache");
 		document->createDocBody()->fromCache(in, docBandSize);
 		
 		in >> docBandSize;
 		if(docBandSize != 0) {
-			logger.debug("Serialize DocFooter");
+			logger.debug("DocFooter from cache");
 			document->createDocFooter()->fromCache(in, docBandSize);
 		}
 		
 		in >> docBandSize;
 		if(docBandSize != 0) {
-			logger.debug("Serialize PageFooter");
+			logger.debug("PageFooter from cache");
 			document->createPageFooter()->fromCache(in, docBandSize);
 		}
+		
+		groupBandsFromCache(document, in);
 		
 		return document;
 	}
@@ -351,6 +387,43 @@ namespace libqt4report {
 		}
 		
 		return 0;
+	}
+	//------------------------------------------------------------------------------
+	void CDocument::serializeGroupBands(QDataStream &out) {
+		int i;
+		for(i=egbHeader;i<=egbFooter;i++) {
+			QHashIterator<CGroup *, CDocBand *> it(*groupBands[i]);
+			
+			out << groupBands[i]->size();
+			while(it.hasNext()) {
+				it.next();
+				out << it.key()->getId();
+				it.value()->serialize(out);
+			}
+		}
+	}
+	//------------------------------------------------------------------------------
+	void CDocument::groupBandsFromCache(CDocument *document, QDataStream &in) {
+		int i;
+		for(i=egbHeader;i<=egbFooter;i++) {
+			int groupBandSize;
+			int j;
+			
+			in >> groupBandSize;
+			for(j=0;j<groupBandSize;j++) {
+				QString groupId;
+				int docBandSize;
+				CDocBand *docBand=new CDocBand();
+				
+				in >> groupId;
+				in >> docBandSize;
+				
+				logger.debug((QString("Fill group band ")+groupId+QString(" from cache")).toStdString());
+				
+				docBand->fromCache(in, docBandSize);
+				document->addGroupBand(CGroups::getInstance()->getGroup(groupId), (CDocument::EGBType)i, docBand);
+			}
+		}
 	}
 	//------------------------------------------------------------------------------
 }
