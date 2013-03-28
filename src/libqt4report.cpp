@@ -106,7 +106,16 @@ namespace libqt4report {
 			QFileInfo cacheFileInfo(f);
 			if(f.exists() && f.open(QIODevice::ReadOnly) && cacheFileInfo.lastModified() > fileInfo.lastModified()) {
 				QDataStream in(&f);
-				document=CDocument::fromCache(in, fileInfo.absoluteDir().absolutePath());
+				document=CDocument::fromCache(in, fileInfo.absoluteDir().absolutePath(), connectionName);
+				QStringList params=document->getParams();
+				for(int i=0;i<params.size();i++) {
+					QVariant value;
+					
+					emit queryParam(params.at(i), value);
+					if(value.isValid()) {
+						document->setParamValue(params.at(i), value);
+					}
+				}
 				
 				f.close();
 			}
@@ -119,32 +128,34 @@ namespace libqt4report {
 			if(xmlReader->parse(source)) {
 				document=parser->getDocument();
 				
-				QHashIterator<QString, QVariant> i(params);
-				while (i.hasNext()) {
-					i.next();
-					logger.debug((tr("Param")+" "+i.key()+" = "+i.value().toString()).toStdString());
-					document->setParamValue(i.key(), i.value());
-				}
-				
-				if(document->process()) {
-					ret=true;
-				}else {
-					lastSourceError=document->getLastSourceError();
-					lastError=document->getLastError();
+				QFile f(seriFileName);
+				if(f.open(QIODevice::WriteOnly)) {
+					logger.debug("Save document in cache");
+					QDataStream out(&f);
+					document->serialize(out);
+						
+					f.close();
 				}
 			}else {
 				lastSourceError=QObject::tr("Invalid file");
 				lastError=QObject::tr("Unable to parse the file : ")+parser->errorString();
 				logger.debug(("Unable to parse the file : "+parser->errorString()).toStdString());
 			}
-			
-			QFile f(seriFileName);
-			if(f.open(QIODevice::WriteOnly)) {
-				logger.debug("Save document in cache");
-				QDataStream out(&f);
-				document->serialize(out);
-					
-				f.close();
+		}
+				
+		if(document != 0) {
+			QHashIterator<QString, QVariant> i(params);
+			while (i.hasNext()) {
+				i.next();
+				logger.debug((tr("Param")+" "+i.key()+" = "+i.value().toString()).toStdString());
+				document->setParamValue(i.key(), i.value());
+			}
+				
+			if(document->process()) {
+				ret=true;
+			}else {
+				lastSourceError=document->getLastSourceError();
+				lastError=document->getLastError();
 			}
 		}
 		

@@ -48,6 +48,7 @@ namespace libqt4report {
 			void serialize(QDataStream &out);
 			static CDocument * fromCache(QDataStream &in, QString reportPath, QString connectionName="");
 			static QString getReportPath(void);
+			const QStringList getParams(void) { return params.keys(); }
 		private:
 			CDocBand *pageHeader;
 			CDocBand *docHeader;
@@ -70,6 +71,8 @@ namespace libqt4report {
 			void processFields(QSqlRecord *record) { CFields::getInstance()->process(record); }
 			void setUnit(QString unit) { coef=(unit == "mm" ? COEF_MM : (unit == "in" ? COEF_IN : COEF_PX)); }
 			CGroup * testGroupChanged(QSqlRecord *rec0, QSqlRecord *rec1);
+			void serializeGroupBands(QDataStream &out);
+			void static groupBandsFromCache(CDocument *document, QDataStream &in);
 	};
 	//------------------------------------------------------------------------------
 	class CPageManager {
