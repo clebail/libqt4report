@@ -167,6 +167,7 @@ namespace libqt4report {
 				logger.debug((tr("Param")+" "+i.key()+" = "+i.value().toString()).toStdString());
 				document->setParamValue(i.key(), i.value());
 			}
+			params.clear();
 				
 			if(document->process()) {
 				ret=true;
