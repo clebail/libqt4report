@@ -8,6 +8,7 @@
 namespace libqt4report {
 	class CFonts {
 		public:
+			~CFonts(void) { delete map; }
 			CFont * getFont(QString key) { return map->value(key); }
 			void addFont(QString key, CFont *font) { map->insert(key, font); }
 			void cleanup(void);

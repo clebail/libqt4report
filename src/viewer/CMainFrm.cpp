@@ -18,7 +18,7 @@ CMainFrm::CMainFrm(QString fileName) : QMainWindow() {
 	scrollArea=new QScrollArea(this);
 	scrollArea->setAlignment(Qt::AlignCenter);
 	
-	report=new libqt4report::CReport(QString(), false);
+	report=new libqt4report::CReport(QString(), true);
 	connect(report, SIGNAL(queryParam(QString,QVariant&)), this, SLOT(onReportQueryParam(QString,QVariant&)));
 	QApplication::installTranslator(libqt4report::CReport::getTranslator());
 	

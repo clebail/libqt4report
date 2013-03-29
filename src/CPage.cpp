@@ -14,6 +14,7 @@ namespace libqt4report {
 		}
 		
 		rendererObjects->clear();
+		delete rendererObjects;
 	}
 }// namespace
 //------------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 namespace libqt4report {
 	class CItem : public CPrintableObject {
 		public:
-			virtual ~CItem(void) {}
+			virtual ~CItem(void) { attributes.clear(); }
 			void setAttribute(QString name, QString value) { attributes.insert(name, value); }
 			QString getAttribute(QString name) { return attributes.value(name) ;}
 			bool hasAttribute(QString name) { return attributes.contains(name); }

@@ -13,7 +13,6 @@ namespace libqt4report {
 			i.next();
 			delete i.value();
 		}
-		delete map;
 		delete this;
 		
 		instance=0;

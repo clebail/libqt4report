@@ -56,6 +56,9 @@ namespace libqt4report {
 			}while(dGroup != 0);
 		}
 		
+		delete this;
+		instance=0;
+		
 		firstGroup=lastGroup=0;
 		nbGroup=0;
 	}

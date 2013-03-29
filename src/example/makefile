@@ -1,6 +1,6 @@
 CC = g++
-CFLAGS = -g -Wall -I. `pkg-config --cflags QtCore QtGui libqt4report`
-LDFLAGS = `pkg-config --libs QtCore QtGui libqt4report`
+CFLAGS = -g -Wall -I. `pkg-config --cflags QtCore QtGui QtSql libqt4report`
+LDFLAGS = `pkg-config --libs QtCore QtGui QtSql libqt4report`
 ALL = test
 
 all: $(ALL)
