@@ -45,6 +45,7 @@ namespace libqt4report {
 			i.next();
 			delete i.value();
 		}
+		clear();
 	}
 	//------------------------------------------------------------------------------
 	void CDocBand::prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {

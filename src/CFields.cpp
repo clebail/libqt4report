@@ -62,6 +62,8 @@ namespace libqt4report {
 			delete map->at(i);
 		}
 		
+		keyMap->clear();
+		
 		delete map;
 		delete keyMap;
 		delete this;
