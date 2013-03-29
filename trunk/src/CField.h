@@ -12,7 +12,7 @@
 namespace libqt4report {
 	class CField {
 		public:
-			virtual ~CField(void) {}
+			virtual ~CField(void) { attributes.clear(); }
 			void setAttribute(QString name, QString value) { attributes.insert(name, value); }
 			QString getAttribute(QString name) { return attributes.value(name); }
 			virtual void process(QSqlRecord *record) = 0;
@@ -41,6 +41,7 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	class CCalculatedFieldObject : public CField {
 		public:
+			~CCalculatedFieldObject(void) { depends.clear(); }
 			void process(QSqlRecord *record);
 			void setExpression(QString expression);
 			QString getExpression(void) { return expression; }

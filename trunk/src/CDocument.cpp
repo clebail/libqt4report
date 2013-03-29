@@ -109,8 +109,6 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::cleanup(void) {
-		CGroups::getInstance()->cleanup();
-		
 		if(pageHeader != 0) {
 			pageHeader->cleanup();
 			delete pageHeader;
@@ -138,14 +136,17 @@ namespace libqt4report {
 		CFields::getInstance()->cleanup();
 		CScript::getInstance()->cleanup();
 		
-		for(int i=0;i<2;i++) {
+		for(int i=egbHeader;i<=egbFooter;i++) {
 			QHashIterator<CGroup *, CDocBand *> ite(*groupBands[i]);
 			while (ite.hasNext()) {
 				ite.next();
+				ite.value()->cleanup();
 				delete ite.value();
 			}
 			groupBands[i]->clear();
 		}
+		
+		CGroups::getInstance()->cleanup();
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::serialize(QDataStream &out) {

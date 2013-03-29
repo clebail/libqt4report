@@ -52,6 +52,7 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	CReport::~CReport(void) {
 		logger.debug("Delete CReport instance");
+		params.clear();
 		if(document != 0) {
 			delete document;
 		}
@@ -85,15 +86,11 @@ namespace libqt4report {
 	}
 	//------------------------------------------------------------------------------
 	bool CReport::process(QFile *docFile) {
-		QXmlSimpleReader *xmlReader=new QXmlSimpleReader();
-		QXmlInputSource *source = new QXmlInputSource(docFile);
-		QFileInfo fileInfo(*docFile);
+		QFileInfo *fileInfo=new QFileInfo(*docFile);
 		bool ret=false;
-		QString seriFileName=docFile->fileName()+".cache";
+		QString seriFileName="."+docFile->fileName()+".cache";
 		
 		logger.debug("Start process report");
-		CDocumentParser *parser=new CDocumentParser(connectionName, fileInfo.absoluteDir().absolutePath());
-		connect(parser, SIGNAL(queryParam(QString,QVariant&)), this, SLOT(onParserQueryParam(QString,QVariant&)));
 		
 		if(document != 0) {
 			delete document;
@@ -102,11 +99,11 @@ namespace libqt4report {
 		
 		if(!forceReload) {
 			logger.debug("Read document from cache");
-			QFile f(seriFileName);
-			QFileInfo cacheFileInfo(f);
-			if(f.exists() && f.open(QIODevice::ReadOnly) && cacheFileInfo.lastModified() > fileInfo.lastModified()) {
-				QDataStream in(&f);
-				document=CDocument::fromCache(in, fileInfo.absoluteDir().absolutePath(), connectionName);
+			QFile *f=new QFile(seriFileName);
+			QFileInfo *cacheFileInfo=new QFileInfo(*f);
+			if(f->exists() && f->open(QIODevice::ReadOnly) && cacheFileInfo->lastModified() > fileInfo->lastModified()) {
+				QDataStream in(f);
+				document=CDocument::fromCache(in, fileInfo->absoluteDir().absolutePath(), connectionName);
 				QStringList params=document->getParams();
 				for(int i=0;i<params.size();i++) {
 					QVariant value;
@@ -117,30 +114,50 @@ namespace libqt4report {
 					}
 				}
 				
-				f.close();
+				f->close();
 			}
+			delete cacheFileInfo;
+			delete f;
 		}
 		
 		if(document == 0) {
 			logger.debug("Start parse report file");
+			
+			QXmlSimpleReader *xmlReader=new QXmlSimpleReader();
+			QXmlInputSource *source = new QXmlInputSource(docFile);
+			
+			CDocumentParser *parser=new CDocumentParser(connectionName, fileInfo->absoluteDir().absolutePath());
+			connect(parser, SIGNAL(queryParam(QString,QVariant&)), this, SLOT(onParserQueryParam(QString,QVariant&)));
+			
 			xmlReader->setContentHandler(parser);
 			xmlReader->setLexicalHandler(parser);
 			if(xmlReader->parse(source)) {
 				document=parser->getDocument();
 				
-				QFile f(seriFileName);
-				if(f.open(QIODevice::WriteOnly)) {
-					logger.debug("Save document in cache");
-					QDataStream out(&f);
-					document->serialize(out);
-						
-					f.close();
+				QFile *f=new QFile(seriFileName);
+				QFileInfo *cacheFileInfo=new QFileInfo(*f);
+				
+				if(!f->exists() || cacheFileInfo->lastModified() < fileInfo->lastModified()) {
+					if(f->open(QIODevice::WriteOnly)) {
+						logger.debug("Save document in cache");
+						QDataStream out(f);
+						document->serialize(out);
+							
+						f->close();
+					}
 				}
+				
+				delete cacheFileInfo;
+				delete f;
 			}else {
 				lastSourceError=QObject::tr("Invalid file");
 				lastError=QObject::tr("Unable to parse the file : ")+parser->errorString();
 				logger.debug(("Unable to parse the file : "+parser->errorString()).toStdString());
 			}
+			
+			delete parser;
+			delete source;
+			delete xmlReader;
 		}
 				
 		if(document != 0) {
@@ -161,9 +178,7 @@ namespace libqt4report {
 		
 		cleanup();
 		
-		delete parser;
-		delete source;
-		delete xmlReader;
+		delete fileInfo;
 		
 		return ret;
 	}
