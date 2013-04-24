@@ -32,9 +32,14 @@ namespace libqt4report {
 	CDocument::~CDocument(void) {
 		logger.debug("Delete CDocument instance");
 		
-		
 		delete groupBands[egbHeader];
 		delete groupBands[egbFooter];
+		
+		for(int i=0;i<count();i++) {
+			delete at(i);
+		}
+		
+		clear();
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::setDatabaseInfos(QString driver, QString host, QString userName, QString password, QString dbName) {
@@ -140,10 +145,6 @@ namespace libqt4report {
 		}
 		
 		CGroups::getInstance()->cleanup();
-		
-		for(int i=0;i<count();i++) {
-			delete at(i);
-		}
 		
 		clear();
 	}

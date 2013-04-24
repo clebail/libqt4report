@@ -4,6 +4,7 @@
 namespace libqt4report {
 	CPage::CPage(void) {
 		rendererObjects=new QList<CRendererObject *>();
+		svg="";
 	}
 	//------------------------------------------------------------------------------
 	CPage::~CPage(void) {
@@ -13,6 +14,7 @@ namespace libqt4report {
 			delete rendererObjects->at(i);
 		}
 		
+		svg.clear();
 		rendererObjects->clear();
 		delete rendererObjects;
 	}
