@@ -44,7 +44,7 @@ namespace libqt4report {
 		if(newPage) {
 			page=new CPage();
 			QString w=QString::number(wPage);
-			QString svg="<?xml version='1.0' encoding='utf-8'?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='cd http://www.w3.org/1999/xlink' version='1.2' \
+			QString svg="<?xml version='1.0' encoding='utf-8'?><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.2' \
 				baseProfile='tiny' width='" % w % "' \
 				height='${height}'> \
 				<rect x='0' y='0' width='" % w % "' height='${height}' fill='white' stroke='none' />";
