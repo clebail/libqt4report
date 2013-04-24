@@ -27,7 +27,6 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	void CPageManager::process(CPrintableObject *printableObject, bool firstEnr, bool lastEnr) {
 		CPage *page;
-		QString svg;
 		
 		if(endPage ) {
 			page=document->last();
@@ -39,20 +38,18 @@ namespace libqt4report {
 			draw(document->getPageFooter());
 			
 			page->addSvg("</svg>");
-			//svg.replace("${height}", QString::number(hSpecified ? hPage : hPage=y));
+			page->setHeight(hSpecified ? hPage : hPage=y);
 		}
 		
 		if(newPage) {
 			page=new CPage();
 			QString w=QString::number(wPage);
-			
-			svg="<?xml version='1.0' encoding='utf-8'?><svg xmlns='http://www.w3.org/2000/svg' version='1.2' \
+			QString svg="<?xml version='1.0' encoding='utf-8'?><svg xmlns='http://www.w3.org/2000/svg' version='1.2' \
 				baseProfile='tiny' width='" % w % "' \
 				height='${height}'> \
 				<rect x='0' y='0' width='" % w % "' height='${height}' fill='white' stroke='none' />";
 			
 			page->addSvg(svg);
-			
 			document->append(page);
 			
 			y=0;

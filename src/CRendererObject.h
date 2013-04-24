@@ -7,10 +7,12 @@
 #include <QPoint>
 #include <QFont>
 #include <QImage>
+#include <QtDebug>
 //------------------------------------------------------------------------------
 namespace libqt4report {
 	class CRendererObject {
 		public:
+			virtual ~CRendererObject(void) {}
 			void setColor(QString sColor) { color.setNamedColor(sColor); }
 			virtual void draw(QPainter * painter) = 0;
 		protected:

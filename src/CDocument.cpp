@@ -32,9 +32,6 @@ namespace libqt4report {
 	CDocument::~CDocument(void) {
 		logger.debug("Delete CDocument instance");
 		
-		delete groupBands[egbHeader];
-		delete groupBands[egbFooter];
-		
 		for(int i=0;i<count();i++) {
 			delete at(i);
 		}
@@ -142,11 +139,11 @@ namespace libqt4report {
 				delete ite.value();
 			}
 			groupBands[i]->clear();
+			
+			delete groupBands[i];
 		}
 		
 		CGroups::getInstance()->cleanup();
-		
-		clear();
 	}
 	//------------------------------------------------------------------------------
 	void CDocument::serialize(QDataStream &out) {
