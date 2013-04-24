@@ -52,6 +52,7 @@ namespace libqt4report {
 		QString style="style='";
 		CFont *font=CFonts::getInstance()->getFont(getAttribute("fontId"));
 		QString color;
+		QString svg="";
 		
 		if(hasAttribute("color")) {
 			color="stroke:"+getAttribute("color")+";fill:"+getAttribute("color")+";";
@@ -66,10 +67,12 @@ namespace libqt4report {
 			align="text-anchor='"+getAttribute("align")+"'";
 		}
 		
-		return QString("<text x='%1' y='%2' "+align+" "+style+">%3</text>")
+		svg=QString("<text x='%1' y='%2' "+align+" "+style+">%3</text>")
 			.arg((int)(getAttribute("x").toDouble()*coef))
 			.arg((int)((getAttribute("y").toDouble())*coef)+y)
 			.arg(value);
+			
+		return svg;
 	}
 	//------------------------------------------------------------------------------
 	void CItemText::prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {
@@ -159,6 +162,7 @@ namespace libqt4report {
 		int height=(int)((getAttribute("height").toDouble())*coef);
 		int x1, y1, x2, y2;
 		QString color="black";
+		QString svg="";
 		
 		x1=(int)(getAttribute("x").toDouble()*coef);
 		y1=(int)((getAttribute("y").toDouble())*coef)+y;
@@ -169,8 +173,10 @@ namespace libqt4report {
 			color=getAttribute("color");
 		}
 		
-		return QString("<line x1='%1' y1='%2' x2='%3' y2='%4' style='stroke:"+color+";stroke-width:1;' />")
+		svg=QString("<line x1='%1' y1='%2' x2='%3' y2='%4' style='stroke:"+color+";stroke-width:1;' />")
 			.arg(x1).arg(y1).arg(x2).arg(y2);
+			
+		return svg;
 	}
 	//------------------------------------------------------------------------------
 	void CItemLineObject::prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {
@@ -209,6 +215,7 @@ namespace libqt4report {
 	QString CItemRectObject::toSvg(int y, double coef) {
 		int x, yR, width, height;
 		QString color="black";
+		QString svg="";
 		
 		x=(int)(getAttribute("x").toDouble()*coef);
 		yR=(int)((getAttribute("y").toDouble())*coef)+y;
@@ -219,8 +226,10 @@ namespace libqt4report {
 			color=getAttribute("color");
 		}
 		
-		return QString("<rect x='%1' y='%2' width='%3' height='%4' style='stroke:"+color+";stroke-width:1;fill:none;' />")
+		svg=QString("<rect x='%1' y='%2' width='%3' height='%4' style='stroke:"+color+";stroke-width:1;fill:none;' />")
 		.arg(x).arg(yR).arg(width).arg(height);
+		
+		return svg;
 	}
 	//------------------------------------------------------------------------------
 	void CItemRectObject::prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {
@@ -246,14 +255,17 @@ namespace libqt4report {
 	//------------------------------------------------------------------------------
 	QString CItemImageObject::toSvg(int y, double coef) {
 		int x, yR, width, height;
+		QString svg="";
 				
 		x=(int)(getAttribute("x").toDouble()*coef);
 		yR=(int)((getAttribute("y").toDouble())*coef)+y;
 		width=(int)(getAttribute("width").toDouble()*coef);
 		height=(int)(getAttribute("height").toDouble()*coef);
 		
-		return QString("<image x='%1' y='%2' width='%3' height='%4' xlink:href='%5' />")
+		svg=QString("<image x='%1' y='%2' width='%3' height='%4' xlink:href='%5' />")
 			.arg(x).arg(yR).arg(width).arg(height).arg(absolutePath);
+			
+		return svg;
 	}
 	//------------------------------------------------------------------------------
 	void CItemImageObject::prepareRender(QList<CRendererObject *> *rendererObjects, int y, double coef) {

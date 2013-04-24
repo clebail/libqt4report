@@ -12,7 +12,7 @@ namespace libqt4report {
 			CPage(void);
 			~CPage(void);
 			QString getSvg(void) { return svg; }
-			void setSvg(QString svg) { this->svg=svg; }
+			void addSvg(QString svg) { this->svg.append(svg); }
 			QList<CRendererObject *> * getRendererObjects(void) { return rendererObjects; }
 		private:
 			QString svg;
